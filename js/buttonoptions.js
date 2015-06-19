@@ -6,8 +6,8 @@
 // argument when the page is truly done loading
 $(init);
 
-var buttonPOSTUrl = "../ui/button";
-var sessionData = {"questionsAnswered": 0};
+var buttonPOSTUrl = "ui/button";
+var sessionData = {"picCount": 1};
 var buttonIDs = ["#left-button", "#right-button"];
 
 // Because of the strange way that javascript scoping works, in order
@@ -36,19 +36,43 @@ function buttonClicked(idx) {
     $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
 }
 
+// handleResponse takes the data returned by the python server
 function handleResponse(rawData) {
     var jsonData = JSON.parse(rawData);
     sessionData = jsonData["sessionData"];
-    if("imageURL" in jsonData) {
-        changeImage(jsonData["imageURL"]);
+    // when the server determines that the game is over,
+    //  it notifies via toSurvey var
+    //   and javascripts load the survey page from the directory
+    if ("toSurvey" in jsonData){
+        window.location.href = "survey.html";
     }
-    if("buttonLabels" in jsonData) {
-        changeButtonLabels(jsonData["buttonLabels"]);
+    //server may provide a new image, new buttons text, colors, instructions
+    else{
+        if("imageURL" in jsonData) {
+            changeImage(jsonData["imageURL"]);
+        }
+        if("buttonLabels" in jsonData) {
+            if (jsonData["buttonLabels"][0]!="null"){
+                $('#left-button').removeAttr('style');
+            }
+            else{
+                $('#left-button').hide();
+            }
+            changeButtonLabels(jsonData["buttonLabels"]);
+        }
+		
+        //handle changing button colors upon server request 
+		var bclasses = "btn-primary btn-success btn-danger btn-warning";
+		var newclass = jsonData["buttonClass"] || "btn-primary";
+		console.log(newclass);
+		$(".ui-button").removeClass(bclasses).addClass(newclass);
+	
+        if("instructionText" in jsonData) {
+            $("#instruction-text").html(jsonData["instructionText"]);
+        }
+        enableButtons();
+        $('.ui-button').blur();
     }
-    if("instructionText" in jsonData) {
-        $("#instruction-text").html(jsonData["instructionText"]);
-    }
-    enableButtons();
 }
 
 function disableButtons() {

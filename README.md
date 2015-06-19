@@ -1,23 +1,8 @@
-# web-interface-examples
-Examples of connecting ROS to web technologies
+# Robot-Human Table Turning
 
-General hints:
+To run in localhost:
 
-Running rosbridge server: rosrun rosbridge_server rosbridge.py
-	
-Running mjpeg server: rosrun mjpeg_server mjpeg_server
-
-Easiest way to run a webserver:
-In the directory you want to serve:
-* python 2.x: python -m SimpleHTTPServer 8080
-* python 3.x: python -m http.server 8080
-
-## buttonoptions.html
-
-Run the server:
-```
-cd [directory where you've put this repo]
-python servers/buttonserver.py
-```
-
-Navigate to the webpage at http://localhost:8080/buttonoptions.html
+  1.  navigate to buttonoptions directory
+  2.  find out computer's ip
+  3.  run: python servers/buttonserver.py
+  4. in the browser, go to ip:2223/tableturn.html
