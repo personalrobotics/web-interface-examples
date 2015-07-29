@@ -1,6 +1,6 @@
 # Robot-Human Table Turning
 
-##To run
+##To run 
 
   1.  navigate to buttonoptions directory
   1. run python servers/buttonserver.py
