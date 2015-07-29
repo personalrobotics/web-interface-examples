@@ -31,7 +31,7 @@ function init() {
 function buttonClicked(idx) {
     disableButtons();
     var postData = {"sessionData": sessionData,
-                    "buttonID": idx};
+    "buttonID": idx};
     // Note: posted data *has* to be stringified for bottle.py to understand
     $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
 }
@@ -46,31 +46,80 @@ function handleResponse(rawData) {
     if ("toSurvey" in jsonData){
         window.location.href = "survey.html";
     }
+
     //server may provide a new image, new buttons text, colors, instructions
     else{
-        if("imageURL" in jsonData) {
-            changeImage(jsonData["imageURL"]);
-        }
-        if("buttonLabels" in jsonData) {
-            if (jsonData["buttonLabels"][0]!="null"){
-                $('#left-button').removeAttr('style');
-            }
-            else{
-                $('#left-button').hide();
-            }
-            changeButtonLabels(jsonData["buttonLabels"]);
-        }
-		
-        //handle changing button colors upon server request 
-		var bclasses = "btn-primary btn-success btn-danger btn-warning";
-		var newclass = jsonData["buttonClass"] || "btn-primary";
-		console.log(newclass);
-		$(".ui-button").removeClass(bclasses).addClass(newclass);
-	
+        enableButtons();
         if("instructionText" in jsonData) {
             $("#instruction-text").html(jsonData["instructionText"]);
         }
-        enableButtons();
+
+        if(sessionData["picCount"]==6 || sessionData["picCount"]==7|| sessionData["picCount"]==9){
+            //videos start only after instructions
+            if (sessionData["playVideo"]==1){
+                //disable buttons until the video is over
+                disableButtons();
+                $("#instruction-text").html("<br>"); //disable html text while video is playing
+                $('#ui-video').attr('src', jsonData["videoURL"]);
+                $('#ui-image').hide();
+                $('#ui-video').removeAttr('style');
+                //can work with video only when the page is done loading
+                var vid = document.getElementById("ui-video");
+                vid.onended = function() {
+                    $("#instruction-text").html(jsonData["instructionText"]);
+                    $('#ui-image').removeAttr('style');
+                    $('#ui-image').attr('src', jsonData["imageURL"]);
+                    $('#ui-video').hide();
+                    if("buttonLabels" in jsonData) {
+                        if (jsonData["buttonLabels"][0]!="null"){
+                            $('#left-button').removeAttr('style');
+                        }
+                        else{
+                            $('#left-button').hide();
+                        }
+                        changeButtonLabels(jsonData["buttonLabels"]);
+                    }
+                    //handle changing button colors upon server request 
+                    var bclasses = "btn-primary btn-success btn-danger btn-warning";
+                    var newclass = jsonData["buttonClass"] || "btn-primary";
+                    $(".ui-button").removeClass(bclasses).addClass(newclass);
+                    enableButtons();
+                };
+            }
+            else{
+                changeImage(jsonData["imageURL"]);
+                if("buttonLabels" in jsonData) {
+                    if (jsonData["buttonLabels"][0]!="null"){
+                        $('#left-button').removeAttr('style');
+                    }
+                    else{
+                        $('#left-button').hide();
+                    }
+                    changeButtonLabels(jsonData["buttonLabels"]);
+                }
+                //handle changing button colors upon server request 
+                var bclasses = "btn-primary btn-success btn-danger btn-warning";
+                var newclass = jsonData["buttonClass"] || "btn-primary";
+                $(".ui-button").removeClass(bclasses).addClass(newclass);
+            }
+        }
+        else if("imageURL" in jsonData) {
+            changeImage(jsonData["imageURL"]);
+            if("buttonLabels" in jsonData) {
+                if (jsonData["buttonLabels"][0]!="null"){
+                    $('#left-button').removeAttr('style');
+                }
+                else{
+                    $('#left-button').hide();
+                }
+                changeButtonLabels(jsonData["buttonLabels"]);
+            }
+            //handle changing button colors upon server request 
+            var bclasses = "btn-primary btn-success btn-danger btn-warning";
+            var newclass = jsonData["buttonClass"] || "btn-primary";
+            $(".ui-button").removeClass(bclasses).addClass(newclass);
+        }
+        //dont frame the buttons as previously selected
         $('.ui-button').blur();
     }
 }
@@ -97,3 +146,4 @@ function changeButtonLabels(newlabels) {
         $(buttonIDs[i]).html(newlabels[i]);
     }
 }
+

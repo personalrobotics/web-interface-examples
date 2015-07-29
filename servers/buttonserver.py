@@ -7,11 +7,13 @@ import Model2
 import os
 import shutil
 import time 
+import datetime
 
 app = Bottle()
 data = dict()
 d=dict()
-
+timestart1 = dict()
+timestart2 = dict()
 #loads static pages from the directory
 #example: website.com/index.html
 #server will load index.html from the directory
@@ -37,7 +39,7 @@ def do_click():
 
   #manually set value
   totalPicsNum = 19
-  survey_duration = 60*60 #1 hour. after that cookie expires
+  survey_duration = 10*60*60 #10 hours to prevent retaking
 
   #get the data that the buttonClicked posted
   requestData = json.loads(request.body.getvalue())
@@ -91,13 +93,18 @@ def do_click():
     #generate a cookie with user's ID
     gen_id = ''.join(random.choice(string.ascii_uppercase +
       string.digits) for _ in range(6))
-    response.set_cookie('mturk_id', gen_id, max_age=60*60, path='/')
+    response.set_cookie('mturk_id', gen_id, max_age=survey_duration, path='/')
     data[gen_id] = []
     #get ip
     ip = request.environ.get('REMOTE_ADDR')
     data[gen_id].append(ip)
-
-    ret = {"imageURL": "images/T100.JPG",
+    #timestamp
+    startTime = datetime.datetime.now()
+    data[gen_id].append("start: "+ str(startTime))
+    timestart1[gen_id] = startTime
+    sessionData["playVideo"] = 0
+    sessionData["playedLong"] = 0
+    ret = {"imageURL": "images/T100.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": "Choose how you would like to rotate the table.",
@@ -110,50 +117,77 @@ def do_click():
   mturk_id = request.cookies.get('mturk_id','NOT SET')
 
   if sessionData["picCount"]==7:
+    sessionData["playVideo"] = 0
     ret = {"imageURL": "images/Slide5.JPG",
            "buttonLabels": ["null", "START"],
            "instructionText": " ",
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
     data[mturk_id].append("round two")
-    sessionData["picCount"]+=1       
+    sessionData["picCount"]+=1
+    #timestamp
+    firstFinish = datetime.datetime.now()
+    data[mturk_id].append("firstFinish: "+ str(firstFinish))
+    timeDelta = firstFinish-timestart1[mturk_id]
+    data[mturk_id].append("timeDelta: "+ str(timeDelta.total_seconds()))
     return json.dumps(ret)
 
   if sessionData["picCount"]==8:
+    sessionData["playVideo"] = 0
     Model2.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
-    ret = {"imageURL": "images/T100.JPG",
+    ret = {"imageURL": "images/T100.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": "Choose how you would like to rotate the table.",
            "sessionData": sessionData,
        "buttonClass": "btn-success"}
+    #timestamp
+    secondStart = datetime.datetime.now()
+    data[mturk_id].append("secondStart: "+ str(secondStart))
+    timestart2[mturk_id] = secondStart
     sessionData["picCount"]+=1  
     return json.dumps(ret)  
   
   #record in log
   data[mturk_id].append(buttonClicked)
 
-  #get next move#
-  currTableTheta, message = \
+  #get next move
+  currTableTheta, oldTableTheta, message = \
     Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
 
+  #play the long video if the human-robot actions
+  # are the same and it's the first time this is happening
+  suffix=""
+  if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
+    suffix="l"
+    sessionData["playedLong"]=1
+  videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
+  imageLink = "images/T{}.jpg".format(currTableTheta)
   if currTableTheta==0 or currTableTheta==180:
-    imageLink = "images/T{}.JPG".format(currTableTheta)
     if sessionData["picCount"]==6:
       Model2.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
     elif sessionData["picCount"]==9:
       sessionData["toSurvey"] = True
-    ret = {"imageURL": imageLink,
+      #timestamp
+      secondFinish = datetime.datetime.now()
+      data[mturk_id].append("secondFinish: "+ str(secondFinish))
+      timeDelta = secondFinish-timestart2[mturk_id]
+      data[mturk_id].append("timeDelta2: "+ str(timeDelta.total_seconds()))
+    
+    ret = {"videoURL": videoLink,
+           "imageURL": imageLink,
            "buttonLabels": ["null","Next"],
            "instructionText": "The table is in a horizontal position. You finished the task!",
            "sessionData": sessionData}
     return json.dumps(ret)
   else:
-    ret = {"imageURL": "images/T{}.JPG".format(currTableTheta),
+    sessionData["playVideo"] = 1
+    ret = {"videoURL": videoLink,
+           "imageURL":imageLink,
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
-           "instructionText": message,
+           "instructionText": "<br>",
            "sessionData": sessionData,
            "buttonClass": "btn-success"}
     return json.dumps(ret)
@@ -165,7 +199,7 @@ def do_click():
 @app.post('/submit_survey')
 def handle_survey():
   mturk_id = request.cookies.get('mturk_id', 'EXPIRED')
-  for i in xrange(1,16):
+  for i in xrange(1,17):
     data[mturk_id].append(request.forms.get(str(i)))
   with open('output/log.json', 'w') as outfile:
     json.dump(data, outfile)

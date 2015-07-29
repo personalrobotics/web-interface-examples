@@ -1,5 +1,5 @@
 __author__ = 'Stefanos'
-import numpy
+import numpy 
 from IPython import embed
 import  xml.etree.cElementTree as ET
 
@@ -19,7 +19,7 @@ NUMOFUNOBSSTATES = 5
 STR_ACTIONS = ['ROTATE_CLOCKWISE', 'ROTATE_COUNTER_CLOCKWISE']
 R = numpy.zeros([NUMOFSTATES,NUMOFROBOTACTIONS, NUMOFHUMANACTIONS, NUMOFSTATES])
 T = numpy.zeros([NUMOFUNOBSSTATES, NUMOFSTATES, NUMOFROBOTACTIONS, NUMOFSTATES])
-NUMOFALPHAVECTORS = 42
+NUMOFALPHAVECTORS = 99
 A = numpy.zeros([NUMOFALPHAVECTORS, NUMOFUNOBSSTATES + 2])
 startStateIndx = NUMOFSTATES-2 #assume that the state before last is the starting one
 goal1RestartStateIndx = 20
@@ -75,6 +75,11 @@ class Data:
   def __init__(self, id):
     ##############The following variables are different per user########################
     self.bel_t = numpy.ones([5,1])*0.2
+    self.bel_t[0] = 0.14
+    self.bel_t[1] = 0.5
+    self.bel_t[2] = 0.005
+    self.bel_t[3] = 0.005
+    self.bel_t[4] = 0.35
     self.currState = startStateIndx
     self.prevGoalStateTheta = -1
     self.id = id  #this is a user id
@@ -82,6 +87,7 @@ class Data:
   def stateUpdateFromHumanAction(self,humanAction):
     global stateNames
     robotAction = self.getRobotActionFromPolicy(self.currState, self.bel_t)
+    oldTableTheta = self.getTableThetaFromState(self.currState)
     nextState = self.getNextStateFromHumanRobotAction(self.currState,robotAction, humanAction)
     new_bel_t = self.getNewBeliefFromHumanAction(self.currState,robotAction,nextState, self.bel_t)
     self.bel_t = new_bel_t
@@ -93,7 +99,7 @@ class Data:
     resultHAction = STR_ACTIONS[humanAction]
     resultRAction = STR_ACTIONS[robotAction]
 
-    return (currTableTheta, resultState, resultBelief, resultHAction, resultRAction)
+    return (currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta)
 
   def getRobotActionFromPolicy(self, ss, bel_t):
     action = -1
@@ -111,7 +117,7 @@ class Data:
 
   def getTableThetaFromState(self, ss):
     thetaIndx = int(ss/4)
-    if(thetaIndx>=0) and (thetaIndx<=18):
+    if(thetaIndx>=0) and (thetaIndx<=9):
      return thetaIndx*20
     else:
      return startStateTheta
@@ -183,7 +189,7 @@ def getMove(d,id,humanAction):
     x = Data(id)
     d[id] = x
     print("New class instance created: id={}".format(id))
-  currTableTheta, resultState, resultBelief, resultHAction, resultRAction = \
+  currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta = \
     x.stateUpdateFromHumanAction(humanAction)
   print("OUT:theta={}".format(currTableTheta))
   if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
@@ -197,7 +203,7 @@ def getMove(d,id,humanAction):
   else:
       message = 'Model2py@getMove error: unknown string!' 
   #for debugging
-  #instructionString ='''The current angle is: {}<br> The current state is: {}<br>  The current belief is: {}<br> You did action: {}<br> Robot did action: {}<br>
-  # {}<br> '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, message)
-  #message = message + instructionString
-  return (currTableTheta, message)
+  instructionString ='''The current angle is: {}<br> The current state is: {}<br>  The current belief is: {}<br> You did action: {}<br> Robot did action: {}<br>
+   Old angle is {}<br> '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta)
+  message = message + instructionString
+  return (currTableTheta, oldTableTheta, message)
