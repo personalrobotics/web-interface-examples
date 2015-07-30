@@ -90,6 +90,7 @@ def do_click():
     return json.dumps(ret)
 
   if sessionData["picCount"]==5:
+    print "starting time!!!"
     #generate a cookie with user's ID
     gen_id = ''.join(random.choice(string.ascii_uppercase +
       string.digits) for _ in range(6))
@@ -134,7 +135,7 @@ def do_click():
 
   if sessionData["picCount"]==8:
     sessionData["playVideo"] = 0
-    Model2.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
+    Model2.startRotationPhase(d,request.cookies.get('mturk_id','NOT SET'))
     ret = {"imageURL": "images/T100.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
@@ -148,6 +149,20 @@ def do_click():
     sessionData["picCount"]+=1  
     return json.dumps(ret)  
   
+  #start task execution phase
+
+  if sessionData["picCount"]==10:
+    print "picCount == 10"
+    sessionData["playVideo"] = 0
+    ret = {"imageURL": "images/Slide5.JPG",
+           "buttonLabels": ["null", "START"],
+           "instructionText": " ",
+           "sessionData": sessionData,
+       "buttonClass": "btn-primary"}
+    sessionData["picCount"]+=1
+    return json.dumps(ret)
+
+
   #record in log
   data[mturk_id].append(buttonClicked)
 
@@ -165,15 +180,16 @@ def do_click():
   imageLink = "images/T{}.jpg".format(currTableTheta)
   if currTableTheta==0 or currTableTheta==180:
     if sessionData["picCount"]==6:
-      Model2.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
+      #Model2.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
     elif sessionData["picCount"]==9:
-      sessionData["toSurvey"] = True
-      #timestamp
+      #sessionData["toSurvey"] = True
+      print "picCount == 9"
       secondFinish = datetime.datetime.now()
       data[mturk_id].append("secondFinish: "+ str(secondFinish))
       timeDelta = secondFinish-timestart2[mturk_id]
       data[mturk_id].append("timeDelta2: "+ str(timeDelta.total_seconds()))
+      sessionData["picCount"]+=1
     
     ret = {"videoURL": videoLink,
            "imageURL": imageLink,
