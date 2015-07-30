@@ -315,6 +315,21 @@ def getMove(d,id,humanAction):
      currTableTheta = x.getTableThetaFromState(x.currState)  
      x.stateActionSeqRot.append(x.currState)
 
+  elif x.phase == EXECUTION_PHASE:
+     #in the execution phase
+     robotAction = x.getRobotActionFromPolicy(x.currState)
+     oldTableTheta = x.getTableThetaFromState(x.currState)
+     if VERBOSE:
+        print "The current state is: " + stateNames[x.currState]
+        print 'Human does action: ' + STR_ACTIONS[humanAction]
+        print 'Robot does action: ' + STR_ACTIONS[int(robotAction)]
+
+     nextState = x.getNextStateFromReachMtx(x.currState, robotAction, humanAction)
+     x.currState = nextState
+     currTableTheta = x.getTableThetaFromState(x.currState)  
+  else:
+     print "Model2@Error: unknown phase!"
+
   
   resultState = stateNames[x.currState]
   resultHAction = STR_ACTIONS[humanAction]

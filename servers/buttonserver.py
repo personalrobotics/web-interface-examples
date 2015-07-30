@@ -162,6 +162,21 @@ def do_click():
     sessionData["picCount"]+=1
     return json.dumps(ret)
 
+  if sessionData["picCount"]==11:
+    sessionData["playVideo"] = 0
+    Model2.startTaskExecutionPhase(d, request.cookies.get('mturk_id','NOT_SET'))
+    ret = {"imageURL": "images/T100.jpg",
+           "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
+                            '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
+           "instructionText": "Choose how you would like to rotate the table.",
+           "sessionData": sessionData,
+       "buttonClass": "btn-success"}
+    #timestamp
+    # secondStart = datetime.datetime.now()
+    # data[mturk_id].append("secondStart: "+ str(secondStart))
+    # timestart2[mturk_id] = secondStart
+    sessionData["picCount"]+=1  
+    return json.dumps(ret)  
 
   #record in log
   data[mturk_id].append(buttonClicked)
