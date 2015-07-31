@@ -19,6 +19,9 @@ HIGH_REWARD  = 14
 LOW_REWARD = 10
 STR_ACTIONS = ['ROTATE_CLOCKWISE', 'ROTATE_COUNTER_CLOCKWISE']
 R = numpy.zeros([NUMOFSTATES,NUMOFROBOTACTIONS, NUMOFHUMANACTIONS, NUMOFSTATES])
+#global FORWARD_PHASE
+#global ROTATION_PHASE
+#global EXECUTION_PHASE
 FORWARD_PHASE = 0
 ROTATION_PHASE = 1
 EXECUTION_PHASE = 2
@@ -355,4 +358,4 @@ def getMove(d,id,humanAction):
   instructionString ='''The current angle is: {}<br> The current state is: {}<br>  The current belief is: {}<br> You did action: {}<br> Robot did action: {}<br>
    Old angle is {}<br> '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta)
   message = message + instructionString
-  return (currTableTheta, oldTableTheta, message)
+  return (currTableTheta, oldTableTheta, x.phase, message)

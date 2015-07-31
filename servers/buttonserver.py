@@ -14,6 +14,7 @@ data = dict()
 d=dict()
 timestart1 = dict()
 timestart2 = dict()
+timestart3 = dict()
 #loads static pages from the directory
 #example: website.com/index.html
 #server will load index.html from the directory
@@ -175,6 +176,9 @@ def do_click():
     # secondStart = datetime.datetime.now()
     # data[mturk_id].append("secondStart: "+ str(secondStart))
     # timestart2[mturk_id] = secondStart
+    thirdStart = datetime.datetime.now()
+    data[mturk_id].append("thirdStart: "+ str(thirdStart))
+    timestart3[mturk_id] = thirdStart
     sessionData["picCount"]+=1  
     return json.dumps(ret)  
 
@@ -182,7 +186,7 @@ def do_click():
   data[mturk_id].append(buttonClicked)
 
   #get next move
-  currTableTheta, oldTableTheta, message = \
+  currTableTheta, oldTableTheta, phase, message = \
     Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
 
   #play the long video if the human-robot actions
@@ -191,6 +195,10 @@ def do_click():
   if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
     suffix="l"
     sessionData["playedLong"]=1
+  #check if we are in the rotation phase
+  if phase ==  Model2.ROTATION_PHASE:
+    suffix = "R"
+    print "loading rotation phase video"
   videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
   imageLink = "images/T{}.jpg".format(currTableTheta)
   if currTableTheta==0 or currTableTheta==180:
@@ -205,6 +213,13 @@ def do_click():
       timeDelta = secondFinish-timestart2[mturk_id]
       data[mturk_id].append("timeDelta2: "+ str(timeDelta.total_seconds()))
       sessionData["picCount"]+=1
+    elif sessionData["picCount"]==12:
+      sessionData["toSurvey"] = True
+      thirdFinish = datetime.datetime.now()
+      data[mturk_id].append("thirdFinish: "+ str(thirdFinish))
+      timeDelta = thirdFinish-timestart3[mturk_id]
+      data[mturk_id].append("timeDelta3: "+ str(timeDelta.total_seconds()))
+      print "picCount == 12"
     
     ret = {"videoURL": videoLink,
            "imageURL": imageLink,
