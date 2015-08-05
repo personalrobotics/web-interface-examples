@@ -53,7 +53,7 @@ def do_click():
 
   #go to next/prev pic according to button clicked
   buttonClicked = requestData["buttonID"]
-  if sessionData["picCount"]<5:
+  if sessionData["picCount"]<6:
     if buttonClicked==0:
       sessionData["picCount"] -= 1
     elif buttonClicked==1:
@@ -84,12 +84,19 @@ def do_click():
   
   if sessionData["picCount"]==4:
     ret = {"imageURL": "images/Slide4.JPG",
-           "buttonLabels": ["Prev", "START"],
+           "buttonLabels": ["Prev", "Next"],
            "instructionText": " ",
            "sessionData": sessionData}
     return json.dumps(ret)
 
   if sessionData["picCount"]==5:
+    ret = {"imageURL": "images/Slide5.JPG",
+           "buttonLabels": ["Prev", "START"],
+           "instructionText": " ",
+           "sessionData": sessionData}
+    return json.dumps(ret)
+
+  if sessionData["picCount"]==6:
     #generate a cookie with user's ID
     gen_id = ''.join(random.choice(string.ascii_uppercase +
       string.digits) for _ in range(6))
@@ -116,9 +123,9 @@ def do_click():
   #following code may need mturk_id, so get it once now
   mturk_id = request.cookies.get('mturk_id','NOT SET')
 
-  if sessionData["picCount"]==7:
+  if sessionData["picCount"]==8:
     sessionData["playVideo"] = 0
-    ret = {"imageURL": "images/Slide5.JPG",
+    ret = {"imageURL": "images/Slide6.JPG",
            "buttonLabels": ["null", "START"],
            "instructionText": " ",
            "sessionData": sessionData,
@@ -132,7 +139,7 @@ def do_click():
     data[mturk_id].append("timeDelta: "+ str(timeDelta.total_seconds()))
     return json.dumps(ret)
 
-  if sessionData["picCount"]==8:
+  if sessionData["picCount"]==9:
     sessionData["playVideo"] = 0
     Model2.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
     ret = {"imageURL": "images/T100.jpg",
@@ -164,10 +171,10 @@ def do_click():
   videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
   imageLink = "images/T{}.jpg".format(currTableTheta)
   if currTableTheta==0 or currTableTheta==180:
-    if sessionData["picCount"]==6:
+    if sessionData["picCount"]==7:
       Model2.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
-    elif sessionData["picCount"]==9:
+    elif sessionData["picCount"]==10:
       sessionData["toSurvey"] = True
       #timestamp
       secondFinish = datetime.datetime.now()
