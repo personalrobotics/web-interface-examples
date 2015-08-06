@@ -54,7 +54,7 @@ def do_click():
 
   #go to next/prev pic according to button clicked
   buttonClicked = requestData["buttonID"]
-  if sessionData["picCount"]<5:
+  if sessionData["picCount"]<6:
     if buttonClicked==0:
       sessionData["picCount"] -= 1
     elif buttonClicked==1:
@@ -85,12 +85,19 @@ def do_click():
   
   if sessionData["picCount"]==4:
     ret = {"imageURL": "images/Slide4.JPG",
-           "buttonLabels": ["Prev", "START"],
+           "buttonLabels": ["Prev", "Next"],
            "instructionText": " ",
            "sessionData": sessionData}
     return json.dumps(ret)
 
   if sessionData["picCount"]==5:
+    ret = {"imageURL": "images/Slide5.JPG",
+           "buttonLabels": ["Prev", "START"],
+           "instructionText": " ",
+           "sessionData": sessionData}
+    return json.dumps(ret)
+
+  if sessionData["picCount"]==6:
     print "starting time!!!"
     #generate a cookie with user's ID
     gen_id = ''.join(random.choice(string.ascii_uppercase +
@@ -118,9 +125,9 @@ def do_click():
   #following code may need mturk_id, so get it once now
   mturk_id = request.cookies.get('mturk_id','NOT SET')
 
-  if sessionData["picCount"]==7:
+  if sessionData["picCount"]==8:
     sessionData["playVideo"] = 0
-    ret = {"imageURL": "images/Slide5.JPG",
+    ret = {"imageURL": "images/Slide6.JPG",
            "buttonLabels": ["null", "START"],
            "instructionText": " ",
            "sessionData": sessionData,
@@ -134,10 +141,10 @@ def do_click():
     data[mturk_id].append("timeDelta: "+ str(timeDelta.total_seconds()))
     return json.dumps(ret)
 
-  if sessionData["picCount"]==8:
+  if sessionData["picCount"]==9:
     sessionData["playVideo"] = 0
     Model2.startRotationPhase(d,request.cookies.get('mturk_id','NOT SET'))
-    ret = {"imageURL": "images/T100.jpg",
+    ret = {"imageURL": "images/T100R.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": "Choose how you would like to rotate the table.",
@@ -152,10 +159,10 @@ def do_click():
   
   #start task execution phase
 
-  if sessionData["picCount"]==10:
-    print "picCount == 10"
+  if sessionData["picCount"]==11:
+    print "picCount == 11"
     sessionData["playVideo"] = 0
-    ret = {"imageURL": "images/Slide5.JPG",
+    ret = {"imageURL": "images/Slide7.JPG",
            "buttonLabels": ["null", "START"],
            "instructionText": " ",
            "sessionData": sessionData,
@@ -163,7 +170,7 @@ def do_click():
     sessionData["picCount"]+=1
     return json.dumps(ret)
 
-  if sessionData["picCount"]==11:
+  if sessionData["picCount"]==12:
     sessionData["playVideo"] = 0
     Model2.startTaskExecutionPhase(d, request.cookies.get('mturk_id','NOT_SET'))
     ret = {"imageURL": "images/T100.jpg",
@@ -197,29 +204,32 @@ def do_click():
     sessionData["playedLong"]=1
   #check if we are in the rotation phase
   if phase ==  Model2.ROTATION_PHASE:
-    suffix = "R"
+    suffix = suffix + "R"
     print "loading rotation phase video"
   videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
-  imageLink = "images/T{}.jpg".format(currTableTheta)
+  if phase == Model2.ROTATION_PHASE:
+    imageLink = "images/T{}R.jpg".format(currTableTheta)
+  else:
+    imageLink =  "images/T{}.jpg".format(currTableTheta)
   if currTableTheta==0 or currTableTheta==180:
-    if sessionData["picCount"]==6:
+    if sessionData["picCount"]==7:
       #Model2.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
-    elif sessionData["picCount"]==9:
+    elif sessionData["picCount"]==10:
       #sessionData["toSurvey"] = True
-      print "picCount == 9"
+      print "picCount == 10"
       secondFinish = datetime.datetime.now()
       data[mturk_id].append("secondFinish: "+ str(secondFinish))
       timeDelta = secondFinish-timestart2[mturk_id]
       data[mturk_id].append("timeDelta2: "+ str(timeDelta.total_seconds()))
       sessionData["picCount"]+=1
-    elif sessionData["picCount"]==12:
+    elif sessionData["picCount"]==13:
       sessionData["toSurvey"] = True
       thirdFinish = datetime.datetime.now()
       data[mturk_id].append("thirdFinish: "+ str(thirdFinish))
       timeDelta = thirdFinish-timestart3[mturk_id]
       data[mturk_id].append("timeDelta3: "+ str(timeDelta.total_seconds()))
-      print "picCount == 12"
+      print "picCount == 13"
     
     ret = {"videoURL": videoLink,
            "imageURL": imageLink,

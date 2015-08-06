@@ -54,7 +54,7 @@ function handleResponse(rawData) {
             $("#instruction-text").html(jsonData["instructionText"]);
         }
 
-        if(sessionData["picCount"]==6 || sessionData["picCount"]==7|| sessionData["picCount"]==9||sessionData["picCount"]==10 || sessionData["picCount"]==12){
+        if(sessionData["picCount"]==7 || sessionData["picCount"]==8|| sessionData["picCount"]==10||sessionData["picCount"]==11 || sessionData["picCount"]==13){
             //videos start only after instructions
             if (sessionData["playVideo"]==1){
                 //disable buttons until the video is over

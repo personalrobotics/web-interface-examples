@@ -82,27 +82,36 @@ class Data:
     self.T = numpy.zeros([NUMOFSTATES, NUMOFROBOTACTIONS, NUMOFSTATES])
     self.Rew = numpy.zeros([NUMOFSTATES, NUMOFROBOTACTIONS])
     print "Generating Transition Matrix"
-    for ra in range(0, NUMOFROBOTACTIONS):
-      for ss in range(0, NUMOFSTATES):
-        Sum = 0
-        for nss in range(0, NUMOFSTATES):
-          if(R[ss][ra][0][nss]==1):
-             #uniform transition matrix
-              #self.T[ss][ra][nss] = 1
-              if(ra == 0):
-                self.T[ss][ra][nss] = 1
-          elif(R[ss][ra][1][nss]==1):
-             #uniform transition matrix
-             #self.T[ss][ra][nss] = 1
-              # robot-follower transition matrix
-             if(ra == 1):
-                self.T[ss][ra][nss] = 1
+    for ss in range(0, NUMOFSTATES):
+      Sum = 0
+      for nss in range(0, NUMOFSTATES):
+        if(R[ss][0][0][nss]==1):
+          	 #uniform transition matrix
+              self.T[ss][0][nss] = 0.75
+        if(R[ss][0][1][nss]==1):
+              self.T[ss][0][nss] = 0.25
+        if(R[ss][1][1][nss]==1):
+              self.T[ss][1][nss] = 0.75
+        if(R[ss][1][0][nss]==1):
+              self.T[ss][1][nss] = 0.25
 
-          Sum = Sum + self.T[ss][ra][nss]
+        #       # robot-follower transition matrix
+        #       #if(ra == 0):
+        #      # 	self.T[ss][ra][nss] = 1
+        #   elif(self.R[ss][ra][1][nss]==1):
+        #   	  #uniform transition matrix
+        #   	  self.T[ss][ra][nss] = 1
+        #       # robot-follower transition matrix
+        #       #if(ra == 1):
+        #       #self.T[ss][ra][nss] = 1
 
-        for nss in range(0, NUMOFSTATES):
-          self.T[ss][ra][nss] = self.T[ss][ra][nss]/Sum
-
+        # Sum = Sum + self.T[ss][ra][nss]
+      for ra in range(0,NUMOFROBOTACTIONS):
+          Sum = 0
+          for nss in range(0, NUMOFSTATES):
+            Sum = Sum + self.T[ss][ra][nss]
+          for nss in range(0, NUMOFSTATES):        
+            self.T[ss][ra][nss] = self.T[ss][ra][nss]/Sum
     print "Generating Reward Matrix"
     for ss in range(0, NUMOFSTATES):
       if(ss == highRewardStateIndx):
