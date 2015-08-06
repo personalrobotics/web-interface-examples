@@ -159,9 +159,11 @@ def do_click():
   data[mturk_id].append(buttonClicked)
 
   #get next move
-  currTableTheta, oldTableTheta, message = \
+  currTableTheta, oldTableTheta, resultBelief, message = \
     Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
 
+  #debugging
+  #print "Belief is: {}".format(resultBelief)
   #play the long video if the human-robot actions
   # are the same and it's the first time this is happening
   suffix=""
@@ -181,7 +183,12 @@ def do_click():
       data[mturk_id].append("secondFinish: "+ str(secondFinish))
       timeDelta = secondFinish-timestart2[mturk_id]
       data[mturk_id].append("timeDelta2: "+ str(timeDelta.total_seconds()))
-    
+      data[mturk_id].append("belief0:" + str(resultBelief[0][0]))
+      data[mturk_id].append("belief1:" + str(resultBelief[1][0]))
+      data[mturk_id].append("belief2:" + str(resultBelief[2][0]))
+      data[mturk_id].append("belief3:" + str(resultBelief[3][0]))
+      data[mturk_id].append("belief4:" + str(resultBelief[4][0]))
+
     ret = {"videoURL": videoLink,
            "imageURL": imageLink,
            "buttonLabels": ["null","Next"],
