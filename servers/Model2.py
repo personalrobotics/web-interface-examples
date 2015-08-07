@@ -12,18 +12,18 @@ statesFileName = 'obsState.dat'
 startStateTheta = 100
 goal1StateTheta = 0
 goal2StateTheta = 180
-NUMOFSTATES = 42
+NUMOFSTATES = 734
 NUMOFROBOTACTIONS = 2
 NUMOFHUMANACTIONS = 2
 NUMOFUNOBSSTATES = 5
 STR_ACTIONS = ['ROTATE_CLOCKWISE', 'ROTATE_COUNTER_CLOCKWISE']
 R = numpy.zeros([NUMOFSTATES,NUMOFROBOTACTIONS, NUMOFHUMANACTIONS, NUMOFSTATES])
 T = numpy.zeros([NUMOFUNOBSSTATES, NUMOFSTATES, NUMOFROBOTACTIONS, NUMOFSTATES])
-NUMOFALPHAVECTORS = 99
+NUMOFALPHAVECTORS = 7029
 A = numpy.zeros([NUMOFALPHAVECTORS, NUMOFUNOBSSTATES + 2])
-startStateIndx = NUMOFSTATES-2 #assume that the state before last is the starting one
-goal1RestartStateIndx = 20
-goal2RestartStateIndx = 23
+startStateIndx = 640#NUMOFSTATES-2 #assume that the state before last is the starting one
+goal1RestartStateIndx = 645
+goal2RestartStateIndx = 648
 
 
 #uninitiated globals for globalsInit()
@@ -75,11 +75,11 @@ class Data:
   def __init__(self, id):
     ##############The following variables are different per user########################
     self.bel_t = numpy.ones([5,1])*0.2
-    self.bel_t[0] = 0.14
-    self.bel_t[1] = 0.5
-    self.bel_t[2] = 0.005
-    self.bel_t[3] = 0.005
-    self.bel_t[4] = 0.35
+    # self.bel_t[0] = 0.14
+    # self.bel_t[1] = 0.5
+    # self.bel_t[2] = 0.005
+    # self.bel_t[3] = 0.005
+    # self.bel_t[4] = 0.35
     self.currState = startStateIndx
     self.prevGoalStateTheta = -1
     self.id = id  #this is a user id
@@ -116,11 +116,13 @@ class Data:
     return action
 
   def getTableThetaFromState(self, ss):
-    thetaIndx = int(ss/4)
-    if(thetaIndx>=0) and (thetaIndx<=9):
-     return thetaIndx*20
+    if(ss == startStateIndx):
+  	   return startStateTheta
     else:
-     return startStateTheta
+       str_state = stateNames[ss]
+       theta = int(str_state.split("_")[0][1:])
+      #if theta>=0 and theta<=180:
+       return theta
 
   def getNextStateFromHumanRobotAction(self, ss, ra, ha):
     nextStateMtx = R[ss][ra][ha][:]
