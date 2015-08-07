@@ -11,7 +11,7 @@
 <!-- Bootstrap -->
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-<link rel="stylesheet" href="css/mystyle.css">
+<!--link rel="stylesheet" href="css/mystyle.css"-->
 <script src="lib/bootstrap.min.js"></script>
 
 <!-- herb favicon -->
@@ -54,14 +54,14 @@
 
       3. What was your initial preference for doing the task?
       <div class="radio">
-        <label><input type="radio" name=3 value="Door">Move the table outside so that I am facing the door</label>
+        <label><input type="radio" name=3 value="humanFacingDoor">Move the table outside so that I am facing the door</label>
       </div>
       <div class="radio">
-        <label><input type="radio" name=3 value="Red">Move the table outside so that I am facing the room</label>
+        <label><input type="radio" name=3 value="humanFacingRoom">Move the table outside so that I am facing the room</label>
       </div>
-      <div class="radio">
+      <!--div class="radio">
         <label><input type="radio" name=3 value="No pref">No Preference</label>
-      </div>
+      </div-->
       <br>
 
       4. Did you switch preferences during the task?
@@ -209,41 +209,23 @@
         <tr>
           <th>HERB did not understand how I wanted to do the task</th>
           <td>
-            <label><input type="radio" name = 14 value="1"> 1</label>
+            <label><input type="radio" name = 11 value="1"> 1</label>
           </td>
           <td>
-            <label><input type="radio" name = 14 value="2"> 2</label>
+            <label><input type="radio" name = 11 value="2"> 2</label>
           </td>
           <td>
-            <label><input type="radio" name = 14 value="3"> 3</label>
+            <label><input type="radio" name = 11 value="3"> 3</label>
           </td>
           <td>
-            <label><input type="radio" name = 14 value="4"> 4</label>
+            <label><input type="radio" name = 11 value="4"> 4</label>
           </td>
           <td>
-            <label><input type="radio" name = 14 value="5"> 5</label>
+            <label><input type="radio" name = 11 value="5"> 5</label>
           </td>
         </td>
         <tr>
           <th>HERB and I worked towards mutually agreed upon goals</th>
-          <td>
-            <label><input type="radio" name=11 value="1"> 1</label>
-          </td>
-          <td>
-            <label><input type="radio" name=11 value="2"> 2</label>
-          </td>
-          <td>
-            <label><input type="radio" name=11 value="3"> 3</label>
-          </td>
-          <td>
-            <label><input type="radio" name=11 value="4"> 4</label>
-          </td>
-          <td>
-            <label><input type="radio" name=11 value="5"> 5</label>
-          </td>
-        </tr>
-        <tr>
-          <th>HERB and I collaborated well together</th>
           <td>
             <label><input type="radio" name=12 value="1"> 1</label>
           </td>
@@ -261,7 +243,7 @@
           </td>
         </tr>
         <tr>
-          <th>HERB's actions were reasonable</th>
+          <th>HERB and I collaborated well together</th>
           <td>
             <label><input type="radio" name=13 value="1"> 1</label>
           </td>
@@ -278,6 +260,24 @@
             <label><input type="radio" name=13 value="5"> 5</label>
           </td>
         </tr>
+        <tr>
+          <th>HERB's actions were reasonable</th>
+          <td>
+            <label><input type="radio" name=14 value="1"> 1</label>
+          </td>
+          <td>
+            <label><input type="radio" name=14 value="2"> 2</label>
+          </td>
+          <td>
+            <label><input type="radio" name=14 value="3"> 3</label>
+          </td>
+          <td>
+            <label><input type="radio" name=14 value="4"> 4</label>
+          </td>
+          <td>
+            <label><input type="radio" name=14 value="5"> 5</label>
+          </td>
+        </tr>
       </table>
       <p class="text-danger hide">Please answer all questions</p>
       <input value="Submit" type="submit" class="btn btn-success"/>
@@ -285,3 +285,4 @@
   </div>
 </body>
 </html>
+

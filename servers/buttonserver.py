@@ -84,21 +84,6 @@ def do_click():
     return json.dumps(ret)
   
   if sessionData["picCount"]==4:
-    ret = {"imageURL": "images/Slide4.JPG",
-           "buttonLabels": ["Prev", "Next"],
-           "instructionText": " ",
-           "sessionData": sessionData}
-    return json.dumps(ret)
-
-  if sessionData["picCount"]==5:
-    ret = {"imageURL": "images/Slide5.JPG",
-           "buttonLabels": ["Prev", "START"],
-           "instructionText": " ",
-           "sessionData": sessionData}
-    return json.dumps(ret)
-
-  if sessionData["picCount"]==6:
-    print "starting time!!!"
     #generate a cookie with user's ID
     gen_id = ''.join(random.choice(string.ascii_uppercase +
       string.digits) for _ in range(6))
@@ -107,10 +92,30 @@ def do_click():
     #get ip
     ip = request.environ.get('REMOTE_ADDR')
     data[gen_id].append(ip)
+    ret = {"imageURL": "images/Slide4.JPG",
+           "buttonLabels": ["Prev", "Next"],
+           "instructionText": " ",
+           "sessionData": sessionData}
+    return json.dumps(ret)
+
+
+  #following code may need mturk_id, so get it once now
+  mturk_id = request.cookies.get('mturk_id','NOT SET')
+
+
+  if sessionData["picCount"]==5:
+    data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
+    ret = {"imageURL": "images/Slide5.JPG",
+           "buttonLabels": ["Prev", "START"],
+           "instructionText": " ",
+           "sessionData": sessionData}
+    return json.dumps(ret)
+
+  if sessionData["picCount"]==6:
     #timestamp
     startTime = datetime.datetime.now()
-    data[gen_id].append("start: "+ str(startTime))
-    timestart1[gen_id] = startTime
+    data[mturk_id].append("start: "+ str(startTime))
+    timestart1[mturk_id] = startTime
     sessionData["playVideo"] = 0
     sessionData["playedLong"] = 0
     ret = {"imageURL": "images/T100.jpg",
@@ -121,9 +126,7 @@ def do_click():
        "buttonClass": "btn-success"}
     sessionData["picCount"]+=1       
     return json.dumps(ret)
-  
-  #following code may need mturk_id, so get it once now
-  mturk_id = request.cookies.get('mturk_id','NOT SET')
+
 
   if sessionData["picCount"]==8:
     sessionData["playVideo"] = 0

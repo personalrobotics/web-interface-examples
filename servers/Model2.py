@@ -6,7 +6,7 @@ import  xml.etree.cElementTree as ET
 VERBOSE = True  
 
 #loading data, these are the same for all users
-alpha = 1
+alpha = 0.1
 startStateTheta = 100
 goal1StateTheta = 0
 goal2StateTheta = 180
@@ -15,7 +15,7 @@ NUMOFROBOTACTIONS = 2
 NUMOFHUMANACTIONS = 2
 highRewardStateIndx = 0
 lowRewardStateIndx = 9
-HIGH_REWARD  = 14
+HIGH_REWARD  = 12.5
 LOW_REWARD = 10
 STR_ACTIONS = ['ROTATE_CLOCKWISE', 'ROTATE_COUNTER_CLOCKWISE']
 R = numpy.zeros([NUMOFSTATES,NUMOFROBOTACTIONS, NUMOFHUMANACTIONS, NUMOFSTATES])
@@ -65,11 +65,6 @@ class Data:
   def __init__(self, id):
     ##############The following variables are different per user########################
     self.bel_t = numpy.ones([5,1])*0.2
-    self.bel_t[0] = 0.14
-    self.bel_t[1] = 0.5
-    self.bel_t[2] = 0.005
-    self.bel_t[3] = 0.005
-    self.bel_t[4] = 0.35
     self.currState = startStateIndx
     self.prevGoalStateTheta = -1
     self.phase = FORWARD_PHASE
@@ -95,17 +90,6 @@ class Data:
         if(R[ss][1][0][nss]==1):
               self.T[ss][1][nss] = 0.25
 
-        #       # robot-follower transition matrix
-        #       #if(ra == 0):
-        #      # 	self.T[ss][ra][nss] = 1
-        #   elif(self.R[ss][ra][1][nss]==1):
-        #   	  #uniform transition matrix
-        #   	  self.T[ss][ra][nss] = 1
-        #       # robot-follower transition matrix
-        #       #if(ra == 1):
-        #       #self.T[ss][ra][nss] = 1
-
-        # Sum = Sum + self.T[ss][ra][nss]
       for ra in range(0,NUMOFROBOTACTIONS):
           Sum = 0
           for nss in range(0, NUMOFSTATES):

@@ -31,9 +31,32 @@ function init() {
 function buttonClicked(idx) {
     disableButtons();
     var postData = {"sessionData": sessionData,
-    "buttonID": idx};
-    // Note: posted data *has* to be stringified for bottle.py to understand
-    $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+                    "buttonID": idx};
+
+
+    //hangling the radiobutton selection on slide 4
+    if (sessionData["picCount"]==4){
+        $(".text-danger").show()
+        if ((!$("input[name=1]:checked").val())&&(postData["buttonID"]==1)){
+            $(".text-danger").removeClass('hide');
+            enableButtons();
+        }
+        else if((!$("input[name=1]:checked").val())&&(postData["buttonID"]==0)){
+            $(".radio").hide()
+            $(".text-danger").hide()
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+        else{
+            radioChoice = $("input[name=1]:checked").val()
+            $(".radio").hide()
+            $(".text-danger").hide()
+            postData["radioChoice"] = radioChoice
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+    }
+    else
+        // Note: posted data *has* to be stringified for bottle.py to understand
+        $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
 }
 
 // handleResponse takes the data returned by the python server
@@ -121,6 +144,10 @@ function handleResponse(rawData) {
         }
         //dont frame the buttons as previously selected
         $('.ui-button').blur();
+
+        if (sessionData["picCount"]==4){
+            $('.radio').removeAttr('style');
+        }
     }
 }
 
