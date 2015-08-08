@@ -150,7 +150,7 @@ def do_click():
     ret = {"imageURL": "images/T100R.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
-           "instructionText": "Choose how you would like to rotate the table.",
+           "instructionText": "<br>",
            "sessionData": sessionData,
        "buttonClass": "btn-success"}
     #timestamp

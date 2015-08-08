@@ -83,12 +83,16 @@ class Data:
         if(R[ss][0][0][nss]==1):
           	 #uniform transition matrix
               self.T[ss][0][nss] = 0.8
+			  #self.T[ss][0][nss] = 0.999
         if(R[ss][0][1][nss]==1):
               self.T[ss][0][nss] = 0.2
+			  #self.T[ss][0][nss] = 0.001
         if(R[ss][1][1][nss]==1):
               self.T[ss][1][nss] = 0.8
+			  #self.T[ss][1][nss] = 0.999
         if(R[ss][1][0][nss]==1):
               self.T[ss][1][nss] = 0.2
+			  #self.T[ss][1][nss] = 0.001
 
       for ra in range(0,NUMOFROBOTACTIONS):
           Sum = 0
@@ -185,6 +189,7 @@ class Data:
       if(self.T[ss][ra][nss]>0):
         probs.append(self.T[ss][ra][nss])
         has.append(self.getHumanAction(ss,ra,nss))
+        print "<nss, prob>" + self.printState(nss), self.T[ss][ra][nss]
 
     haIndx = numpy.argmax(numpy.random.multinomial(1,probs,size=1))
     return has[haIndx]
