@@ -82,13 +82,13 @@ class Data:
       for nss in range(0, NUMOFSTATES):
         if(R[ss][0][0][nss]==1):
           	 #uniform transition matrix
-              self.T[ss][0][nss] = 0.75
+              self.T[ss][0][nss] = 0.8
         if(R[ss][0][1][nss]==1):
-              self.T[ss][0][nss] = 0.25
+              self.T[ss][0][nss] = 0.2
         if(R[ss][1][1][nss]==1):
-              self.T[ss][1][nss] = 0.75
+              self.T[ss][1][nss] = 0.8
         if(R[ss][1][0][nss]==1):
-              self.T[ss][1][nss] = 0.25
+              self.T[ss][1][nss] = 0.2
 
       for ra in range(0,NUMOFROBOTACTIONS):
           Sum = 0
@@ -185,6 +185,7 @@ class Data:
       if(self.T[ss][ra][nss]>0):
         probs.append(self.T[ss][ra][nss])
         has.append(self.getHumanAction(ss,ra,nss))
+
     haIndx = numpy.argmax(numpy.random.multinomial(1,probs,size=1))
     return has[haIndx]
 
