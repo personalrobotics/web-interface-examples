@@ -198,6 +198,10 @@ def do_click():
   #get next move
   currTableTheta, oldTableTheta, phase, message = \
     Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
+  # record state too for the rotation phase too
+  if phase == Model2.ROTATION_PHASE:
+    data[mturk_id].append(currTableTheta)
+    
 
   #play the long video if the human-robot actions
   # are the same and it's the first time this is happening
