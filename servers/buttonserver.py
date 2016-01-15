@@ -70,6 +70,14 @@ def do_click():
     return json.dumps(ret)
 	
   if sessionData["picCount"]==2:
+    #generate a cookie with user's ID
+    gen_id = ''.join(random.choice(string.ascii_uppercase +
+      string.digits) for _ in range(6))
+    response.set_cookie('mturk_id', gen_id, max_age=survey_duration, path='/')
+    data[gen_id] = []
+    #get ip
+    ip = request.environ.get('REMOTE_ADDR')
+    data[gen_id].append(ip)
     ret = {"imageURL": "",
            "buttonLabels": ["null", "Next"],
            "instructionText": " ",
@@ -77,7 +85,14 @@ def do_click():
        "buttonClass": "btn-primary"}
     return json.dumps(ret)
 
+  #following code may need mturk_id, so get it once now
+  mturk_id = request.cookies.get('mturk_id','NOT SET')
+	
   if sessionData["picCount"]==3:
+    # we got the results from slide4 radio
+    data[mturk_id].append("generalTrust: "+ requestData["generalTrust"])
+    data[mturk_id].append("previousExperience: "+ requestData["previousExperience"])
+
     ret = {"imageURL": "images/Slide2.JPG",
            "buttonLabels": ["null", "Next"],
            "instructionText": " ",
@@ -93,32 +108,17 @@ def do_click():
     return json.dumps(ret)
   
   if sessionData["picCount"]==5:
-    #generate a cookie with user's ID
-    gen_id = ''.join(random.choice(string.ascii_uppercase +
-      string.digits) for _ in range(6))
-    response.set_cookie('mturk_id', gen_id, max_age=survey_duration, path='/')
-    data[gen_id] = []
-    #get ip
-    ip = request.environ.get('REMOTE_ADDR')
-    data[gen_id].append(ip)
+
     ret = {"imageURL": "images/Slide4.JPG",
            "buttonLabels": ["Prev", "Next"],
            "instructionText": " ",
            "sessionData": sessionData}
     return json.dumps(ret)
 
-  #following code may need mturk_id, so get it once now
-  mturk_id = request.cookies.get('mturk_id','NOT SET')
 
 
 
   if sessionData["picCount"]==6:
-    from IPython import embed
-    embed() 
-    # we got the results from slide4 radio
-    data[mturk_id].append("generalTrust: "+ requestData["generalTrust"])
-    data[mturk_id].append("previousExperience: "+ requestData["previousExperience"])
-
     if "radioChoice" in requestData.keys():
       data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
     ret = {"imageURL": "",
@@ -205,7 +205,7 @@ def do_click():
 
   if sessionData["picCount"]==14:
     sessionData["playVideo"] = 0
-    ret = {"imageURL": "images/SlideTrustQ.JPG",
+    ret = {"imageURL": "",
            "buttonLabels": ["null", "Next"],
            "instructionText": " ",
            "sessionData": sessionData,
