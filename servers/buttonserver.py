@@ -70,7 +70,7 @@ def do_click():
     return json.dumps(ret)
 	
   if sessionData["picCount"]==2:
-    ret = {"imageURL": "images/Slide1b.JPG",
+    ret = {"imageURL": "",
            "buttonLabels": ["null", "Next"],
            "instructionText": " ",
            "sessionData": sessionData,
@@ -113,7 +113,12 @@ def do_click():
 
 
   if sessionData["picCount"]==6:
+    from IPython import embed
+    embed() 
     # we got the results from slide4 radio
+    data[mturk_id].append("generalTrust: "+ requestData["generalTrust"])
+    data[mturk_id].append("previousExperience: "+ requestData["previousExperience"])
+
     if "radioChoice" in requestData.keys():
       data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
     ret = {"imageURL": "",
@@ -152,7 +157,7 @@ def do_click():
 
   if sessionData["picCount"]==10:
     sessionData["playVideo"] = 0
-    ret = {"imageURL": "images/SlideTrustQ.JPG",
+    ret = {"imageURL": "",
            "buttonLabels": ["null", "Next"],
            "instructionText": " ",
            "sessionData": sessionData,
@@ -167,6 +172,7 @@ def do_click():
 
   if sessionData["picCount"]==11:
     data[mturk_id].append("trustRate2: "+ requestData["trustRate2"])
+    data[mturk_id].append("scRate2: "+ requestData["scRate2"])
     sessionData["playVideo"] = 0
     ret = {"imageURL": "images/Slide6.JPG",
            "buttonLabels": ["null", "START"],
@@ -213,6 +219,7 @@ def do_click():
 
   if sessionData["picCount"]==15:
     data[mturk_id].append("trustRate3: "+ requestData["trustRate3"])
+    data[mturk_id].append("scRate3: "+ requestData["scRate3"])
     sessionData["playVideo"] = 0
     ret = {"imageURL": "images/Slide7.JPG",
            "buttonLabels": ["null", "START"],
@@ -243,7 +250,7 @@ def do_click():
 
   if sessionData["picCount"]==18:
     sessionData["playVideo"] = 0
-    ret = {"imageURL": "images/SlideTrustQ.JPG",
+    ret = {"imageURL": "",
            "buttonLabels": ["null", "Next"],
            "instructionText": " ",
            "sessionData": sessionData,
@@ -257,6 +264,7 @@ def do_click():
 
   if sessionData["picCount"]==19:
     data[mturk_id].append("trustRate4: "+ requestData["trustRate4"])
+    data[mturk_id].append("scRate4: "+ requestData["scRate4"])
     sessionData["playVideo"] = 0
     ret = {"imageURL": "images/Slide8.JPG",
            "buttonLabels": ["null", "START"],

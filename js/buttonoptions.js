@@ -33,10 +33,27 @@ function buttonClicked(idx) {
     disableButtons();
     var postData = {"sessionData": sessionData,
                     "buttonID": idx};
-
-
-    //hangling the radiobutton selection on slide 4
-    if (sessionData["picCount"]==5){
+    
+	if (sessionData["picCount"]==2){
+        $(".text-danger").show()
+        if ((!$("input[name=s1]:checked").val())||(!$("input[name=s2]:checked").val())){
+            $(".text-danger").removeClass('hide');
+            enableButtons();
+        }
+        else if(($("input[name=s1]:checked").val())&&($("input[name=s2]:checked").val())&&(postData["buttonID"]==1)){
+            radioChoice = $("input[name=s1]:checked").val()
+			radioChoice2 = $("input[name=s2]:checked").val()
+            $(".startquestions").hide()
+     		$(".starttext").hide()
+			$(".s1").hide()
+     		$(".s2").hide()
+            $(".text-danger").hide()
+            postData["generalTrust"] = radioChoice
+			postData["previousExperience"] = radioChoice2
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+    }	
+    else if (sessionData["picCount"]==5){
         $(".text-danger").show()
         if ((!$("input[name=1]:checked").val())&&(postData["buttonID"]==1)){
             $(".text-danger").removeClass('hide');
@@ -83,59 +100,83 @@ function buttonClicked(idx) {
         }
     }
    else if(sessionData["picCount"]==11){
-     $(".text-danger").show()
-        if ((!$("input[name=3]:checked").val())&&(postData["buttonID"]==1)){
+        $(".text-danger").show()
+        if (((!$("input[name=t2]:checked").val())||(!$("input[name=sc2]:checked").val()))&&(postData["buttonID"]==1)){
             $(".text-danger").removeClass('hide');
             enableButtons();
         }
-        else if((!$("input[name=3]:checked").val())&&(postData["buttonID"]==0)){
-            $(".radio3").hide()
+	    else if(postData["buttonID"]==0){
+            $(".trust2").hide()
+			$(".trust2text").hide()
+			$(".sc2").hide()
+			$(".sc2text").hide()
             $(".text-danger").hide()
             $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
         }
-        else{
-            radioChoice = $("input[name=3]:checked").val()
-            $(".radio3").hide()
+        else if(($("input[name=t2]:checked").val())&&($("input[name=sc2]:checked").val())&&(postData["buttonID"]==1)){
+            radioChoice = $("input[name=t2]:checked").val()
+			radioChoice2 = $("input[name=sc2]:checked").val()
+            $(".trust2").hide()
+     		$(".trust2text").hide()
+			$(".sc2").hide()
+     		$(".sc2text").hide()
             $(".text-danger").hide()
             postData["trustRate2"] = radioChoice
+			postData["scRate2"] = radioChoice2
             $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
         }
     }
    else if(sessionData["picCount"]==15){
-     $(".text-danger").show()
-        if ((!$("input[name=4]:checked").val())&&(postData["buttonID"]==1)){
+      $(".text-danger").show()
+        if (((!$("input[name=t3]:checked").val())||(!$("input[name=sc3]:checked").val()))&&(postData["buttonID"]==1)){
             $(".text-danger").removeClass('hide');
             enableButtons();
         }
-        else if((!$("input[name=4]:checked").val())&&(postData["buttonID"]==0)){
-            $(".radio4").hide()
+	    else if(postData["buttonID"]==0){
+            $(".trust3").hide()
+			$(".trust3text").hide()
+			$(".sc3").hide()
+			$(".sc3text").hide()
             $(".text-danger").hide()
             $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
         }
-        else{
-            radioChoice = $("input[name=4]:checked").val()
-            $(".radio4").hide()
+        else if(($("input[name=t3]:checked").val())&&($("input[name=sc3]:checked").val())&&(postData["buttonID"]==1)){
+            radioChoice = $("input[name=t3]:checked").val()
+			radioChoice2 = $("input[name=sc3]:checked").val()
+            $(".trust3").hide()
+     		$(".trust3text").hide()
+			$(".sc3").hide()
+     		$(".sc3text").hide()
             $(".text-danger").hide()
             postData["trustRate3"] = radioChoice
+			postData["scRate3"] = radioChoice2
             $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
         }
     }
    else if(sessionData["picCount"]==19){
-     $(".text-danger").show()
-        if ((!$("input[name=5]:checked").val())&&(postData["buttonID"]==1)){
+  $(".text-danger").show()
+        if (((!$("input[name=t4]:checked").val())||(!$("input[name=sc4]:checked").val()))&&(postData["buttonID"]==1)){
             $(".text-danger").removeClass('hide');
             enableButtons();
         }
-        else if((!$("input[name=5]:checked").val())&&(postData["buttonID"]==0)){
-            $(".radio5").hide()
+	    else if(postData["buttonID"]==0){
+            $(".trust4").hide()
+			$(".trust4text").hide()
+			$(".sc4").hide()
+			$(".sc4text").hide()
             $(".text-danger").hide()
             $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
         }
-        else{
-            radioChoice = $("input[name=5]:checked").val()
-            $(".radio5").hide()
+        else if(($("input[name=t4]:checked").val())&&($("input[name=sc4]:checked").val())&&(postData["buttonID"]==1)){
+            radioChoice = $("input[name=t4]:checked").val()
+			radioChoice2 = $("input[name=sc4]:checked").val()
+            $(".trust4").hide()
+     		$(".trust4text").hide()
+			$(".sc4").hide()
+     		$(".sc4text").hide()
             $(".text-danger").hide()
             postData["trustRate4"] = radioChoice
+			postData["scRate4"] = radioChoice2
             $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
         }
     }
@@ -232,7 +273,11 @@ sessionData["picCount"]==21){
         //dont frame the buttons as previously selected
         $('.ui-button').blur();
 
-        if (sessionData["picCount"]==5){
+	     if(sessionData["picCount"]==2){
+		     $('.startquestions').removeAttr('style');
+		     $('.starttext').removeAttr('style');
+		 }
+        else if (sessionData["picCount"]==5){
             $('.radio').removeAttr('style');
         }
         else if(sessionData["picCount"] == 6){
@@ -240,16 +285,24 @@ sessionData["picCount"]==21){
             $('.trust1text').removeAttr('style');
 			$('.sc1').removeAttr('style');
             $('.sc1text').removeAttr('style');
-
         }
         else if(sessionData["picCount"] == 11){
-            $('.radio3').removeAttr('style');
-        }
+            $('.trust2').removeAttr('style');
+            $('.trust2text').removeAttr('style');
+			$('.sc2').removeAttr('style');
+            $('.sc2text').removeAttr('style');
+		}
         else if(sessionData["picCount"] == 15){
-            $('.radio4').removeAttr('style');
-        }
+            $('.trust3').removeAttr('style');
+            $('.trust3text').removeAttr('style');
+			$('.sc3').removeAttr('style');
+            $('.sc3text').removeAttr('style');
+         }
         else if(sessionData["picCount"] == 19){
-            $('.radio5').removeAttr('style');
+            $('.trust4').removeAttr('style');
+            $('.trust4text').removeAttr('style');
+			$('.sc4').removeAttr('style');
+            $('.sc4text').removeAttr('style');    
         }
     }
 }

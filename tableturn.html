@@ -45,6 +45,16 @@
 room (rotate the table in the clockwise direction)</label>
     </div> 
 	
+	   <div class = "starttext" style = "display:none;">
+	   <h3 > Please rate your agreement to the following statements. 
+	   	</h3>
+		<h4>
+	      <em>  Your answers to questions are a very important part of the experiment, so please make your ratings carefully.
+          </em>
+		</h4>
+		<br>
+		</div>
+	
 	<table class="startquestions table-bordered table-hover fixed" style="display:none;" >
         <!--caption></caption-->
         <col width="200px" />
@@ -79,36 +89,28 @@ room (rotate the table in the clockwise direction)</label>
             &nbsp;<label><input type="radio" name="s1"  value="5">  5</label>
           </td>
         </tr>
-		<tr>
-          <th>&nbsp;</th>
-          <th>Strongly Disagree</th>
-          <th>Disagree</th>
-          <th>Neither Agree nor Disagree</th>
-          <th>Agree</th>
-          <th>Strongly Agree</th>
-        </tr>
         <tr>
           <th >I have experience with robots</th>
           <td>
-            &nbsp;<label><input type="radio" name="2" value="1">  1</label>
+            &nbsp;<label><input type="radio" name="s2" value="1">  1</label>
           </td>
           <td>
-           &nbsp; <label><input type="radio" name="2"  value="2">  2</label>
+           &nbsp; <label><input type="radio" name="s2"  value="2">  2</label>
           </td>
           <td>
-            &nbsp;<label><input type="radio" name="2"  value="3">  3</label>
+            &nbsp;<label><input type="radio" name="s2"  value="3">  3</label>
           </td>
           <td>
-            &nbsp;<label><input type="radio" name="2"  value="4">  4</label>
+            &nbsp;<label><input type="radio" name="s2"  value="4">  4</label>
           </td>
           <td>
-            &nbsp;<label><input type="radio" name="2"  value="5">  5</label>
+            &nbsp;<label><input type="radio" name="s2"  value="5">  5</label>
           </td>
         </tr>
        </table>
   
        <div class = "trust1text" style = "display:none;">
-	   <h3 > 1. Please rate your agreement to the following statement based on your degree of <strong>trust</strong> to the <strong>robot</strong> right now.  
+	   <h3 > 1. Please rate your agreement to the following statement based on your degree of <strong>trust</strong> to <strong>HERB</strong> right now.  
 	   	   </h3>
        <h4>
 	   <em>  Since you have not worked with HERB yet, please answer based on your previous interaction experiences with robots, as well as your intuition.
@@ -156,7 +158,7 @@ room (rotate the table in the clockwise direction)</label>
 	   <br>
 	   <br>
        <br>
-	   <h3 > 2. Please rate your agreement to the following statement, based on your degree of <strong> self-confidence </strong> in your ability to complete the task.
+	   <h3 > 2. Please rate your agreement to the following statement, based on your degree of <strong>self-confidence </strong> in your ability to complete the task.
 	   	   </h3>
 		<br>
 		</div>
@@ -187,52 +189,68 @@ room (rotate the table in the clockwise direction)</label>
             &nbsp;<label><input type="radio" name="sc1"  value="3">  3</label>
           </td>
           <td>
-            &nbsp;<label><input type="radio" name="sc1"  value="4">  4</label>
+            &nbsp;<label><input type="radio" name="sc1"  value="4">  4</ label>
           </td>
           <td>
             &nbsp;<label><input type="radio" name="sc1"  value="5">  5</label>
           </td>
         </tr>
        </table>
+<div class = "trust2text" style = "display:none;">
+	   <h3 > 1. Please rate your agreement to the following statement based on your degree of <strong>trust</strong> to <strong>HERB</strong> right now.  
+	   	   </h3>
+       <h4>
+	   <em>  Think carefully about your interaction experiences before answering. 
+        </em>
+				</h4>
+
+		<br>
+		</div>
+      <table class="trust2 table-bordered table-hover fixed" style="display:none;" >
+        <col width="200px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <tr>
+          <th>&nbsp;</th>
+          <th>Strongly Disagree</th>
+          <th>Disagree</th>
+          <th>Neither Agree nor Disagree</th>
+          <th>Agree</th>
+          <th>Strongly Agree</th>
+        </tr>
+        <tr>
+          <th >HERB is trustworthy</th>
+          <td>
+            &nbsp;<label><input type="radio" name="t2" value="1">  1</label>
+          </td>
+          <td>
+           &nbsp; <label><input type="radio" name="t2"  value="2">  2</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="t2"  value="3">  3</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="t2"  value="4">  4</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="t2"  value="5">  5</label>
+          </td>
+        </tr>
+       </table>
 	   
-<table class="radio3 table-bordered table-hover fixed" style="display:none;">
-        <!--caption></caption-->
-        <col width="130px" />
-        <col width="130px" />
-        <col width="130px" />
-        <col width="130px" />
-        <col width="130px" />
-        <col width="130px" />
-        <tr>
-          <th>&nbsp;</th>
-          <th>Strongly Disagree</th>
-          <th>Disagree</th>
-          <th>Neither Agree nor Disagree</th>
-          <th>Agree</th>
-          <th>Strongly Agree</th>
-        </tr>
-        <tr>
-          <th>HERB is trustworthy</th>
-          <td>
-            &nbsp;<label><input type="radio" name="3" value="1"> 1</label>
-          </td>
-          <td>
-            &nbsp;<label><input type="radio" name="3"  value="2"> 2</label>
-          </td>
-          <td>
-            &nbsp;<label><input type="radio" name="3"  value="3"> 3</label>
-          </td>
-          <td>
-            &nbsp;<label><input type="radio" name="3"  value="4"> 4</label>
-          </td>
-          <td>
-            &nbsp;<label><input type="radio" name="3"  value="5"> 5</label>
-          </td>
-        </tr>
-       </table>
-<table class="radio4 table-bordered table-hover fixed" style="display:none;">
-        <!--caption></caption-->
-        <col width="130px" />
+	   <div class = "sc2text" style = "display:none;">
+	   <br>
+	   <br>
+       <br>
+	   <h3 > 2. Please rate your agreement to the following statement, based on your degree of <strong>self-confidence</strong> in your ability to complete the task.
+	   	   </h3>
+		<br>
+		</div>
+      <table class="sc2 table-bordered table-hover fixed" style="display:none;" >
+        <col width="200px" />
         <col width="130px" />
         <col width="130px" />
         <col width="130px" />
@@ -247,27 +265,36 @@ room (rotate the table in the clockwise direction)</label>
           <th>Strongly Agree</th>
         </tr>
         <tr>
-          <th>HERB is trustworthy</th>
+          <th >I am confident my ability to complete the task.</th>
           <td>
-            &nbsp;<label><input type="radio" name="4" value="1"> 1</label>
+            &nbsp;<label><input type="radio" name="sc2" value="1">  1</label>
           </td>
           <td>
-           &nbsp; <label><input type="radio" name="4"  value="2"> 2</label>
+           &nbsp; <label><input type="radio" name="sc2"  value="2">  2</label>
           </td>
           <td>
-           &nbsp; <label><input type="radio" name="4"  value="3"> 3</label>
+            &nbsp;<label><input type="radio" name="sc2"  value="3">  3</label>
           </td>
           <td>
-            &nbsp;<label><input type="radio" name="4"  value="4"> 4</label>
+            &nbsp;<label><input type="radio" name="sc2"  value="4">  4</label>
           </td>
           <td>
-            &nbsp;<label><input type="radio" name="4"  value="5"> 5</label>
+            &nbsp;<label><input type="radio" name="sc2"  value="5">  5</label>
           </td>
         </tr>
        </table>
-<table class="radio5 table-bordered table-hover fixed" style="display:none;">
-        <!--caption></caption-->
-        <col width="130px" />
+	   <div class = "trust3text" style = "display:none;">
+	   <h3 > 1. Please rate your agreement to the following statement based on your degree of <strong>trust</strong> to <strong>HERB</strong> right now.  
+	   	   </h3>
+       <h4>
+	   <em>  Think carefully about your interaction experiences before answering. 
+        </em>
+				</h4>
+
+		<br>
+		</div>
+      <table class="trust3 table-bordered table-hover fixed" style="display:none;" >
+        <col width="200px" />
         <col width="130px" />
         <col width="130px" />
         <col width="130px" />
@@ -282,24 +309,157 @@ room (rotate the table in the clockwise direction)</label>
           <th>Strongly Agree</th>
         </tr>
         <tr>
-          <th>HERB is trustworthy</th>
+          <th >HERB is trustworthy</th>
           <td>
-           &nbsp; <label><input type="radio" name="5" value="1"> 1</label>
+            &nbsp;<label><input type="radio" name="t3" value="1">  1</label>
           </td>
           <td>
-           &nbsp; <label><input type="radio" name="5"  value="2"> 2</label>
+           &nbsp; <label><input type="radio" name="t3"  value="2">  2</label>
           </td>
           <td>
-           &nbsp;<label><input type="radio" name="5"  value="3"> 3</label>
+            &nbsp;<label><input type="radio" name="t3"  value="3">  3</label>
           </td>
           <td>
-           &nbsp; <label><input type="radio" name="5"  value="4"> 4</label>
+            &nbsp;<label><input type="radio" name="t3"  value="4">  4</label>
           </td>
           <td>
-          &nbsp;  <label><input type="radio" name="5"  value="5"> 5</label>
+            &nbsp;<label><input type="radio" name="t3"  value="5">  5</label>
           </td>
         </tr>
        </table>
+	   
+	   <div class = "sc3text" style = "display:none;">
+	   <br>
+	   <br>
+       <br>
+	   <h3 > 2. Please rate your agreement to the following statement, based on your degree of <strong>self-confidence</strong> in your ability to complete the task.
+	   	   </h3>
+		<br>
+		</div>
+      <table class="sc3 table-bordered table-hover fixed" style="display:none;" >
+        <col width="200px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <tr>
+          <th>&nbsp;</th>
+          <th>Strongly Disagree</th>
+          <th>Disagree</th>
+          <th>Neither Agree nor Disagree</th>
+          <th>Agree</th>
+          <th>Strongly Agree</th>
+        </tr>
+        <tr>
+          <th >I am confident my ability to complete the task.</th>
+          <td>
+            &nbsp;<label><input type="radio" name="sc3" value="1">  1</label>
+          </td>
+          <td>
+           &nbsp; <label><input type="radio" name="sc3"  value="2">  2</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="sc3"  value="3">  3</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="sc3"  value="4">  4</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="sc3"  value="5">  5</label>
+          </td>
+        </tr>
+       </table>
+	   
+	   	   <div class = "trust4text" style = "display:none;">
+	   <h3 > 1. Please rate your agreement to the following statement based on your degree of <strong>trust</strong> to <strong>HERB</strong> right now.  
+	   	   </h3>
+       <h4>
+	   <em>  Think carefully about your interaction experiences before answering. 
+        </em>
+				</h4>
+
+		<br>
+		</div>
+      <table class="trust4 table-bordered table-hover fixed" style="display:none;" >
+        <col width="200px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <tr>
+          <th>&nbsp;</th>
+          <th>Strongly Disagree</th>
+          <th>Disagree</th>
+          <th>Neither Agree nor Disagree</th>
+          <th>Agree</th>
+          <th>Strongly Agree</th>
+        </tr>
+        <tr>
+          <th >HERB is trustworthy</th>
+          <td>
+            &nbsp;<label><input type="radio" name="t4" value="1">  1</label>
+          </td>
+          <td>
+           &nbsp; <label><input type="radio" name="t4"  value="2">  2</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="t4"  value="3">  3</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="t4"  value="4">  4</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="t4"  value="5">  5</label>
+          </td>
+        </tr>
+       </table>
+	   
+	   <div class = "sc4text" style = "display:none;">
+	   <br>
+	   <br>
+       <br>
+	   <h3 > 2. Please rate your agreement to the following statement, based on your degree of <strong>self-confidence</strong> in your ability to complete the task.
+	   	   </h3>
+		<br>
+		</div>
+      <table class="sc4 table-bordered table-hover fixed" style="display:none;" >
+        <col width="200px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <tr>
+          <th>&nbsp;</th>
+          <th>Strongly Disagree</th>
+          <th>Disagree</th>
+          <th>Neither Agree nor Disagree</th>
+          <th>Agree</th>
+          <th>Strongly Agree</th>
+        </tr>
+        <tr>
+          <th >I am confident my ability to complete the task.</th>
+          <td>
+            &nbsp;<label><input type="radio" name="sc4" value="1">  1</label>
+          </td>
+          <td>
+           &nbsp; <label><input type="radio" name="sc4"  value="2">  2</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="sc4"  value="3">  3</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="sc4"  value="4">  4</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="sc4"  value="5">  5</label>
+          </td>
+        </tr>
+       </table>
+	   
+	   
     <br>
     <button id="left-button" type="button" class="ui-button btn btn-primary btn-lg" style="display:none;">null</button>
     <button id="right-button" type="button" class="ui-button btn btn-primary btn-lg">Next</button>
