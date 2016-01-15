@@ -28,6 +28,7 @@ function init() {
     }
 }
 
+
 function buttonClicked(idx) {
     disableButtons();
     var postData = {"sessionData": sessionData,
@@ -35,7 +36,7 @@ function buttonClicked(idx) {
 
 
     //hangling the radiobutton selection on slide 4
-    if (sessionData["picCount"]==4){
+    if (sessionData["picCount"]==5){
         $(".text-danger").show()
         if ((!$("input[name=1]:checked").val())&&(postData["buttonID"]==1)){
             $(".text-danger").removeClass('hide');
@@ -54,11 +55,94 @@ function buttonClicked(idx) {
             $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
         }
     }
+    else if(sessionData["picCount"]==6){
+     $(".text-danger").show()
+        if (((!$("input[name=t1]:checked").val())||(!$("input[name=sc1]:checked").val()))&&(postData["buttonID"]==1)){
+            $(".text-danger").removeClass('hide');
+            enableButtons();
+        }
+	    else if(postData["buttonID"]==0){
+            $(".trust1").hide()
+			$(".trust1text").hide()
+			$(".sc1").hide()
+			$(".sc1text").hide()
+            $(".text-danger").hide()
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+        else if(($("input[name=t1]:checked").val())&&($("input[name=sc1]:checked").val())&&(postData["buttonID"]==1)){
+            radioChoice = $("input[name=t1]:checked").val()
+			radioChoice2 = $("input[name=sc1]:checked").val()
+            $(".trust1").hide()
+     		$(".trust1text").hide()
+			$(".sc1").hide()
+     		$(".sc1text").hide()
+            $(".text-danger").hide()
+            postData["trustRate1"] = radioChoice
+			postData["scRate1"] = radioChoice2
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+    }
+   else if(sessionData["picCount"]==11){
+     $(".text-danger").show()
+        if ((!$("input[name=3]:checked").val())&&(postData["buttonID"]==1)){
+            $(".text-danger").removeClass('hide');
+            enableButtons();
+        }
+        else if((!$("input[name=3]:checked").val())&&(postData["buttonID"]==0)){
+            $(".radio3").hide()
+            $(".text-danger").hide()
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+        else{
+            radioChoice = $("input[name=3]:checked").val()
+            $(".radio3").hide()
+            $(".text-danger").hide()
+            postData["trustRate2"] = radioChoice
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+    }
+   else if(sessionData["picCount"]==15){
+     $(".text-danger").show()
+        if ((!$("input[name=4]:checked").val())&&(postData["buttonID"]==1)){
+            $(".text-danger").removeClass('hide');
+            enableButtons();
+        }
+        else if((!$("input[name=4]:checked").val())&&(postData["buttonID"]==0)){
+            $(".radio4").hide()
+            $(".text-danger").hide()
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+        else{
+            radioChoice = $("input[name=4]:checked").val()
+            $(".radio4").hide()
+            $(".text-danger").hide()
+            postData["trustRate3"] = radioChoice
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+    }
+   else if(sessionData["picCount"]==19){
+     $(".text-danger").show()
+        if ((!$("input[name=5]:checked").val())&&(postData["buttonID"]==1)){
+            $(".text-danger").removeClass('hide');
+            enableButtons();
+        }
+        else if((!$("input[name=5]:checked").val())&&(postData["buttonID"]==0)){
+            $(".radio5").hide()
+            $(".text-danger").hide()
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+        else{
+            radioChoice = $("input[name=5]:checked").val()
+            $(".radio5").hide()
+            $(".text-danger").hide()
+            postData["trustRate4"] = radioChoice
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+    }
     else
         // Note: posted data *has* to be stringified for bottle.py to understand
         $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
 }
-
 // handleResponse takes the data returned by the python server
 function handleResponse(rawData) {
     var jsonData = JSON.parse(rawData);
@@ -77,9 +161,12 @@ function handleResponse(rawData) {
             $("#instruction-text").html(jsonData["instructionText"]);
         }
 
-        if(sessionData["picCount"]==7 || sessionData["picCount"]==8|| sessionData["picCount"]==10||sessionData["picCount"]==11 || sessionData["picCount"]==13){
+        if(sessionData["picCount"]==9 || sessionData["picCount"]==10|| sessionData["picCount"]==11|| 
+sessionData["picCount"]==13 || sessionData["picCount"]==14|| sessionData["picCount"]==15||
+sessionData["picCount"]==17 || sessionData["picCount"]==18|| sessionData["picCount"]==19||
+sessionData["picCount"]==21){
             //videos start only after instructions
-            if (sessionData["playVideo"]==1){
+            if (sessionData["playVideo"]==2){ //remove now for debugging
                 //disable buttons until the video is over
                 disableButtons();
                 $("#instruction-text").html("<br>"); //disable html text while video is playing
@@ -145,8 +232,24 @@ function handleResponse(rawData) {
         //dont frame the buttons as previously selected
         $('.ui-button').blur();
 
-        if (sessionData["picCount"]==4){
+        if (sessionData["picCount"]==5){
             $('.radio').removeAttr('style');
+        }
+        else if(sessionData["picCount"] == 6){
+            $('.trust1').removeAttr('style');
+            $('.trust1text').removeAttr('style');
+			$('.sc1').removeAttr('style');
+            $('.sc1text').removeAttr('style');
+
+        }
+        else if(sessionData["picCount"] == 11){
+            $('.radio3').removeAttr('style');
+        }
+        else if(sessionData["picCount"] == 15){
+            $('.radio4').removeAttr('style');
+        }
+        else if(sessionData["picCount"] == 19){
+            $('.radio5').removeAttr('style');
         }
     }
 }
