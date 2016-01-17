@@ -16,6 +16,9 @@ timestart1 = dict()
 timestart2 = dict()
 timestart3 = dict()
 timestart4 = dict()
+trialIndx = dict()
+
+
 #loads static pages from the directory
 #example: website.com/index.html
 #server will load index.html from the directory
@@ -87,11 +90,13 @@ def do_click():
 
   #following code may need mturk_id, so get it once now
   mturk_id = request.cookies.get('mturk_id','NOT SET')
-	
+  	
   if sessionData["picCount"]==3:
     # we got the results from slide4 radio
     data[mturk_id].append("generalTrust: "+ requestData["generalTrust"])
     data[mturk_id].append("previousExperience: "+ requestData["previousExperience"])
+
+    trialIndx[mturk_id] = 1
 
     ret = {"imageURL": "images/Slide2.JPG",
            "buttonLabels": ["null", "Next"],
@@ -321,12 +326,15 @@ def do_click():
       data[mturk_id].append("fourthFinish: "+ str(fourthFinish))
       timeDelta = fourthFinish-timestart4[mturk_id]
       data[mturk_id].append("timeDelta4: "+ str(timeDelta.total_seconds()))
-      data[mturk_id].append("belief0:" + str(resultBelief[0][0]))
-      data[mturk_id].append("belief1:" + str(resultBelief[1][0]))
-      data[mturk_id].append("belief2:" + str(resultBelief[2][0]))
-      data[mturk_id].append("belief3:" + str(resultBelief[3][0]))
-      data[mturk_id].append("belief4:" + str(resultBelief[4][0]))
 
+    data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief0:" + str(resultBelief[0][0]))
+    data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief1:" + str(resultBelief[1][0]))
+    data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief2:" + str(resultBelief[2][0]))
+    data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief3:" + str(resultBelief[3][0]))
+    data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief4:" + str(resultBelief[4][0]))
+    trialIndx[mturk_id] = trialIndx[mturk_id]  + 1
+
+ 
     ret = {"videoURL": videoLink,
            "imageURL": imageLink,
            "buttonLabels": ["null","Next"],
@@ -351,8 +359,10 @@ def do_click():
 @app.post('/submit_survey')
 def handle_survey():
   mturk_id = request.cookies.get('mturk_id', 'EXPIRED')
-  for i in xrange(1,17):
+  for i in xrange(1,7):
     data[mturk_id].append(request.forms.get(str(i)))
+  data[mturk_id].append(request.forms.get("t5"))
+  data[mturk_id].append(request.forms.get("sc5"))
   with open('output/log.json', 'w') as outfile:
     json.dump(data, outfile)
   print("User {} submitted the survey".format(mturk_id))
