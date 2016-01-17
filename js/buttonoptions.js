@@ -316,7 +316,13 @@ function enableButtons() {
 }
 
 function changeImage(newImageURL) {
-    $("#ui-image").attr("src", newImageURL);
+    if (newImageURL==""){
+       $("#ui-image").hide();
+    }
+    else{
+       $("#ui-image").show();
+       $("#ui-image").attr("src", newImageURL);
+    } 
 }
 
 function changeButtonLabels(newlabels) {
