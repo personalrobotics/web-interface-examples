@@ -1,0 +1,91 @@
+body {
+	margin: 0px;
+	background-color: #000000;
+	overflow: hidden;
+}
+
+
+#tangopos {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	color: #ffffff;
+	font-size: 30px;
+}
+
+#sketch-container {
+	position: absolute;
+	top: 100px;
+	left: 100px;
+}
+
+.sketch-button {
+	color: #ffffff;
+	font-size: 40px;
+}
+
+#the-sketch {
+	background-color: #000000;
+}
+
+#soapstone {
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	color: #fff;
+	font-size: 40px;
+}
+
+#resetbutton {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	color: #ffffff;
+	font-size: 60px
+}
+
+#motionbutton {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	color: #ffffff;
+	font-size: 60px
+}
+
+#modebutton {
+	position: absolute;
+	top: 100px;
+	left: 0px;
+	color: #ffffff;
+	font-size: 60px
+}
+
+#submitbutton {
+	position: absolute;
+	top: 100px;
+	right: 0px;
+	color: #ffffff;
+	font-size: 60px
+}
+
+#camerabutton {
+	position: absolute;
+	top: 160px;
+	left: 0px;
+	color: #ffffff;
+	font-size: 60px	
+}
+
+#render-canvas {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: -1;
+}
+
+#food-video-stream {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: -2;
+}

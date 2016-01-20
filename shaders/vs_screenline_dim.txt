@@ -1,0 +1,26 @@
+attribute vec3 pivotPos;
+attribute vec3 pivotDir;
+attribute float arcPos;
+attribute vec3 linecolor;
+uniform float lineWidth;
+
+varying vec2 v_uv;
+varying vec3 v_color;
+
+void main() {
+	vec4 vPivotPos = modelViewMatrix * vec4( pivotPos, 1.0 );
+	vec3 nViewDir = normalize(vPivotPos.xyz);
+
+	vec3 vPivotDir = normalize(normalMatrix * pivotDir);
+
+	vec3 vPivotedPos = (normalize(cross(vPivotDir, nViewDir)) * lineWidth) + vPivotPos.xyz;
+
+	v_uv = uv; // threejs predefines 'uv' attribute?
+	v_uv.x = arcPos;
+
+	float dimfactor = clamp(2.5 - length(vPivotPos)*0.5, 0.0, 1.0);
+
+	v_color = linecolor * dimfactor;
+	
+	gl_Position = projectionMatrix * vec4( vPivotedPos, 1.0 );
+}

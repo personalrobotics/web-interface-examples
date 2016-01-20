@@ -1,0 +1,12 @@
+uniform sampler2D hatchMap;
+
+varying vec3 v_color;
+varying vec2 v_uv;
+
+uniform vec4 diffuseColor;
+
+void main() {
+	vec4 maskVal = texture2D(hatchMap, v_uv); 
+	gl_FragColor = vec4(diffuseColor.rgb * maskVal.rgb, 1.0);
+	//gl_FragColor = vec4(1.0,1.0,0.0,1.0);
+}
