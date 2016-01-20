@@ -244,8 +244,8 @@ def do_click():
     #timestamp
     thirdStart = datetime.datetime.now()
     data[mturk_id].append("thirdStart: "+ str(thirdStart))
-    timestart3[mturk_id] = thirdStart
     sessionData["picCount"]+=1  
+    timestart3[mturk_id] = thirdStart
     return json.dumps(ret) 
 
   if sessionData["picCount"]==18:
