@@ -52,13 +52,8 @@
       </div>
       <br>
 
-      3. What was your initial preference for doing the task?
-      <div class="radio">
-        <label><input type="radio" name=3 value="humanFacingDoor">Move the table outside so that I am facing the door</label>
-      </div>
-      <div class="radio">
-        <label><input type="radio" name=3 value="humanFacingRoom">Move the table outside so that I am facing the room</label>
-      </div>
+      3. How old are you?
+      <input type="text" name=3 class="fr1 form-control" placeholder="Enter your age">
       <!--div class="radio">
         <label><input type="radio" name=3 value="No pref">No Preference</label>
       </div-->
@@ -72,19 +67,22 @@
         <label><input type="radio" name=4 value="No">No</label>
       </div>
       Explain your answer below:
-      <input type="text" name=15 class="fr1 form-control" placeholder="Explain your answer to 4">
+      <input type="text" name=5 class="fr2 form-control" placeholder="Explain your answer to 4">
       <br>
       <br>
 
       <p>5. Why do you think the robot behaved the way it did?</p>
-      <input type="text" name=16 class="fr2 form-control" placeholder="Comment on instructions">
+      <input type="text" name=6 class="fr3 form-control" placeholder="Comment on robot behavior">
       <br>
       <br>
 
-      <p> 6.Rate your agreement to the following statements </p>
-      <table class="table table-bordered table-hover fixed">
-        <!--caption></caption-->
-        <col width="100px" />
+      <p>6. Please rate your agreement to the following statement based on your degree of <strong>trust</strong> to <strong>HERB</strong> right now.  </p>
+	   <em>  Think carefully about your interaction experiences before answering. 
+        </em>
+         <br>
+         <br>
+ <table class="trust5 table-bordered table-hover fixed">
+        <col width="200px" />
         <col width="100px" />
         <col width="100px" />
         <col width="100px" />
@@ -99,188 +97,69 @@
           <th>Strongly Agree</th>
         </tr>
         <tr>
-          <th>HERB is trustworthy</th>
+          <th >HERB is trustworthy</th>
           <td>
-            <label><input type="radio" name=5 value="1"> 1</label>
+            &nbsp;<label><input type="radio" name="t5" value="1">  1</label>
           </td>
           <td>
-            <label><input type="radio" name=5 value="2"> 2</label>
+           &nbsp; <label><input type="radio" name="t5"  value="2">  2</label>
           </td>
           <td>
-            <label><input type="radio" name=5 value="3"> 3</label>
+            &nbsp;<label><input type="radio" name="t5"  value="3">  3</label>
           </td>
           <td>
-            <label><input type="radio" name=5 value="4"> 4</label>
+            &nbsp;<label><input type="radio" name="t5"  value="4">  4</label>
           </td>
           <td>
-            <label><input type="radio" name=5 value="5"> 5</label>
-          </td>
-        </tr>
-        <tr>
-          <th>I trusted HERB to do the right thing at the right time</th>
-          <td>
-            <label><input type="radio" name=6 value="1"> 1</label>
-          </td>
-          <td>
-            <label><input type="radio" name=6 value="2"> 2</label>
-          </td>
-          <td>
-            <label><input type="radio" name=6 value="3"> 3</label>
-          </td>
-          <td>
-            <label><input type="radio" name=6 value="4"> 4</label>
-          </td>
-          <td>
-            <label><input type="radio" name=6 value="5"> 5</label>
+            &nbsp;<label><input type="radio" name="t5"  value="5">  5</label>
           </td>
         </tr>
+       </table>
+
+         <br>
+         <br>
+
+
+	   <p>7. Please rate your agreement to the following statement, based on your degree of <strong>self-confidence</strong> in your ability to complete the task.
+	   	   </p>
+      <table class="sc5 table-bordered table-hover fixed">
+        <col width="200px" />
+        <col width="100px" />
+        <col width="100px" />
+        <col width="100px" />
+        <col width="100px" />
+        <col width="100px" />
         <tr>
-          <th>HERB is intelligent</th>
-          <td>
-            <label><input type="radio" name=7 value="1"> 1</label>
-          </td>
-          <td>
-            <label><input type="radio" name=7 value="2"> 2</label>
-          </td>
-          <td>
-            <label><input type="radio" name=7 value="3"> 3</label>
-          </td>
-          <td>
-            <label><input type="radio" name=7 value="4"> 4</label>
-          </td>
-          <td>
-            <label><input type="radio" name=7 value="5"> 5</label>
-          </td>
+          <th>&nbsp;</th>
+          <th>Strongly Disagree</th>
+          <th>Disagree</th>
+          <th>Neither Agree nor Disagree</th>
+          <th>Agree</th>
+          <th>Strongly Agree</th>
         </tr>
         <tr>
-          <th>HERB made me change my mind during the task</th>
+          <th >I am confident in my ability to complete the task.</th>
           <td>
-            <label><input type="radio" name=8 value="1"> 1</label>
+            &nbsp;<label><input type="radio" name="sc5" value="1">  1</label>
           </td>
           <td>
-            <label><input type="radio" name=8 value="2"> 2</label>
+           &nbsp; <label><input type="radio" name="sc5"  value="2">  2</label>
           </td>
           <td>
-            <label><input type="radio" name=8 value="3"> 3</label>
+            &nbsp;<label><input type="radio" name="sc5"  value="3">  3</label>
           </td>
           <td>
-            <label><input type="radio" name=8 value="4"> 4</label>
+            &nbsp;<label><input type="radio" name="sc5"  value="4">  4</label>
           </td>
           <td>
-            <label><input type="radio" name=8 value="5"> 5</label>
-          </td>
-        </tr>
-        <tr>
-          <th>I was satisfied with HERB and my performance</th>
-          <td>
-            <label><input type="radio" name=9 value="1"> 1</label>
-          </td>
-          <td>
-            <label><input type="radio" name=9 value="2"> 2</label>
-          </td>
-          <td>
-            <label><input type="radio" name=9 value="3"> 3</label>
-          </td>
-          <td>
-            <label><input type="radio" name=9 value="4"> 4</label>
-          </td>
-          <td>
-            <label><input type="radio" name=9 value="5"> 5</label>
+            &nbsp;<label><input type="radio" name="sc5"  value="5">  5</label>
           </td>
         </tr>
-        <tr>
-          <th>HERB perceived accurately what my goals are</th>
-          <td>
-            <label><input type="radio" name=10 value="1"> 1</label>
-          </td>
-          <td>
-            <label><input type="radio" name=10 value="2"> 2</label>
-          </td>
-          <td>
-            <label><input type="radio" name=10 value="3"> 3</label>
-          </td>
-          <td>
-            <label><input type="radio" name=10 value="4"> 4</label>
-          </td>
-          <td>
-            <label><input type="radio" name=10 value="5"> 5</label>
-          </td>
-        </tr>
-        <tr>
-          <th>HERB did not understand how I wanted to do the task</th>
-          <td>
-            <label><input type="radio" name = 11 value="1"> 1</label>
-          </td>
-          <td>
-            <label><input type="radio" name = 11 value="2"> 2</label>
-          </td>
-          <td>
-            <label><input type="radio" name = 11 value="3"> 3</label>
-          </td>
-          <td>
-            <label><input type="radio" name = 11 value="4"> 4</label>
-          </td>
-          <td>
-            <label><input type="radio" name = 11 value="5"> 5</label>
-          </td>
-        </td>
-        <tr>
-          <th>HERB and I worked towards mutually agreed upon goals</th>
-          <td>
-            <label><input type="radio" name=12 value="1"> 1</label>
-          </td>
-          <td>
-            <label><input type="radio" name=12 value="2"> 2</label>
-          </td>
-          <td>
-            <label><input type="radio" name=12 value="3"> 3</label>
-          </td>
-          <td>
-            <label><input type="radio" name=12 value="4"> 4</label>
-          </td>
-          <td>
-            <label><input type="radio" name=12 value="5"> 5</label>
-          </td>
-        </tr>
-        <tr>
-          <th>HERB and I collaborated well together</th>
-          <td>
-            <label><input type="radio" name=13 value="1"> 1</label>
-          </td>
-          <td>
-            <label><input type="radio" name=13 value="2"> 2</label>
-          </td>
-          <td>
-            <label><input type="radio" name=13 value="3"> 3</label>
-          </td>
-          <td>
-            <label><input type="radio" name=13 value="4"> 4</label>
-          </td>
-          <td>
-            <label><input type="radio" name=13 value="5"> 5</label>
-          </td>
-        </tr>
-        <tr>
-          <th>HERB's actions were reasonable</th>
-          <td>
-            <label><input type="radio" name=14 value="1"> 1</label>
-          </td>
-          <td>
-            <label><input type="radio" name=14 value="2"> 2</label>
-          </td>
-          <td>
-            <label><input type="radio" name=14 value="3"> 3</label>
-          </td>
-          <td>
-            <label><input type="radio" name=14 value="4"> 4</label>
-          </td>
-          <td>
-            <label><input type="radio" name=14 value="5"> 5</label>
-          </td>
-        </tr>
-      </table>
+       </table>
       <p class="text-danger hide">Please answer all questions</p>
+      <br>
       <input value="Submit" type="submit" class="btn btn-success"/>
+      <br>
   </form>
   </div>
 </body>
