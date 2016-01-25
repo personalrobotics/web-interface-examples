@@ -93,8 +93,9 @@ def do_click():
   	
   if sessionData["picCount"]==3:
     # we got the results from slide4 radio
-    data[mturk_id].append("generalTrust: "+ requestData["generalTrust"])
-    data[mturk_id].append("previousExperience: "+ requestData["previousExperience"])
+    if "generalTrust" in requestData.keys():
+      data[mturk_id].append("generalTrust: "+ requestData["generalTrust"])
+      data[mturk_id].append("previousExperience: "+ requestData["previousExperience"])
 
     trialIndx[mturk_id] = 1
 
