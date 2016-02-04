@@ -38,7 +38,6 @@ def do_click():
   time.sleep(0.5)
 
   #manually set value
-  totalPicsNum = 19
   survey_duration = 10*60*60 #10 hours to prevent retaking
 
   #get the data that the buttonClicked posted
@@ -116,7 +115,7 @@ def do_click():
     timestart1[mturk_id] = startTime
     sessionData["playVideo"] = 0
     sessionData["playedLong"] = 0
-    ret = {"imageURL": "images/T100.jpg",
+    ret = {"imageURL": "images/START.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": "Choose how you would like to rotate the table.",
@@ -144,7 +143,7 @@ def do_click():
   if sessionData["picCount"]==9:
     sessionData["playVideo"] = 0
     Model2.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
-    ret = {"imageURL": "images/T100.jpg",
+    ret = {"imageURL": "images/START.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": "Choose how you would like to rotate the table.",
@@ -161,22 +160,24 @@ def do_click():
   data[mturk_id].append(buttonClicked)
 
   #get next move
-  currTableTheta, oldTableTheta, resultBelief, message = \
+  currHumanPos, currRobotPos, oldHumanPos, oldRobotPos, resultBelief, message = \
     Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
-
+  print "DEBUGGING: ", str(message)
   #debugging
   #print "Belief is: {}".format(resultBelief)
   #play the long video if the human-robot actions
   # are the same and it's the first time this is happening
   suffix=""
-  if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
+  if currHumanPos == currRobotPos and sessionData["playedLong"] == 0:
+  #if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
     suffix="l"
     sessionData["playedLong"]=1
-  videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
-  imageLink = "images/T{}.jpg".format(currTableTheta)
-  if currTableTheta==0 or currTableTheta==180:
+  videoLink = "videos/R{}H{}toR{}H{}.mp4".format(oldRobotPos,oldHumanPos,currRobotPos,currHumanPos,suffix)
+  imageLink = "images/R{}H{}.jpg".format(currRobotPos,currHumanPos)
+  if currHumanPos != currRobotPos:
+  #if currTableTheta==0 or currTableTheta==180:
     if sessionData["picCount"]==7:
-      Model2.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
+      Model2.setPrevGoalHumanRobotPos(d,request.cookies.get('mturk_id','NOT SET'), currHumanPos, currRobotPos)
       sessionData["picCount"]+=1
     elif sessionData["picCount"]==10:
       sessionData["toSurvey"] = True
@@ -194,7 +195,7 @@ def do_click():
     ret = {"videoURL": videoLink,
            "imageURL": imageLink,
            "buttonLabels": ["null","Next"],
-           "instructionText": "The table is in a horizontal position. You finished the task!",
+           "instructionText": "You crossed the hallway!",
            "sessionData": sessionData}
     return json.dumps(ret)
   else:

@@ -7,23 +7,32 @@ VERBOSE = True
 #these are the same for all users
 folderName = 'data/'
 momdpOutFolderName = 'data/'
-policyFileName = 'TableCarryingTask.policy'
+policyFileName = 'CorridorTask.policy'
 statesFileName = 'obsState.dat'
-startStateTheta = 100
-goal1StateTheta = 0
-goal2StateTheta = 180
-NUMOFSTATES = 734
+startStateHumanPos = 0
+startStateRobotPos = 0
+goal1StateHumanPos = 1 #goal 1(optimal): human left, robot right
+goal1StateRobotPos = 2
+goal2StateHumanPos = 2 #goal 2(suboptimal): human right, robot left
+goal2StateRobotPos = 1
+NUMOFSTATES = 340
 NUMOFROBOTACTIONS = 2
 NUMOFHUMANACTIONS = 2
 NUMOFUNOBSSTATES = 5
-STR_ACTIONS = ['ROTATE_CLOCKWISE', 'ROTATE_COUNTER_CLOCKWISE']
+STR_POSITIONS = [ 'START','LEFT', 'RIGHT']
+STR_ACTIONS = ['MOVE_LEFT', 'MOVE_RIGHT']
 R = numpy.zeros([NUMOFSTATES,NUMOFROBOTACTIONS, NUMOFHUMANACTIONS, NUMOFSTATES])
 T = numpy.zeros([NUMOFUNOBSSTATES, NUMOFSTATES, NUMOFROBOTACTIONS, NUMOFSTATES])
-NUMOFALPHAVECTORS = 7029
+NUMOFALPHAVECTORS = 469
+#self.NUMOFALPHAVECTORS = 42
 A = numpy.zeros([NUMOFALPHAVECTORS, NUMOFUNOBSSTATES + 2])
-startStateIndx = 640#NUMOFSTATES-2 #assume that the state before last is the starting one
-goal1RestartStateIndx = 645
-goal2RestartStateIndx = 648
+#assume that the state before last is the starting state. The last one is the absorbing state
+startStateIndx = 256#self.NUMOFSTATES-2
+print "Loading state names from file"
+stateNamesFile = open(folderName+statesFileName, 'r')
+
+goal1RestartStateIndx = 337 # robot_pos = 1, human_pos = 0, mobs = MRIGHT, mprev = MLEFT
+goal2RestartStateIndx = 338
 
 
 #uninitiated globals for globalsInit()
@@ -75,31 +84,28 @@ class Data:
   def __init__(self, id):
     ##############The following variables are different per user########################
     self.bel_t = numpy.ones([5,1])*0.2
-    # self.bel_t[0] = 0.14
-    # self.bel_t[1] = 0.5
-    # self.bel_t[2] = 0.005
-    # self.bel_t[3] = 0.005
-    # self.bel_t[4] = 0.35
     self.currState = startStateIndx
-    self.prevGoalStateTheta = -1
+    self.prevGoalHumanPos = -1
+    self.prevGoalRobotPos = -1
     self.id = id  #this is a user id
 
   def stateUpdateFromHumanAction(self,humanAction):
     global stateNames
     robotAction = self.getRobotActionFromPolicy(self.currState, self.bel_t)
-    oldTableTheta = self.getTableThetaFromState(self.currState)
+    oldHumanPos, oldRobotPos = self.getHumanRobotPosFromState(self.currState)
     nextState = self.getNextStateFromHumanRobotAction(self.currState,robotAction, humanAction)
+    print "DEBUGGING: next state is ", str(nextState)
     new_bel_t = self.getNewBeliefFromHumanAction(self.currState,robotAction,nextState, self.bel_t)
     self.bel_t = new_bel_t
     self.currState = nextState
-    currTableTheta = self.getTableThetaFromState(self.currState)
+    currHumanPos, currRobotPos = self.getHumanRobotPosFromState(self.currState)
 
     resultState = stateNames[self.currState]
     resultBelief = self.bel_t
     resultHAction = STR_ACTIONS[humanAction]
     resultRAction = STR_ACTIONS[robotAction]
 
-    return (currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta)
+    return (currHumanPos, currRobotPos, resultState, resultBelief, resultHAction, resultRAction, oldHumanPos, oldRobotPos)
 
   def getRobotActionFromPolicy(self, ss, bel_t):
     action = -1
@@ -115,14 +121,20 @@ class Data:
       #print "Robot action is: " + self.STR_ACTIONS[action]
     return action
 
-  def getTableThetaFromState(self, ss):
-    if(ss == startStateIndx):
-  	   return startStateTheta
-    else:
-       str_state = stateNames[ss]
-       theta = int(str_state.split("_")[0][1:])
-      #if theta>=0 and theta<=180:
-       return theta
+  def getHumanRobotPosFromState(self, ss):
+      str_state = stateNames[ss]
+      print "str_state: ", str_state
+
+      if ss == startStateIndx:
+          return startStateHumanPos, startStateRobotPos
+
+      humanPos = int(str_state.split("H")[1][0])
+      robotPos = int(str_state.split("R")[1][0])
+      if humanPos>=1 and humanPos<=2: #not start state
+        return humanPos, robotPos
+      else:
+        print "Error! Unknown human/robot pos!"
+        return startStateHumanPos, startStateRobotPos
 
   def getNextStateFromHumanRobotAction(self, ss, ra, ha):
     nextStateMtx = R[ss][ra][ha][:]
@@ -145,7 +157,7 @@ def idInitiated(id,d):
 
 #the server will call this function passing the id and the button pressed.
 #it will then reset the observable state for that class
-def setPrevGoalStateTheta(d, id, prevGoalStateTheta):
+def setPrevGoalHumanRobotPos(d, id, prevGoalHumanPos, prevGoalRobotPos):
   if idInitiated(id,d):
     x = d[id] #dictionary
     print("Returning user: ID={}".format(id))
@@ -155,9 +167,11 @@ def setPrevGoalStateTheta(d, id, prevGoalStateTheta):
     print ("Model2py@restartTask Error: No class instance found!")
     print("New class instance created: id={}".format(id))
   
-  x.prevGoalStateTheta = prevGoalStateTheta
+  x.prevGoalHumanPos = prevGoalHumanPos
+  x.prevGoalRobotPos = prevGoalRobotPos
 
 def restartTask(d, id):
+  print "DEBUGGING: restarting task!!"
   print("IN:id={}".format(id))
   #retrieve/create the class instance
   if idInitiated(id,d):
@@ -169,14 +183,14 @@ def restartTask(d, id):
     print ("Model2py@restartTask Error: No class instance found!")
     print("New class instance created: id={}".format(id))
   #logic that says what the next state will be based on the previous goal
-  if x.prevGoalStateTheta == goal1StateTheta:
+  if (x.prevGoalHumanPos == goal1StateHumanPos) and (x.prevGoalRobotPos == goal1StateRobotPos):
     x.currState = goal1RestartStateIndx
     print "id={},current state is: {}\n".format(id, x.currState)
-  elif x.prevGoalStateTheta == goal2StateTheta:
+  elif (x.prevGoalHumanPos == goal2StateHumanPos) and (x.prevGoalRobotPos == goal2StateRobotPos):
     x.currState = goal2RestartStateIndx
     print "id={},current state is: {}\n".format(id, x.currState)
   else:
-    print ("Model2py@restartTask invalid theta value {}".format(x.prevGoalStateTheta))
+    print ("Model2py@restartTask invalid human / robot pos value {}{}".format(x.prevGoalHumanPos,x.prevGoalRobotPos))
   
 #the server will call this function passing the id and the button pressed
 #we'll store the class instances in a dictionary with IDs as keys
@@ -191,21 +205,21 @@ def getMove(d,id,humanAction):
     x = Data(id)
     d[id] = x
     print("New class instance created: id={}".format(id))
-  currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta = \
+  currHumanPos, currRobotPos, resultState, resultBelief, resultHAction, resultRAction, oldHumanPos, oldRobotPos = \
     x.stateUpdateFromHumanAction(humanAction)
-  print("OUT:theta={}".format(currTableTheta))
-  if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
-     message = 'You turned the table CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
-  elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
-     message = 'You turned the table COUNTER-CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
-  elif(resultHAction == 'ROTATE_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
-     message = 'You tried to turn the table CLOCKWISE. HERB tried to turn the table COUNTER-CLOCKWISE. <br> The table did not turn.'
-  elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_CLOCKWISE'):
-     message = 'You tried to turn the table COUNTER-CLOCKWISE. HERB tried to turn the table CLOCKWISE. <br> The table did not turn.'
+  print("OUT:humanPos={}{}".format(currHumanPos, currRobotPos))
+  if(resultHAction=='MOVE_LEFT')and(resultRAction=='MOVE_LEFT'):
+     message = 'You moved LEFT. HERB did the same action.'
+  elif(resultHAction == 'MOVE_RIGHT')and(resultRAction == 'MOVE_RIGHT'):
+     message = 'You moved RIGHT. HERB did the same action.'
+  elif(resultHAction == 'MOVE_RIGHT')and(resultRAction == 'MOVE_LEFT'):
+     message = 'You moved RIGHT. HERB moved LEFT.'
+  elif(resultHAction == 'MOVE_LEFT')and(resultRAction == 'MOVE_RIGHT'):
+     message = 'You moved LEFT. HERB moved RIGHT.'
   else:
       message = 'Model2py@getMove error: unknown string!' 
   #for debugging
-  instructionString ='''The current angle is: {}<br> The current state is: {}<br>  The current belief is: {}<br> You did action: {}<br> Robot did action: {}<br>
-   Old angle is {}<br> '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta)
+  instructionString ='''The current human/robot position is: {},{}<br> The current state is: {}<br>  The current belief is: {}<br> You did action: {}<br> Robot did action: {}<br>
+   Old human/robot position is {}{}<br> '''.format(currHumanPos, currRobotPos, resultState, resultBelief, resultHAction, resultRAction, oldHumanPos, oldRobotPos)
   message = message + instructionString
-  return (currTableTheta, oldTableTheta, resultBelief, message)
+  return (currHumanPos, currRobotPos, oldHumanPos, oldRobotPos, resultBelief, message)
