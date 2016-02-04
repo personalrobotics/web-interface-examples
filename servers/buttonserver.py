@@ -52,7 +52,7 @@ def do_click():
 
   #go to next/prev pic according to button clicked
   buttonClicked = requestData["buttonID"]
-  if sessionData["picCount"]<6:
+  if sessionData["picCount"]<7:
     if buttonClicked==0:
       sessionData["picCount"] -= 1
     elif buttonClicked==1:
@@ -82,6 +82,16 @@ def do_click():
     return json.dumps(ret)
   
   if sessionData["picCount"]==4:
+    ret = {"imageURL": "images/Slide3b.JPG",
+           "buttonLabels": ["Prev", "Next"],
+           "instructionText": " ",
+           "sessionData": sessionData}
+    return json.dumps(ret)
+
+  #following code may need mturk_id, so get it once now
+  mturk_id = request.cookies.get('mturk_id','NOT SET')
+  
+  if sessionData["picCount"]==5:
     #generate a cookie with user's ID
     gen_id = ''.join(random.choice(string.ascii_uppercase +
       string.digits) for _ in range(6))
@@ -99,16 +109,17 @@ def do_click():
   #following code may need mturk_id, so get it once now
   mturk_id = request.cookies.get('mturk_id','NOT SET')
 
-  if sessionData["picCount"]==5:
+  if sessionData["picCount"]==6:
     # we got the results from slide4 radio
-    data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
+    if "radioChoice" in requestData.keys():
+       data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
     ret = {"imageURL": "images/Slide5.JPG",
            "buttonLabels": ["Prev", "START"],
            "instructionText": " ",
            "sessionData": sessionData}
     return json.dumps(ret)
 
-  if sessionData["picCount"]==6:
+  if sessionData["picCount"]==7:
     #timestamp
     startTime = datetime.datetime.now()
     data[mturk_id].append("start: "+ str(startTime))
@@ -118,13 +129,13 @@ def do_click():
     ret = {"imageURL": "images/START.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
-           "instructionText": "Choose how you would like to rotate the table.",
+           "instructionText": " ",
            "sessionData": sessionData,
        "buttonClass": "btn-success"}
     sessionData["picCount"]+=1       
     return json.dumps(ret)
 
-  if sessionData["picCount"]==8:
+  if sessionData["picCount"]==9:
     sessionData["playVideo"] = 0
     ret = {"imageURL": "images/Slide6.JPG",
            "buttonLabels": ["null", "START"],
@@ -140,13 +151,13 @@ def do_click():
     data[mturk_id].append("timeDelta: "+ str(timeDelta.total_seconds()))
     return json.dumps(ret)
 
-  if sessionData["picCount"]==9:
+  if sessionData["picCount"]==10:
     sessionData["playVideo"] = 0
     Model2.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
     ret = {"imageURL": "images/START.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
-           "instructionText": "Choose how you would like to rotate the table.",
+           "instructionText": " ",
            "sessionData": sessionData,
        "buttonClass": "btn-success"}
     #timestamp
@@ -176,10 +187,10 @@ def do_click():
   imageLink = "images/R{}H{}.jpg".format(currRobotPos,currHumanPos)
   if currHumanPos != currRobotPos:
   #if currTableTheta==0 or currTableTheta==180:
-    if sessionData["picCount"]==7:
+    if sessionData["picCount"]==8:
       Model2.setPrevGoalHumanRobotPos(d,request.cookies.get('mturk_id','NOT SET'), currHumanPos, currRobotPos)
       sessionData["picCount"]+=1
-    elif sessionData["picCount"]==10:
+    elif sessionData["picCount"]==11:
       sessionData["toSurvey"] = True
       #timestamp
       secondFinish = datetime.datetime.now()

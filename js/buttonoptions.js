@@ -36,7 +36,7 @@ function buttonClicked(idx) {
 
 
     //hangling the radiobutton selection on slide 4
-    if (sessionData["picCount"]==4){
+    if (sessionData["picCount"]==5){
         $(".text-danger").show()
         if ((!$("input[name=1]:checked").val())&&(postData["buttonID"]==1)){
             $(".text-danger").removeClass('hide');
@@ -77,7 +77,7 @@ function handleResponse(rawData) {
             $("#instruction-text").html(jsonData["instructionText"]);
         }
 
-        if(sessionData["picCount"]==7 || sessionData["picCount"]==8|| sessionData["picCount"]==10){
+        if(sessionData["picCount"]==8 || sessionData["picCount"]==9|| sessionData["picCount"]==11){
             //videos start only after instructions
             if (sessionData["playVideo"]==2){
                 //disable buttons until the video is over
@@ -145,7 +145,7 @@ function handleResponse(rawData) {
         //dont frame the buttons as previously selected
         $('.ui-button').blur();
 
-        if (sessionData["picCount"]==4){
+        if (sessionData["picCount"]==5){
             $('.radio').removeAttr('style');
         }
     }
