@@ -79,6 +79,9 @@ function handleResponse(rawData) {
 
         if(sessionData["picCount"]==8 || sessionData["picCount"]==9|| sessionData["picCount"]==11){
             //videos start only after instructions
+			if ((sessionData["changeButton"]==2)&&(sessionData["playVideo"]==1)){
+							window.alert(); // here there should be code for changing left to straight
+			}
             if (sessionData["playVideo"]==2){
                 //disable buttons until the video is over
                 disableButtons();
@@ -102,6 +105,7 @@ function handleResponse(rawData) {
                         }
                         changeButtonLabels(jsonData["buttonLabels"]);
                     }
+
                     //handle changing button colors upon server request 
                     var bclasses = "btn-primary btn-success btn-danger btn-warning";
                     var newclass = jsonData["buttonClass"] || "btn-primary";

@@ -186,6 +186,7 @@ def do_click():
   videoLink = "videos/R{}H{}toR{}H{}.mp4".format(oldRobotPos,oldHumanPos,currRobotPos,currHumanPos,suffix)
   imageLink = "images/R{}H{}.jpg".format(currRobotPos,currHumanPos)
   if currHumanPos != currRobotPos:
+    sessionData["changeButton"] = 0
   #if currTableTheta==0 or currTableTheta==180:
     if sessionData["picCount"]==8:
       Model2.setPrevGoalHumanRobotPos(d,request.cookies.get('mturk_id','NOT SET'), currHumanPos, currRobotPos)
@@ -210,6 +211,8 @@ def do_click():
            "sessionData": sessionData}
     return json.dumps(ret)
   else:
+    if currHumanPos == currRobotPos and currHumanPos == 2:
+	   sessionData["changeButton"] = 2
     sessionData["playVideo"] = 1
     ret = {"videoURL": videoLink,
            "imageURL":imageLink,
