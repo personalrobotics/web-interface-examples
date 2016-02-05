@@ -143,8 +143,8 @@ def do_click():
         sessionData["playVideo"] = 0
         sessionData["playedLong"] = 0
         ret = {"imageURL": "images/START.jpg",
-               "buttonLabels": ['<i class="fa fa-long-arrow-left"></i>',
-                                '<i class="fa fa-long-arrow-right"></i>'],
+               "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
+                                '<i class="fa fa-2x fa-long-arrow-right"></i>'],
                "instructionText": " ",
                "sessionData": sessionData,
                "buttonClass": "btn-success"}
@@ -185,8 +185,8 @@ def do_click():
         sessionData["playVideo"] = 0
         Model2.restartTask(d, request.cookies.get('mturk_id', 'NOT SET'))
         ret = {"imageURL": "images/START.jpg",
-               "buttonLabels": ['<i class="fa fa-long-arrow-left"></i>',
-                                '<i class="fa fa-long-arrow-right"></i>'],
+               "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
+                                '<i class="fa fa-2x fa-long-arrow-right"></i>'],
                "instructionText": " ",
                "sessionData": sessionData,
                "buttonClass": "btn-success"}
@@ -249,8 +249,8 @@ def do_click():
             sessionData["playVideo"] = 1
             ret = {"videoURL": videoLink,
                    "imageURL": imageLink,
-                   "buttonLabels": ['<i class="fa fa-long-arrow-left"></i>',
-                                    'Stand Still'],
+                   "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
+                                    'Stay'],
                    "instructionText": "<br>",
                    "sessionData": sessionData,
                    "buttonClass": "btn-success"}
@@ -259,8 +259,8 @@ def do_click():
             sessionData["playVideo"] = 1
             ret = {"videoURL": videoLink,
                    "imageURL": imageLink,
-                   "buttonLabels": ['<i class="fa fa-long-arrow-left"></i>',
-                                    '<i class="fa fa-long-arrow-right"></i>'],
+                   "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
+                                    '<i class="fa fa-2x fa-long-arrow-right"></i>'],
                    "instructionText": "<br>",
                    "sessionData": sessionData,
                    "buttonClass": "btn-success"}
