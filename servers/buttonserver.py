@@ -14,6 +14,7 @@ data = dict()
 d=dict()
 timestart1 = dict()
 timestart2 = dict()
+preference = dict()
 #loads static pages from the directory
 #example: website.com/index.html
 #server will load index.html from the directory
@@ -113,6 +114,7 @@ def do_click():
     # we got the results from slide4 radio
     if "radioChoice" in requestData.keys():
        data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
+       preference[mturk_id] = requestData["radioChoice"]
     ret = {"imageURL": "images/Slide5.JPG",
            "buttonLabels": ["Prev", "START"],
            "instructionText": " ",
@@ -172,7 +174,7 @@ def do_click():
 
   #get next move
   currHumanPos, currRobotPos, oldHumanPos, oldRobotPos, resultBelief, message = \
-    Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
+    Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, preference[mturk_id])
   print "DEBUGGING: ", str(message)
   #debugging
   #print "Belief is: {}".format(resultBelief)

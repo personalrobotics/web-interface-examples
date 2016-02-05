@@ -108,9 +108,9 @@ class Data:
     self.prevGoalRobotPos = -1
     self.id = id  #this is a user id
 
-  def stateUpdateFromHumanAction(self,humanAction):
+  def stateUpdateFromHumanAction(self,humanAction, human_pref):
     global stateNames
-    robotAction = self.getRobotActionFromPolicy(self.currState, self.bel_t)
+    robotAction = self.getRobotActionFromPolicy(self.currState, self.bel_t, human_pref)
     oldHumanPos, oldRobotPos = self.getHumanRobotPosFromState(self.currState)
     nextState = self.getNextStateFromHumanRobotAction(self.currState,robotAction, humanAction)
     print "DEBUGGING: next state is ", str(nextState)
@@ -136,12 +136,15 @@ class Data:
           if(val > maxVal):
             maxVal = val
             action = int(A_RIGHT[aa][1])
-      if human_pref == "move_left":
+      elif human_pref == "move_left":
         if(A_LEFT[aa][0] == ss):
-          val = numpy.dot(A_RIGHT[aa][2:NUMOFUNOBSSTATES+2],bel_t)
+          val = numpy.dot(A_LEFT[aa][2:NUMOFUNOBSSTATES+2],bel_t)
           if(val > maxVal):
             maxVal = val
-            action = int(A_RIGHT[aa][1])
+            action = int(A_LEFT[aa][1])
+      else:
+        action = 1
+        print "ERROR! Unknown preference: ", str(human_pref)
     if VERBOSE:
       print "Value function is: " + str(maxVal)
       #print "Robot action is: " + self.STR_ACTIONS[action]
@@ -221,7 +224,7 @@ def restartTask(d, id):
 #the server will call this function passing the id and the button pressed
 #we'll store the class instances in a dictionary with IDs as keys
 #idInitiated helper function checks if id is in the dictionary
-def getMove(d,id,humanAction):
+def getMove(d,id,humanAction, human_pref):
   print("IN:id={},action={}".format(id,humanAction))
   #retrieve/create the class instance
   if idInitiated(id,d):
@@ -232,7 +235,7 @@ def getMove(d,id,humanAction):
     d[id] = x
     print("New class instance created: id={}".format(id))
   currHumanPos, currRobotPos, resultState, resultBelief, resultHAction, resultRAction, oldHumanPos, oldRobotPos = \
-    x.stateUpdateFromHumanAction(humanAction)
+    x.stateUpdateFromHumanAction(humanAction, human_pref)
   print("OUT:humanPos={}{}".format(currHumanPos, currRobotPos))
   if(resultHAction=='MOVE_LEFT')and(resultRAction=='MOVE_LEFT'):
      message = 'You moved LEFT. HERB did the same action.'
