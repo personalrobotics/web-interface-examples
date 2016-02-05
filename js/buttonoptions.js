@@ -55,6 +55,60 @@ function buttonClicked(idx) {
             $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
         }
     }
+	else if(sessionData["picCount"]==6){
+     $(".text-danger").show()
+        if (((!$("input[name=t1]:checked").val())||(!$("input[name=sc1]:checked").val()))&&(postData["buttonID"]==1)){
+            $(".text-danger").removeClass('hide');
+            enableButtons();
+        }
+	    else if(postData["buttonID"]==0){
+            $(".trust1").hide()
+			$(".trust1text").hide()
+			$(".sc1").hide()
+			$(".sc1text").hide()
+            $(".text-danger").hide()
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+        else if(($("input[name=t1]:checked").val())&&($("input[name=sc1]:checked").val())&&(postData["buttonID"]==1)){
+            radioChoice = $("input[name=t1]:checked").val()
+			radioChoice2 = $("input[name=sc1]:checked").val()
+            $(".trust1").hide()
+     		$(".trust1text").hide()
+			$(".sc1").hide()
+     		$(".sc1text").hide()
+            $(".text-danger").hide()
+            postData["trustRate1"] = radioChoice
+			postData["scRate1"] = radioChoice2
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+    }
+    else if(sessionData["picCount"]==11){
+        $(".text-danger").show()
+        if (((!$("input[name=t2]:checked").val())||(!$("input[name=sc2]:checked").val()))&&(postData["buttonID"]==1)){
+            $(".text-danger").removeClass('hide');
+            enableButtons();
+        }
+	    else if(postData["buttonID"]==0){
+            $(".trust2").hide()
+			$(".trust2text").hide()
+			$(".sc2").hide()
+			$(".sc2text").hide()
+            $(".text-danger").hide()
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+        else if(($("input[name=t2]:checked").val())&&($("input[name=sc2]:checked").val())&&(postData["buttonID"]==1)){
+            radioChoice = $("input[name=t2]:checked").val()
+			radioChoice2 = $("input[name=sc2]:checked").val()
+            $(".trust2").hide()
+     		$(".trust2text").hide()
+			$(".sc2").hide()
+     		$(".sc2text").hide()
+            $(".text-danger").hide()
+            postData["trustRate2"] = radioChoice
+			postData["scRate2"] = radioChoice2
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+    }
     else
         // Note: posted data *has* to be stringified for bottle.py to understand
         $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
@@ -77,10 +131,10 @@ function handleResponse(rawData) {
             $("#instruction-text").html(jsonData["instructionText"]);
         }
 
-        if(sessionData["picCount"]==8 || sessionData["picCount"]==9|| sessionData["picCount"]==11){
+if(sessionData["picCount"]==9 || sessionData["picCount"]==10|| sessionData["picCount"]==11 || sessionData["picCount"]==13){
             //videos start only after instructions
 			if ((sessionData["changeButton"]==2)&&(sessionData["playVideo"]==1)){
-							window.alert(); // here there should be code for changing left to straight
+						;//	window.alert(); // here there should be code for changing left to straight
 			}
             if (sessionData["playVideo"]==2){
                 //disable buttons until the video is over
@@ -152,6 +206,18 @@ function handleResponse(rawData) {
         if (sessionData["picCount"]==5){
             $('.radio').removeAttr('style');
         }
+		 else if(sessionData["picCount"] == 6){
+            $('.trust1').removeAttr('style');
+            $('.trust1text').removeAttr('style');
+			$('.sc1').removeAttr('style');
+            $('.sc1text').removeAttr('style');
+        }
+		else if(sessionData["picCount"] == 11){
+            $('.trust2').removeAttr('style');
+            $('.trust2text').removeAttr('style');
+			$('.sc2').removeAttr('style');
+            $('.sc2text').removeAttr('style');
+		}
     }
 }
 

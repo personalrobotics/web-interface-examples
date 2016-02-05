@@ -53,7 +53,7 @@ def do_click():
 
   #go to next/prev pic according to button clicked
   buttonClicked = requestData["buttonID"]
-  if sessionData["picCount"]<7:
+  if sessionData["picCount"]<8:
     if buttonClicked==0:
       sessionData["picCount"] -= 1
     elif buttonClicked==1:
@@ -115,13 +115,23 @@ def do_click():
     if "radioChoice" in requestData.keys():
        data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
        preference[mturk_id] = requestData["radioChoice"]
+    ret = {"imageURL": "",
+           "buttonLabels": ["Prev", "Next"],
+           "instructionText": " ",
+           "sessionData": sessionData}
+    return json.dumps(ret)
+	
+  if sessionData["picCount"]==7:
+    # we got the results from slide4 radio
+    data[mturk_id].append("trustRate1: "+ requestData["trustRate1"])
+    data[mturk_id].append("scRate1: "+ requestData["scRate1"])
     ret = {"imageURL": "images/Slide5.JPG",
            "buttonLabels": ["Prev", "START"],
            "instructionText": " ",
            "sessionData": sessionData}
     return json.dumps(ret)
 
-  if sessionData["picCount"]==7:
+  if sessionData["picCount"]==8:
     #timestamp
     startTime = datetime.datetime.now()
     data[mturk_id].append("start: "+ str(startTime))
@@ -136,8 +146,26 @@ def do_click():
        "buttonClass": "btn-success"}
     sessionData["picCount"]+=1       
     return json.dumps(ret)
+	
+  if sessionData["picCount"]==10:
+    sessionData["playVideo"] = 0
+    ret = {"imageURL": "",
+           "buttonLabels": ["null", "Next"],
+           "instructionText": " ",
+           "sessionData": sessionData,
+       "buttonClass": "btn-primary"}
+    sessionData["picCount"]+=1
+    #timestamp
+    firstFinish = datetime.datetime.now()
+    data[mturk_id].append("firstFinish: "+ str(firstFinish))
+    timeDelta = firstFinish-timestart1[mturk_id]
+    data[mturk_id].append("timeDelta: "+ str(timeDelta.total_seconds()))
+    return json.dumps(ret)
 
-  if sessionData["picCount"]==9:
+  if sessionData["picCount"]==11:
+    data[mturk_id].append("trustRate2: "+ requestData["trustRate2"])
+    data[mturk_id].append("scRate2: "+ requestData["scRate2"])
+
     sessionData["playVideo"] = 0
     ret = {"imageURL": "images/Slide6.JPG",
            "buttonLabels": ["null", "START"],
@@ -147,13 +175,9 @@ def do_click():
     data[mturk_id].append("round two")
     sessionData["picCount"]+=1
     #timestamp
-    firstFinish = datetime.datetime.now()
-    data[mturk_id].append("firstFinish: "+ str(firstFinish))
-    timeDelta = firstFinish-timestart1[mturk_id]
-    data[mturk_id].append("timeDelta: "+ str(timeDelta.total_seconds()))
     return json.dumps(ret)
 
-  if sessionData["picCount"]==10:
+  if sessionData["picCount"]==12:
     sessionData["playVideo"] = 0
     Model2.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
     ret = {"imageURL": "images/START.jpg",
@@ -190,10 +214,10 @@ def do_click():
   if currHumanPos != currRobotPos:
     sessionData["changeButton"] = 0
   #if currTableTheta==0 or currTableTheta==180:
-    if sessionData["picCount"]==8:
+    if sessionData["picCount"]==9:
       Model2.setPrevGoalHumanRobotPos(d,request.cookies.get('mturk_id','NOT SET'), currHumanPos, currRobotPos)
       sessionData["picCount"]+=1
-    elif sessionData["picCount"]==11:
+    elif sessionData["picCount"]==13:
       sessionData["toSurvey"] = True
       #timestamp
       secondFinish = datetime.datetime.now()
