@@ -7,7 +7,8 @@ VERBOSE = True
 #these are the same for all users
 folderName = 'data/'
 momdpOutFolderName = 'data/'
-policyFileName = 'CorridorTask.policy'
+policyFileNameLeft = 'CorridorHumanPrefLeft.policy'
+policyFileNameRight = 'CorridorHumanPrefRight.policy'
 statesFileName = 'obsState.dat'
 startStateHumanPos = 0
 startStateRobotPos = 0
@@ -25,7 +26,8 @@ R = numpy.zeros([NUMOFSTATES,NUMOFROBOTACTIONS, NUMOFHUMANACTIONS, NUMOFSTATES])
 T = numpy.zeros([NUMOFUNOBSSTATES, NUMOFSTATES, NUMOFROBOTACTIONS, NUMOFSTATES])
 NUMOFALPHAVECTORS = 469
 #self.NUMOFALPHAVECTORS = 42
-A = numpy.zeros([NUMOFALPHAVECTORS, NUMOFUNOBSSTATES + 2])
+A_LEFT = numpy.zeros([NUMOFALPHAVECTORS, NUMOFUNOBSSTATES + 2])
+A_RIGHT = numpy.zeros([NUMOFALPHAVECTORS, NUMOFUNOBSSTATES + 2])
 #assume that the state before last is the starting state. The last one is the absorbing state
 startStateIndx = 256#self.NUMOFSTATES-2
 print "Loading state names from file"
@@ -60,8 +62,25 @@ def globalsInit():
           for ss in range(0, NUMOFSTATES):
             for nss in range(0, NUMOFSTATES):
               T[yIndx][ss][ra][nss] = transMtx[ss][nss]
-  print "Loading XML policy file"
-  tree = ET.parse(momdpOutFolderName + policyFileName)
+  print "Loading XML policy file left"
+  tree = ET.parse(momdpOutFolderName + policyFileNameLeft)
+  root = tree.getroot()
+  numVectors = len(root.getchildren()[0].getchildren())
+  print numVectors
+  print root.iter('Vector')
+  counter = 0
+  for vector in root.iter('Vector'):
+    obsValue  = vector.get('obsValue')
+    action = vector.get('action')
+    values = vector.text.split(' ')
+    # vector format: obsValue, action, values
+    A_LEFT[counter][0] = float(obsValue)
+    A_LEFT[counter][1] = float(action)
+    for vv in range(0,NUMOFUNOBSSTATES):
+      A_LEFT[counter][2+vv] = float(values[vv])
+    counter = counter + 1
+
+  tree = ET.parse(momdpOutFolderName + policyFileNameRight)
   root = tree.getroot()
   numVectors = len(root.getchildren()[0].getchildren())
   print numVectors
@@ -73,10 +92,10 @@ def globalsInit():
     values = vector.text.split(' ')
 
     # vector format: obsValue, action, values
-    A[counter][0] = float(obsValue)
-    A[counter][1] = float(action)
+    A_RIGHT[counter][0] = float(obsValue)
+    A_RIGHT[counter][1] = float(action)
     for vv in range(0,NUMOFUNOBSSTATES):
-      A[counter][2+vv] = float(values[vv])
+      A_RIGHT[counter][2+vv] = float(values[vv])
     counter = counter + 1
 
 class Data:
@@ -107,15 +126,22 @@ class Data:
 
     return (currHumanPos, currRobotPos, resultState, resultBelief, resultHAction, resultRAction, oldHumanPos, oldRobotPos)
 
-  def getRobotActionFromPolicy(self, ss, bel_t):
+  def getRobotActionFromPolicy(self, ss, bel_t, human_pref):
     action = -1
     maxVal = -1
     for aa in range(0, NUMOFALPHAVECTORS):
-      if(A[aa][0] == ss):
-        val = numpy.dot(A[aa][2:NUMOFUNOBSSTATES+2],bel_t)
-        if(val > maxVal):
-          maxVal = val
-          action = int(A[aa][1])
+      if human_pref == "move_right":
+        if(A_RIGHT[aa][0] == ss):
+          val = numpy.dot(A_RIGHT[aa][2:NUMOFUNOBSSTATES+2],bel_t)
+          if(val > maxVal):
+            maxVal = val
+            action = int(A_RIGHT[aa][1])
+      if human_pref == "move_left":
+        if(A_LEFT[aa][0] == ss):
+          val = numpy.dot(A_RIGHT[aa][2:NUMOFUNOBSSTATES+2],bel_t)
+          if(val > maxVal):
+            maxVal = val
+            action = int(A_RIGHT[aa][1])
     if VERBOSE:
       print "Value function is: " + str(maxVal)
       #print "Robot action is: " + self.STR_ACTIONS[action]
