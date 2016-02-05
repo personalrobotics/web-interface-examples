@@ -255,7 +255,7 @@ def do_click():
                    "sessionData": sessionData,
                    "buttonClass": "btn-success"}
             return json.dumps(ret)
-        else
+        else:
             sessionData["playVideo"] = 1
             ret = {"videoURL": videoLink,
                    "imageURL": imageLink,
