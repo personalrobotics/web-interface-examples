@@ -250,7 +250,7 @@ def do_click():
             ret = {"videoURL": videoLink,
                    "imageURL": imageLink,
                    "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
-                                    'Stay'],
+                                    '<span style="font-size:25px;">Stay</span>'],
                    "instructionText": "<br>",
                    "sessionData": sessionData,
                    "buttonClass": "btn-success"}
