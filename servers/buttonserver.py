@@ -8,6 +8,7 @@ import os
 import shutil
 import time
 import datetime
+from IPython import embed
 
 app = Bottle()
 data = dict()
@@ -141,7 +142,8 @@ def do_click():
         data[mturk_id].append("start: " + str(startTime))
         timestart1[mturk_id] = startTime
         sessionData["playVideo"] = 0
-        sessionData["playedLong"] = 0
+        sessionData["playedLongStart"] = 0
+        sessionData["playedLongStay"] = 0
         ret = {"imageURL": "images/START.jpg",
                "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
                                 '<i class="fa fa-2x fa-long-arrow-right"></i>'],
@@ -210,13 +212,19 @@ def do_click():
     # play the long video if the human-robot actions
     # are the same and it's the first time this is happening
     suffix = ""
-    if currHumanPos == currRobotPos and sessionData["playedLong"] == 0:
-        # if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
+    embed()
+    if oldHumanPos == 0 and oldRobotPos == 0 and currHumanPos == currRobotPos \
+	and sessionData["playedLongStart"] == 0:
+	    print "DEBUGGING: LONG VIDEO!!!!!!!!!!!!!!!!!!!"
         suffix = "l"
-        sessionData["playedLong"] = 1
-    videoLink = "videos/R{}H{}toR{}H{}.mp4".format(
+        sessionData["playedLongStart"] = 1
+	if oldHumanPos !=0 and oldHumanPos == oldRobotPos and currHumanPos == currRobotPos:
+	    suffix = "l"
+	    sessionData["playedLongStay"] = 1
+    videoLink = "videos/R{}H{}toR{}H{}{}.mp4".format(
         oldRobotPos, oldHumanPos, currRobotPos, currHumanPos, suffix)
     imageLink = "images/R{}H{}.jpg".format(currRobotPos, currHumanPos)
+    sessionData["playVideo"] = 1 # if you reached this point you should be able to play video
     if currHumanPos != currRobotPos:
         sessionData["changeButton"] = 0
     # if currTableTheta==0 or currTableTheta==180:
@@ -246,7 +254,6 @@ def do_click():
         return json.dumps(ret)
     else:
         if currHumanPos == currRobotPos and currHumanPos == 2:
-            sessionData["playVideo"] = 1
             ret = {"videoURL": videoLink,
                    "imageURL": imageLink,
                    "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
@@ -256,7 +263,6 @@ def do_click():
                    "buttonClass": "btn-success"}
             return json.dumps(ret)
         else:
-            sessionData["playVideo"] = 1
             ret = {"videoURL": videoLink,
                    "imageURL": imageLink,
                    "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
