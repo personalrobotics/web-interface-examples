@@ -134,9 +134,6 @@ function handleResponse(rawData) {
 if(sessionData["picCount"]==9 || sessionData["picCount"]==10|| sessionData["picCount"]==11 || sessionData["picCount"]==13){
 			//window.alert(sessionData["playVideo"])
             //videos start only after instructions
-			if ((sessionData["changeButton"]==2)&&(sessionData["playVideo"]==1)){
-						;//	window.alert(); // here there should be code for changing left to straight
-			}
             if (sessionData["playVideo"]==1){
                 //disable buttons until the video is over
                 disableButtons();

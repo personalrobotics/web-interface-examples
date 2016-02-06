@@ -206,16 +206,13 @@ def do_click():
     currHumanPos, currRobotPos, oldHumanPos, oldRobotPos, resultBelief, message = \
         Model2.getMove(d, request.cookies.get(
             'mturk_id', 'NOT SET'), buttonClicked, preference[mturk_id])
-    print "DEBUGGING: ", str(message)
     # debugging
     # print "Belief is: {}".format(resultBelief)
     # play the long video if the human-robot actions
     # are the same and it's the first time this is happening
     suffix = ""
-    embed()
     if oldHumanPos == 0 and oldRobotPos == 0 and currHumanPos == currRobotPos \
 	and sessionData["playedLongStart"] == 0:
-	    print "DEBUGGING: LONG VIDEO!!!!!!!!!!!!!!!!!!!"
         suffix = "l"
         sessionData["playedLongStart"] = 1
 	if oldHumanPos !=0 and oldHumanPos == oldRobotPos and currHumanPos == currRobotPos:
@@ -226,7 +223,6 @@ def do_click():
     imageLink = "images/R{}H{}.jpg".format(currRobotPos, currHumanPos)
     sessionData["playVideo"] = 1 # if you reached this point you should be able to play video
     if currHumanPos != currRobotPos:
-        sessionData["changeButton"] = 0
     # if currTableTheta==0 or currTableTheta==180:
         if sessionData["picCount"] == 9:
             Model2.setPrevGoalHumanRobotPos(d, request.cookies.get(
@@ -258,6 +254,15 @@ def do_click():
                    "imageURL": imageLink,
                    "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
                                     '<span style="font-size:25px;">Stay</span>'],
+                   "instructionText": "<br>",
+                   "sessionData": sessionData,
+                   "buttonClass": "btn-success"}
+            return json.dumps(ret)
+        elif currHumanPos == currRobotPos and currHumanPos == 1:
+            ret = {"videoURL": videoLink,
+                   "imageURL": imageLink,
+                   "buttonLabels": ['<span style="font-size:25px;">Stay</span>',
+				                    '<i class="fa fa-2x fa-long-arrow-right"></i>'],
                    "instructionText": "<br>",
                    "sessionData": sessionData,
                    "buttonClass": "btn-success"}
