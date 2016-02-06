@@ -288,7 +288,6 @@ def handle_survey():
         data[mturk_id].append(request.forms.get(str(i)))
     data[mturk_id].append(request.forms.get("t5"))
     data[mturk_id].append(request.forms.get("sc5"))
-    embed()
     with open('output/log.json', 'w') as outfile:
         json.dump(data, outfile)
     print("User {} submitted the survey".format(mturk_id))
