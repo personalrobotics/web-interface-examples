@@ -113,7 +113,6 @@ class Data:
     robotAction = self.getRobotActionFromPolicy(self.currState, self.bel_t, human_pref)
     oldHumanPos, oldRobotPos = self.getHumanRobotPosFromState(self.currState)
     nextState = self.getNextStateFromHumanRobotAction(self.currState,robotAction, humanAction)
-    print "DEBUGGING: next state is ", str(nextState)
     new_bel_t = self.getNewBeliefFromHumanAction(self.currState,robotAction,nextState, self.bel_t)
     self.bel_t = new_bel_t
     self.currState = nextState
@@ -200,7 +199,6 @@ def setPrevGoalHumanRobotPos(d, id, prevGoalHumanPos, prevGoalRobotPos):
   x.prevGoalRobotPos = prevGoalRobotPos
 
 def restartTask(d, id):
-  print "DEBUGGING: restarting task!!"
   print("IN:id={}".format(id))
   #retrieve/create the class instance
   if idInitiated(id,d):
