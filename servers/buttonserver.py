@@ -1,4 +1,4 @@
-from bottle import Bottle, run, static_file, request,response
+from bottle import Bottle, run, static_file, request, response
 import json
 import string
 import random
@@ -6,147 +6,141 @@ import json
 import Model2
 import os
 import shutil
-import time 
+import time
 import datetime
 
 app = Bottle()
 data = dict()
-d=dict()
+d = dict()
 timestart1 = dict()
 timestart2 = dict()
 timestart3 = dict()
-timestart4 = dict()
 trialIndx = dict()
+preference = dict()
 
 
-#loads static pages from the directory
-#example: website.com/index.html
-#server will load index.html from the directory
+# loads static pages from the directory
+# example: website.com/index.html
+# server will load index.html from the directory
 @app.route('<path:path>')
 def server_static(path):
   return static_file(path, root=".")
 
-#handles buttonpress post requests by buttonClicked function in the js
-#the input is provided through the request data
-#we retrieve it using json.loads
-#the server decides what to load next by looking into the request data
+# handles buttonpress post requests by buttonClicked function in the js
+# the input is provided through the request data
+# we retrieve it using json.loads
+# the server decides what to load next by looking into the request data
 # and seeing what the current state of the webapp is
+
+
 @app.post('/ui/button')
 def do_click():
   global prevTableTheta
-  
 
-  #init dictionary of users
+  # init dictionary of users
   global d
 
-  #add artificial delay
+  # add artificial delay
   time.sleep(0.5)
 
-  #manually set value
+  # manually set value
   totalPicsNum = 19
-  survey_duration = 10*60*60 #10 hours to prevent retaking
+  survey_duration = 10 * 60 * 60  # 10 hours to prevent retaking
 
-  #get the data that the buttonClicked posted
+  # get the data that the buttonClicked posted
   requestData = json.loads(request.body.getvalue())
   sessionData = requestData["sessionData"]
 
   if "toSurvey" in sessionData:
-    return json.dumps({"toSurvey":True})
+    return json.dumps({"toSurvey": True})
 
-  #init log variable
+  # init log variable
   global data
 
-  #go to next/prev pic according to button clicked
+  # go to next/prev pic according to button clicked
   buttonClicked = requestData["buttonID"]
-  if sessionData["picCount"]<8:
-    if buttonClicked==0:
+  if sessionData["picCount"] < 8:
+    if buttonClicked == 0:
       sessionData["picCount"] -= 1
-    elif buttonClicked==1:
+    elif buttonClicked == 1:
       sessionData["picCount"] += 1
+    if sessionData["picCount"] == 1:
+        ret = {"imageURL": "images/Slide1.JPG",
+               "buttonLabels": ["null", "Next"],
+               "instructionText": "Instructions 1/3",
+               "sessionData": sessionData,
+               "buttonClass": "btn-primary"}
+        return json.dumps(ret)
 
-  if sessionData["picCount"]==1:
-    ret = {"imageURL": "images/Slide1.JPG",
-           "buttonLabels": ["null", "Next"],
-           "instructionText": "Instructions 1/3",
-           "sessionData": sessionData,
-       "buttonClass": "btn-primary"}
-    return json.dumps(ret)
-	
-  if sessionData["picCount"]==2:
-    #generate a cookie with user's ID
-    gen_id = ''.join(random.choice(string.ascii_uppercase +
-      string.digits) for _ in range(6))
-    response.set_cookie('mturk_id', gen_id, max_age=survey_duration, path='/')
-    data[gen_id] = []
-    #get ip
-    ip = request.environ.get('REMOTE_ADDR')
-    data[gen_id].append(ip)
-    ret = {"imageURL": "",
-           "buttonLabels": ["null", "Next"],
-           "instructionText": " ",
-           "sessionData": sessionData,
-       "buttonClass": "btn-primary"}
-    return json.dumps(ret)
+  if sessionData["picCount"] == 2:
+        ret = {"imageURL": "images/Slide2.JPG",
+               "buttonLabels": ["null", "Next"],
+               "instructionText": " ",
+               "sessionData": sessionData,
+               "buttonClass": "btn-primary"}
+        return json.dumps(ret)
 
-  #following code may need mturk_id, so get it once now
-  mturk_id = request.cookies.get('mturk_id','NOT SET')
-  	
-  if sessionData["picCount"]==3:
-    # we got the results from slide4 radio
-    if "generalTrust" in requestData.keys():
-      data[mturk_id].append("generalTrust: "+ requestData["generalTrust"])
-      data[mturk_id].append("previousExperience: "+ requestData["previousExperience"])
+  if sessionData["picCount"] == 3:
+        ret = {"imageURL": "images/Slide3.JPG",
+               "buttonLabels": ["Prev", "Next"],
+               "instructionText": " ",
+               "sessionData": sessionData}
+        return json.dumps(ret)
 
-    trialIndx[mturk_id] = 1
+  if sessionData["picCount"] == 4:
+        ret = {"imageURL": "images/Slide4.JPG",
+               "buttonLabels": ["Prev", "Next"],
+               "instructionText": " ",
+               "sessionData": sessionData}
+        return json.dumps(ret)
 
-    ret = {"imageURL": "images/Slide2.JPG",
-           "buttonLabels": ["null", "Next"],
-           "instructionText": " ",
-           "sessionData": sessionData,
-       "buttonClass": "btn-primary"}
-    return json.dumps(ret)
+  # following code may need mturk_id, so get it once now
+  mturk_id = request.cookies.get('mturk_id', 'NOT SET')
 
-  if sessionData["picCount"]==4:
-    ret = {"imageURL": "images/Slide3.JPG",
-           "buttonLabels": ["Prev", "Next"],
-           "instructionText": " ",
-           "sessionData": sessionData}
-    return json.dumps(ret)
-  
-  if sessionData["picCount"]==5:
+  if sessionData["picCount"] == 5:
+        # generate a cookie with user's ID
+        gen_id = ''.join(random.choice(string.ascii_uppercase +
+                                       string.digits) for _ in range(6))
+        response.set_cookie('mturk_id', gen_id,
+                            max_age=survey_duration, path='/')
+        data[gen_id] = []
+        # get ip
+        ip = request.environ.get('REMOTE_ADDR')
+        data[gen_id].append(ip)
 
-    ret = {"imageURL": "images/Slide4.JPG",
-           "buttonLabels": ["Prev", "Next"],
-           "instructionText": " ",
-           "sessionData": sessionData}
-    return json.dumps(ret)
+        ret = {"imageURL": "images/Slide5.JPG",
+               "buttonLabels": ["Prev", "Next"],
+               "instructionText": " ",
+               "sessionData": sessionData}
+        return json.dumps(ret)
 
+    # following code may need mturk_id, so get it once now
+  mturk_id = request.cookies.get('mturk_id', 'NOT SET')
 
+  if sessionData["picCount"] == 6:
+      trialIndx[mturk_id] = 1
+      if "radioChoice" in requestData.keys():
+            data[mturk_id].append("radioChoice: " + requestData["radioChoice"])
+            preference[mturk_id] = requestData["radioChoice"]
+      ret = {"imageURL": "",
+               "buttonLabels": ["Prev", "Next"],
+               "instructionText": " ",
+               "sessionData": sessionData}
+      return json.dumps(ret)
 
+  if sessionData["picCount"] == 7:
+        # we got the results from slide4 radio
+        data[mturk_id].append("trustRate1: " + requestData["trustRate1"])
+        data[mturk_id].append("scRate1: " + requestData["scRate1"])
+        ret = {"imageURL": "images/Slide6.JPG",
+               "buttonLabels": ["Prev", "START"],
+               "instructionText": " ",
+               "sessionData": sessionData}
+        return json.dumps(ret)
 
-  if sessionData["picCount"]==6:
-    if "radioChoice" in requestData.keys():
-      data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
-    ret = {"imageURL": "",
-           "buttonLabels": ["Prev", "Next"],
-           "instructionText": " ",
-           "sessionData": sessionData}
-    return json.dumps(ret)
-
-
-  if sessionData["picCount"]==7:
-    # we got the results from slide4 radio
-    data[mturk_id].append("trustRate1: "+ requestData["trustRate1"])
-    data[mturk_id].append("scRate1: "+ requestData["scRate1"])
-
-    ret = {"imageURL": "images/Slide5.JPG",
-           "buttonLabels": ["Prev", "START"],
-           "instructionText": " ",
-           "sessionData": sessionData}
-    return json.dumps(ret)
 
   if sessionData["picCount"]==8:
-    #timestamp
+    # timestamp
     startTime = datetime.datetime.now()
     data[mturk_id].append("start: "+ str(startTime))
     timestart1[mturk_id] = startTime
@@ -169,7 +163,7 @@ def do_click():
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
     sessionData["picCount"]+=1
-    #timestamp
+    # timestamp
     firstFinish = datetime.datetime.now()
     data[mturk_id].append("firstFinish: "+ str(firstFinish))
     timeDelta = firstFinish-timestart1[mturk_id]
@@ -180,14 +174,14 @@ def do_click():
     data[mturk_id].append("trustRate2: "+ requestData["trustRate2"])
     data[mturk_id].append("scRate2: "+ requestData["scRate2"])
     sessionData["playVideo"] = 0
-    ret = {"imageURL": "images/Slide6.JPG",
+    ret = {"imageURL": "images/Slide7.JPG",
            "buttonLabels": ["null", "START"],
            "instructionText": " ",
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
     data[mturk_id].append("round two")
     sessionData["picCount"]+=1
-    #timestamp
+    # timestamp
     return json.dumps(ret)
 
 
@@ -200,7 +194,7 @@ def do_click():
            "instructionText": "Choose how you would like to rotate the table.",
            "sessionData": sessionData,
        "buttonClass": "btn-success"}
-    #timestamp
+    # timestamp
     secondStart = datetime.datetime.now()
     data[mturk_id].append("secondStart: "+ str(secondStart))
     timestart2[mturk_id] = secondStart
@@ -234,7 +228,7 @@ def do_click():
        "buttonClass": "btn-primary"}
     data[mturk_id].append("round three")
     sessionData["picCount"]+=1
-    #timestamp
+    # timestamp
     return json.dumps(ret)
 
 
@@ -247,7 +241,7 @@ def do_click():
            "instructionText": "Choose how you would like to rotate the table.",
            "sessionData": sessionData,
        "buttonClass": "btn-success"}
-    #timestamp
+    # timestamp
     thirdStart = datetime.datetime.now()
     data[mturk_id].append("thirdStart: "+ str(thirdStart))
     sessionData["picCount"]+=1  
@@ -279,7 +273,7 @@ def do_click():
        "buttonClass": "btn-primary"}
     data[mturk_id].append("round four")
     sessionData["picCount"]+=1
-    #timestamp
+    # timestamp
     return json.dumps(ret)
 
 
@@ -292,23 +286,23 @@ def do_click():
            "instructionText": "Choose how you would like to rotate the table.",
            "sessionData": sessionData,
        "buttonClass": "btn-success"}
-    #timestamp
+    # timestamp
     fourthStart = datetime.datetime.now()
     data[mturk_id].append("fourthStart: "+ str(fourthStart))
     timestart4[mturk_id] = fourthStart
     sessionData["picCount"]+=1  
     return json.dumps(ret) 
 
-  #record in log
+  # record in log
   data[mturk_id].append(buttonClicked)
 
-  #get next move
+  # get next move
   currTableTheta, oldTableTheta, resultBelief, message = \
     Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
 
-  #debugging
-  #print "Belief is: {}".format(resultBelief)
-  #play the long video if the human-robot actions
+  # debugging
+  # print "Belief is: {}".format(resultBelief)
+  # play the long video if the human-robot actions
   # are the same and it's the first time this is happening
   suffix=""
   if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
@@ -322,11 +316,14 @@ def do_click():
       sessionData["picCount"]+=1
     elif sessionData["picCount"]==21:
       sessionData["toSurvey"] = True
-      #timestamp
+      # timestamp
       fourthFinish = datetime.datetime.now()
       data[mturk_id].append("fourthFinish: "+ str(fourthFinish))
       timeDelta = fourthFinish-timestart4[mturk_id]
       data[mturk_id].append("timeDelta4: "+ str(timeDelta.total_seconds()))
+  
+    from IPython import embed
+    embed() 
 
     data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief0:" + str(resultBelief[0][0]))
     data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief1:" + str(resultBelief[1][0]))
@@ -354,9 +351,9 @@ def do_click():
     return json.dumps(ret)
 
 
-#when the survey is approved by surveyhandler.js, the button requests this url
-#handle_survey records the responses and gives a one line html page in response
-#web browsers automatically add head/body syntax for this case
+# when the survey is approved by surveyhandler.js, the button requests this url
+# handle_survey records the responses and gives a one line html page in response
+# web browsers automatically add head/body syntax for this case
 @app.post('/submit_survey')
 def handle_survey():
   mturk_id = request.cookies.get('mturk_id', 'EXPIRED')
@@ -369,8 +366,8 @@ def handle_survey():
   print("User {} submitted the survey".format(mturk_id))
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)
 
-#the server only writes to log.json, so if there's some data there already,
-#we'll copy it to another file 
+# the server only writes to log.json, so if there's some data there already,
+# we'll copy it to another file 
 def backupLog():
   i=1
   while (os.path.isfile("output/log-backup-{}.json".format(i))):

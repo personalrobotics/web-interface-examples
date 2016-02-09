@@ -34,26 +34,7 @@ function buttonClicked(idx) {
     var postData = {"sessionData": sessionData,
                     "buttonID": idx};
     
-	if (sessionData["picCount"]==2){
-        $(".text-danger").show()
-        if ((!$("input[name=s1]:checked").val())||(!$("input[name=s2]:checked").val())){
-            $(".text-danger").removeClass('hide');
-            enableButtons();
-        }
-        else if(($("input[name=s1]:checked").val())&&($("input[name=s2]:checked").val())&&(postData["buttonID"]==1)){
-            radioChoice = $("input[name=s1]:checked").val()
-			radioChoice2 = $("input[name=s2]:checked").val()
-            $(".startquestions").hide()
-     		$(".starttext").hide()
-			$(".s1").hide()
-     		$(".s2").hide()
-            $(".text-danger").hide()
-            postData["generalTrust"] = radioChoice
-			postData["previousExperience"] = radioChoice2
-            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
-        }
-    }	
-    else if (sessionData["picCount"]==5){
+      if (sessionData["picCount"]==5){
         $(".text-danger").show()
         if ((!$("input[name=1]:checked").val())&&(postData["buttonID"]==1)){
             $(".text-danger").removeClass('hide');
