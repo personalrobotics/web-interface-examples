@@ -134,6 +134,33 @@ function buttonClicked(idx) {
             $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
         }
     }
+   else if(sessionData["picCount"]==20){
+      $(".text-danger").show()
+        if (((!$("input[name=t4]:checked").val())||(!$("input[name=sc4]:checked").val()))&&(postData["buttonID"]==1)){
+            $(".text-danger").removeClass('hide');
+            enableButtons();
+        }
+        else if(postData["buttonID"]==0){
+            $(".trust4").hide()
+            $(".trust4text").hide()
+            $(".sc4").hide()
+            $(".sc4text").hide()
+            $(".text-danger").hide()
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+        else if(($("input[name=t4]:checked").val())&&($("input[name=sc4]:checked").val())&&(postData["buttonID"]==1)){
+            radioChoice = $("input[name=t4]:checked").val()
+            radioChoice2 = $("input[name=sc4]:checked").val()
+            $(".trust4").hide()
+            $(".trust4text").hide()
+            $(".sc4").hide()
+            $(".sc4text").hide()
+            $(".text-danger").hide()
+            postData["trustRate4"] = radioChoice
+            postData["scRate4"] = radioChoice2
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+    }
     else
         // Note: posted data *has* to be stringified for bottle.py to understand
         $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
@@ -148,7 +175,6 @@ function handleResponse(rawData) {
     if ("toSurvey" in jsonData){
         window.location.href = "survey.html";
     }
-
     //server may provide a new image, new buttons text, colors, instructions
     else{
         enableButtons();
@@ -157,8 +183,7 @@ function handleResponse(rawData) {
         }
 
         if(sessionData["picCount"]==9 || sessionData["picCount"]==10|| sessionData["picCount"]==11|| 
-sessionData["picCount"]==13 || sessionData["picCount"]==14|| sessionData["picCount"]==15||
-sessionData["picCount"]==17){
+sessionData["picCount"]==13 || sessionData["picCount"]==22){
             //videos start only after instructions
             if (sessionData["playVideo"]==2){ //remove now for debugging
                 //disable buttons until the video is over
@@ -251,7 +276,12 @@ sessionData["picCount"]==17){
             $('.sc3').removeAttr('style');
             $('.sc3text').removeAttr('style');
          }
-
+        else if(sessionData["picCount"] == 20){
+            $('.trust4').removeAttr('style');
+            $('.trust4text').removeAttr('style');
+            $('.sc4').removeAttr('style');
+            $('.sc4text').removeAttr('style');
+         }
     }
 }
 
