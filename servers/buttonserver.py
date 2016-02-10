@@ -148,7 +148,6 @@ def do_click():
 
     if sessionData["picCount"] == 6:
         if "radioChoice" in requestData.keys():
-            data[mturk_id].append("radioChoice: " + requestData["radioChoice"])
             preference[mturk_id] = requestData["radioChoice"]
         ret = {"imageURL": "",
                "buttonLabels": ["Prev", "Next"],
@@ -169,6 +168,8 @@ def do_click():
     if sessionData["picCount"] == 8:
         # timestamp
         startTime = datetime.datetime.now()
+        data[mturk_id].append(preference[mturk_id])
+
         data[mturk_id].append("start: " + str(startTime))
         timestart1[mturk_id] = startTime
         sessionData["playVideo"] = 0
@@ -303,8 +304,6 @@ def do_click():
 
     if sessionData["picCount"] == 20:
         if "radioChoice2" in requestData.keys():
-            data[mturk_id].append("hallwayPreference: " +
-                                  requestData["radioChoice2"])
             hallwayPreference[mturk_id] = requestData["radioChoice2"]
         sessionData["playVideo"] = 0
         ret = {"imageURL": "",
@@ -327,12 +326,14 @@ def do_click():
                "instructionText": " ",
                "sessionData": sessionData,
                "buttonClass": "btn-primary"}
-        data[mturk_id].append("round three")
 
         # timestamp
         return json.dumps(ret)
 
     if sessionData["picCount"] == 22:
+        data[mturk_id].append("round three")
+        data[mturk_id].append("hallwayPreference: " + 
+                                  hallwayPreference[mturk_id] )
         sessionData["playVideo"] = 0
         ret = {"imageURL": "images/START.jpg",
                "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
