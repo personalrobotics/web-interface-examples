@@ -267,7 +267,6 @@ def do_click():
                "instructionText": " ",
                "sessionData": sessionData,
                "buttonClass": "btn-primary"}
-        data[mturk_id].append("round three")
         # timestamp
         return json.dumps(ret)
 
@@ -278,8 +277,6 @@ def do_click():
                "instructionText": " ",
                "sessionData": sessionData,
                "buttonClass": "btn-primary"}
-        data[mturk_id].append("round three")
-        print "in 16!!!!!!"
         # timestamp
         return json.dumps(ret)
 
@@ -290,7 +287,6 @@ def do_click():
                "instructionText": " ",
                "sessionData": sessionData,
                "buttonClass": "btn-primary"}
-        data[mturk_id].append("round three")
         # timestamp
         return json.dumps(ret)
 
@@ -301,7 +297,6 @@ def do_click():
                "instructionText": " ",
                "sessionData": sessionData,
                "buttonClass": "btn-primary"}
-        data[mturk_id].append("round three")
 
         # timestamp
         return json.dumps(ret)
@@ -317,7 +312,6 @@ def do_click():
                "instructionText": " ",
                "sessionData": sessionData,
                "buttonClass": "btn-primary"}
-        data[mturk_id].append("round three")
 
         # timestamp
         return json.dumps(ret)
