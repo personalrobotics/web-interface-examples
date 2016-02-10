@@ -13,6 +13,7 @@ jQuery(function ($) {
         if (!$("input[name=1]:checked").val()) demandCompletion(e);
         if (!$("input[name=2]:checked").val()) demandCompletion(e);
         if (!$("input[name=4]:checked").val()) demandCompletion(e);
+        if (!$("input[name=6]:checked").val()) demandCompletion(e);
 
 
         if (!$("input[name=t5]:checked").val()) demandCompletion(e);

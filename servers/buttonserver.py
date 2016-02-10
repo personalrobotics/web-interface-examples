@@ -14,6 +14,7 @@ from IPython import embed
 app = Bottle()
 data = dict()
 d = dict()
+hallway_d = dict()
 timestart1 = dict()
 timestart2 = dict()
 timestart3 = dict()
@@ -43,7 +44,7 @@ def do_click():
     global prevTableTheta
 
     # init dictionary of users
-    global d
+    global d, hallway_d
 
     # add artificial delay
     time.sleep(0.5)
@@ -117,7 +118,7 @@ def do_click():
 
         trialIndx[mturk_id] = 1
 
-        sessionData["picCount"] = 16
+        #sessionData["picCount"] = 16
 
         ret = {"imageURL": "images/Slide3.JPG",
                "buttonLabels": ["Prev", "Next"],
@@ -379,7 +380,7 @@ def do_click():
             if sessionData["picCount"] == 9:
                 Model2.setPrevGoalStateTheta(d, request.cookies.get(
                     'mturk_id', 'NOT SET'), currTableTheta)
-                sessionData["picCount"] += 1
+            sessionData["picCount"] += 1
             data[mturk_id].append(
                 "trial" + str(trialIndx[mturk_id]) + "belief0:" + str(resultBelief[0][0]))
             data[mturk_id].append(
@@ -412,7 +413,7 @@ def do_click():
     elif sessionData["currentTask"] == "Hallway":
         print "human preference: ", str(hallwayPreference[mturk_id])
         currHumanPos, currRobotPos, oldHumanPos, oldRobotPos, resultBelief, message = \
-            HallwayModel.getMove(d, request.cookies.get(
+            HallwayModel.getMove(hallway_d, request.cookies.get(
                 'mturk_id', 'NOT SET'), buttonClicked, hallwayPreference[mturk_id])
         suffix = ""
         if oldHumanPos == 0 and oldRobotPos == 0 and currHumanPos == currRobotPos \
@@ -484,7 +485,7 @@ def do_click():
 @app.post('/submit_survey')
 def handle_survey():
     mturk_id = request.cookies.get('mturk_id', 'EXPIRED')
-    for i in xrange(1, 7):
+    for i in xrange(1, 9):
         data[mturk_id].append(request.forms.get(str(i)))
     data[mturk_id].append(request.forms.get("t5"))
     data[mturk_id].append(request.forms.get("sc5"))

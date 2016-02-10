@@ -27,19 +27,19 @@
     <form action="submit_survey" method="post" id="survey">
       <h3>Thank you for your participation! To finish this study, answer the following questionnaire. </h3>
       <br>
-      1. What was the color of the table?
+      1. We asked you two questions before the last trial. What were the questions about? 
        
       <div class="radio">
-        <label><input type="radio" name=1 value="Red">Red</label>
+        <label><input type="radio" name=1 value="Satisfaction">Human satisfaction and comfort</label>
       </div> 
       <div class="radio">
-        <label><input type="radio" name=1 value="Magenta">Magenta</label>
+        <label><input type="radio" name=1 value="Trust">HERB trustworthiness and human self-confidence</label>
       </div> 
       <div class="radio">
-        <label><input type="radio" name=1 value="Gray">Gray</label>
+        <label><input type="radio" name=1 value="Intelligence">HERB intelligence and task efficiency</label>
       </div> 
       <div class="radio">
-        <label><input type="radio" name=1 value="Purple">Purple</label>
+        <label><input type="radio" name=1 value="Fluency">Human-robot team fluency and collaboration</label>
       </div> 
       <br>
 
@@ -59,7 +59,7 @@
       </div-->
       <br>
 
-      4. Did you switch preferences during the task?
+      4. Did you switch preferences during the <strong> table turning task </strong>?
       <div class="radio">
         <label><input type="radio" name=4 value="Yes">Yes</label>
       </div>
@@ -71,13 +71,25 @@
       <br>
       <br>
 
-      <p>5. Why do you think the robot behaved the way it did?</p>
-      <input type="text" name=6 class="fr3 form-control" placeholder="Comment on robot behavior">
+      5. Did you switch preferences during the <strong> hallway task </strong>?
+    <div class="radio">
+        <label><input type="radio" name=6 value="Yes">Yes</label>
+      </div>
+      <div class="radio">
+        <label><input type="radio" name=6 value="No">No</label>
+      </div>
+      Explain your answer below:
+      <input type="text" name=7 class="fr2 form-control" placeholder="Explain your answer to 5">
       <br>
       <br>
 
-      <p>6. Please rate your agreement to the following statement based on your degree of <strong>trust</strong> to <strong>HERB</strong> right now.  </p>
-	   <em>  Think carefully about your interaction experiences before answering. 
+      <p>6. Why do you think the robot behaved the way it did?</p>
+      <input type="text" name=8 class="fr3 form-control" placeholder="Comment on robot behavior">
+      <br>
+      <br>
+
+      <p>7. Please rate your agreement to the following statement based on your degree of <strong>trust</strong> to <strong>HERB</strong> right now.  </p>
+     <em>  Think carefully about your interaction experiences before answering. 
         </em>
          <br>
          <br>
@@ -120,8 +132,8 @@
          <br>
 
 
-	   <p>7. Please rate your agreement to the following statement, based on your degree of <strong>self-confidence</strong> in your ability to complete the task.
-	   	   </p>
+     <p>8. Please rate your agreement to the following statement, based on your degree of <strong>self-confidence</strong> in your ability to complete the task.
+         </p>
       <table class="sc5 table-bordered table-hover fixed">
         <col width="200px" />
         <col width="100px" />
