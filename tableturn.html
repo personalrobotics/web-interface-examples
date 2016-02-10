@@ -37,15 +37,25 @@
       </video>
     </div>
     <p class="text-danger hide">Please answer the question</p>
-    <div class="radio" style="display:none;">
+    <div class="choice" style="display:none;">
       <label><input type="radio" name=1 value="humanFacingDoor">I would like to walk forward towards the door, so that HERB goes out of the room first  (rotate the table by pressing the <strong>RIGHT</strong> button 
 	  <img src="images/button_ccw.png" alt="counter-clockwise" width="44" height="26">)
 </label>
     </div> 
-    <div class="radio" style="display:none;">
+    <div class="choice" style="display:none;">
       <label><input type="radio" name=1 value="humanFacingRoom">I would like to walk backward towards the door, so that I go out of the room first (rotate the table by pressing the <strong>LEFT</strong> button <img  src="images/button_cw.png" alt="clockwise" width="44" height="26">)</label>
     </div> 
-	
+
+    <div class="radio" style="display:none;">
+      <label><input type="radio" name=2 value="move_right">I would like to move to the right side of the hallway (move to the right by pressing the <strong>RIGHT</strong> button 
+    <img src="images/move-right.png" alt="counter-clockwise" width="44" height="26">)</label>
+    </div> 
+    <div class="radio" style="display:none;">
+      <label><input type="radio" name=2 value="move_left">I would like to move to the left side of the hallway (move to the left by pressing the <strong>LEFT</strong> button 
+    <img src="images/move-left.png" alt="clockwise" width="44" height="26">)</label>
+    </div> 
+  
+    
 
 	
 	
@@ -311,6 +321,17 @@
           </td>
         </tr>
        </table>
+
+         <div class = "trust4text" style = "display:none;">
+     <h3 > 1. Please rate your agreement to the following statement based on your degree of <strong>trust</strong> to <strong>HERB</strong> right now.  
+         </h3>
+       <h4>
+     <em>  Think carefully about your interaction experiences before answering. 
+        </em>
+        </h4>
+
+    <br>
+    </div>
 	         <table class="trust4 table-bordered table-hover fixed" style="display:none;" >
         <col width="200px" />
         <col width="130px" />

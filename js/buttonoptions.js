@@ -33,7 +33,7 @@ function buttonClicked(idx) {
     disableButtons();
     var postData = {"sessionData": sessionData,
                     "buttonID": idx};
-    
+      //preference selection for table-carrying task    
       if (sessionData["picCount"]==5){
         $(".text-danger").show()
         if ((!$("input[name=1]:checked").val())&&(postData["buttonID"]==1)){
@@ -41,15 +41,34 @@ function buttonClicked(idx) {
             enableButtons();
         }
         else if((!$("input[name=1]:checked").val())&&(postData["buttonID"]==0)){
-            $(".radio").hide()
+            $(".choice").hide()
             $(".text-danger").hide()
             $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
         }
         else{
             radioChoice = $("input[name=1]:checked").val()
-            $(".radio").hide()
+            $(".choice").hide()
             $(".text-danger").hide()
             postData["radioChoice"] = radioChoice
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+    }
+    else  if (sessionData["picCount"]==19){
+        $(".text-danger").show()
+        if ((!$("input[name=2]:checked").val())&&(postData["buttonID"]==1)){
+            $(".text-danger").removeClass('hide');
+            enableButtons();
+        }
+        else if((!$("input[name=2]:checked").val())&&(postData["buttonID"]==0)){
+            $(".radio").hide()
+            $(".text-danger").hide()
+            $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
+        }
+        else{
+            radioChoice = $("input[name=2]:checked").val()
+            $(".radio").hide()
+            $(".text-danger").hide()
+            postData["radioChoice2"] = radioChoice
             $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
         }
     }
@@ -256,6 +275,9 @@ sessionData["picCount"]==13 || sessionData["picCount"]==22){
              $('.starttext').removeAttr('style');
          }
         else if (sessionData["picCount"]==5){
+            $('.choice').removeAttr('style');
+        }
+        else if (sessionData["picCount"]==19){
             $('.radio').removeAttr('style');
         }
         else if(sessionData["picCount"] == 6){

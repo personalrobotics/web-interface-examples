@@ -4,7 +4,7 @@ import string
 import random
 import json
 import Model2
-import HallwayModel
+import Hallway
 import os
 import shutil
 import time
@@ -17,16 +17,13 @@ d = dict()
 timestart1 = dict()
 timestart2 = dict()
 timestart3 = dict()
-
 trialIndx = dict()
 preference = dict()
-hallwayPreference = dict()
+
 
 # loads static pages from the directory
 # example: website.com/index.html
 # server will load index.html from the directory
-
-
 @app.route('<path:path>')
 def server_static(path):
     return static_file(path, root=".")
@@ -56,6 +53,7 @@ def do_click():
     requestData = json.loads(request.body.getvalue())
     sessionData = requestData["sessionData"]
 
+
     if "toSurvey" in sessionData:
         return json.dumps({"toSurvey": True})
 
@@ -68,9 +66,8 @@ def do_click():
     print "button clicked is: ", str(buttonClicked)
     print "sessionData is:", str(sessionData["picCount"])
 
-    print str(sessionData)
+
     if sessionData["picCount"] < 8:
-        sessionData["currentTask"] = "TableCarrying"  # start task
         if buttonClicked == 0:
             sessionData["picCount"] -= 1
         elif buttonClicked == 1:
@@ -82,14 +79,13 @@ def do_click():
                    "sessionData": sessionData,
                    "buttonClass": "btn-primary"}
             return json.dumps(ret)
-
-    if sessionData["picCount"] >= 14 and sessionData["picCount"] <= 21:
-        sessionData["currentTask"] = "Hallway"  # start task
-        if buttonClicked == 0:
+   
+    if sessionData["picCount"] >=14 and sessionData["picCount"]<=21:
+     if buttonClicked == 0:
             print "session data before: ", str(sessionData["picCount"])
             sessionData["picCount"] -= 1
             print "session data after: ", str(sessionData["picCount"])
-        elif buttonClicked == 1:
+     elif buttonClicked == 1:
             sessionData["picCount"] += 1
 
     if sessionData["picCount"] == 2:
@@ -112,6 +108,8 @@ def do_click():
     # following code may need mturk_id, so get it once now
     mturk_id = request.cookies.get('mturk_id', 'NOT SET')
 
+
+
     if sessionData["picCount"] == 3:
         sessionData["playedLong"] = 0
 
@@ -133,13 +131,14 @@ def do_click():
         return json.dumps(ret)
 
     if sessionData["picCount"] == 5:
+      
 
         ret = {"imageURL": "images/Slide5.JPG",
                "buttonLabels": ["Prev", "Next"],
                "instructionText": " ",
                "sessionData": sessionData}
 
-        # debugging, move forward
+        #debugging, move forward
         return json.dumps(ret)
 
         # following code may need mturk_id, so get it once now
@@ -223,14 +222,16 @@ def do_click():
         data[mturk_id].append("secondStart: " + str(secondStart))
         timestart2[mturk_id] = secondStart
         sessionData["picCount"] += 1
-        return json.dumps(ret)
+        return json.dumps(ret)  
+
 
    # if sessionData["picCount"] >= 16 and sessionData["picCount"]<=18:
-        #   embed()
+     #   embed()
        # if buttonClicked == 0:
-        #   sessionData["picCount"] -= 1
-        # elif buttonClicked == 1:
-        #  sessionData["picCount"] += 1
+         #   sessionData["picCount"] -= 1
+        #elif buttonClicked == 1:
+          #  sessionData["picCount"] += 1
+
 
     if sessionData["picCount"] == 14:
         sessionData["playVideo"] = 0
@@ -255,11 +256,11 @@ def do_click():
         secondFinish = datetime.datetime.now()
         return json.dumps(ret)
 
+
     if sessionData["picCount"] == 16:
         if "trustRate3" in requestData.keys():
             data[mturk_id].append("trustRate3: " + requestData["trustRate3"])
             data[mturk_id].append("scRate3: " + requestData["scRate3"])
-        sessionData["CurrentTask"] = "TableCarrying"
         sessionData["playVideo"] = 0
         ret = {"imageURL": "images/Slide8.JPG",
                "buttonLabels": ["null", "Next"],
@@ -269,6 +270,9 @@ def do_click():
         data[mturk_id].append("round three")
         # timestamp
         return json.dumps(ret)
+
+
+
 
     if sessionData["picCount"] == 17:
         sessionData["playVideo"] = 0
@@ -281,6 +285,8 @@ def do_click():
         print "in 16!!!!!!"
         # timestamp
         return json.dumps(ret)
+
+
 
     if sessionData["picCount"] == 18:
         sessionData["playVideo"] = 0
@@ -306,10 +312,6 @@ def do_click():
         return json.dumps(ret)
 
     if sessionData["picCount"] == 20:
-        if "radioChoice2" in requestData.keys():
-            data[mturk_id].append("hallwayPreference: " +
-                                  requestData["radioChoice2"])
-            hallwayPreference[mturk_id] = requestData["radioChoice2"]
         sessionData["playVideo"] = 0
         ret = {"imageURL": "",
                "buttonLabels": ["Prev", "Next"],
@@ -322,10 +324,6 @@ def do_click():
         return json.dumps(ret)
 
     if sessionData["picCount"] == 21:
-        if "trustRate4" in requestData["trustRate4"]:
-            data[mturk_id].append("trustRate4: " + requestData["trustRate1"])
-            data[mturk_id].append("scRate4: " + requestData["scRate1"])
-
         sessionData["playVideo"] = 0
         ret = {"imageURL": "images/Slide12.JPG",
                "buttonLabels": ["Prev", "START"],
@@ -339,16 +337,15 @@ def do_click():
 
     if sessionData["picCount"] == 22:
         sessionData["playVideo"] = 0
-        ret = {"imageURL": "images/START.jpg",
-               "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
-                                '<i class="fa fa-2x fa-long-arrow-right"></i>'],
-               "instructionText": " ",
+        Model2.resetTask(d, request.cookies.get('mturk_id', 'NOT SET'))
+        ret = {"imageURL": "images/START.JPG",
+               "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
+                                '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
+               "instructionText": "Choose how you would like to rotate the table.",
                "sessionData": sessionData,
                "buttonClass": "btn-success"}
         # timestamp
         thirdStart = datetime.datetime.now()
-        sessionData["playedLongHallwayStart"] = 0
-        sessionData["playedLongHallwayStay"] = 0
         data[mturk_id].append("thirdStart: " + str(thirdStart))
         sessionData["picCount"] += 1
         timestart3[mturk_id] = thirdStart
@@ -358,129 +355,70 @@ def do_click():
     data[mturk_id].append(buttonClicked)
 
     # get next move
+    currTableTheta, oldTableTheta, resultBelief, message = \
+        Model2.getMove(d, request.cookies.get(
+            'mturk_id', 'NOT SET'), buttonClicked)
 
     # debugging
     # print "Belief is: {}".format(resultBelief)
     # play the long video if the human-robot actions
     # are the same and it's the first time this is happening
-    if sessionData["currentTask"] == "TableCarrying":
-        suffix = ""
-        currTableTheta, oldTableTheta, resultBelief, message = \
-            Model2.getMove(d, request.cookies.get(
-                'mturk_id', 'NOT SET'), buttonClicked)
-
-        if oldTableTheta == currTableTheta and sessionData["playedLong"] == 0:
-            suffix = "l"
-            sessionData["playedLong"] = 1
-        videoLink = "videos/{}to{}{}.mp4".format(
-            oldTableTheta, currTableTheta, suffix)
-        imageLink = "images/T{}.jpg".format(currTableTheta)
-        if currTableTheta == 0 or currTableTheta == 180:
-            if sessionData["picCount"] == 9:
-                Model2.setPrevGoalStateTheta(d, request.cookies.get(
-                    'mturk_id', 'NOT SET'), currTableTheta)
-                sessionData["picCount"] += 1
-            data[mturk_id].append(
-                "trial" + str(trialIndx[mturk_id]) + "belief0:" + str(resultBelief[0][0]))
-            data[mturk_id].append(
-                "trial" + str(trialIndx[mturk_id]) + "belief1:" + str(resultBelief[1][0]))
-            data[mturk_id].append(
-                "trial" + str(trialIndx[mturk_id]) + "belief2:" + str(resultBelief[2][0]))
-            data[mturk_id].append(
-                "trial" + str(trialIndx[mturk_id]) + "belief3:" + str(resultBelief[3][0]))
-            data[mturk_id].append(
-                "trial" + str(trialIndx[mturk_id]) + "belief4:" + str(resultBelief[4][0]))
-            trialIndx[mturk_id] = trialIndx[mturk_id] + 1
-
-            print "appending"
-            ret = {"videoURL": videoLink,
-                   "imageURL": imageLink,
-                   "buttonLabels": ["null", "Next"],
-                   "instructionText": "The table is in a horizontal position. You finished the task!",
-                   "sessionData": sessionData}
-            return json.dumps(ret)
-        else:
-            sessionData["playVideo"] = 1
-            ret = {"videoURL": videoLink,
-                   "imageURL": imageLink,
-                   "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
-                                    '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
-                   "instructionText": "<br>",
-                   "sessionData": sessionData,
-                   "buttonClass": "btn-success"}
-            return json.dumps(ret)
-    elif sessionData["currentTask"] == "Hallway":
-        print "human preference: ", str(hallwayPreference[mturk_id])
-        currHumanPos, currRobotPos, oldHumanPos, oldRobotPos, resultBelief, message = \
-            HallwayModel.getMove(d, request.cookies.get(
-                'mturk_id', 'NOT SET'), buttonClicked, hallwayPreference[mturk_id])
-        suffix = ""
-        if oldHumanPos == 0 and oldRobotPos == 0 and currHumanPos == currRobotPos \
-                and sessionData["playedLongHallwayStart"] == 0:
-            suffix = "l"
-            sessionData["playedLongHallwayStay"] = 1
-            if oldHumanPos !=0 and oldHumanPos == oldRobotPos and currHumanPos == currRobotPos:
-                suffix = "l"
-                sessionData["playedLongHallwayStay"] = 1
-        videoLink = "videos/R{}H{}toR{}H{}{}.mp4".format(
-            oldRobotPos, oldHumanPos, currRobotPos, currHumanPos, suffix)
-        imageLink = "images/R{}H{}.jpg".format(currRobotPos, currHumanPos)
-        # if you reached this point you should be able to play video
-        sessionData["playVideo"] = 1
-        if currHumanPos != currRobotPos:
-            # if currTableTheta==0 or currTableTheta==180:
-            # if sessionData["picCount"] == 13:
+    suffix = ""
+    if oldTableTheta == currTableTheta and sessionData["playedLong"] == 0:
+        suffix = "l"
+        sessionData["playedLong"] = 1
+    videoLink = "videos/{}to{}{}.mp4".format(
+        oldTableTheta, currTableTheta, suffix)
+    imageLink = "images/T{}.jpg".format(currTableTheta)
+    if currTableTheta == 0 or currTableTheta == 180:
+        if sessionData["picCount"] == 9 or sessionData["picCount"] == 13:
+            Model2.setPrevGoalStateTheta(d, request.cookies.get(
+                'mturk_id', 'NOT SET'), currTableTheta)
+            sessionData["picCount"] += 1
+        elif sessionData["picCount"] == 23:
             sessionData["toSurvey"] = True
-        # timestamp
+            # timestamp
             thirdFinish = datetime.datetime.now()
             data[mturk_id].append("thirdFinish: " + str(thirdFinish))
             timeDelta = thirdFinish - timestart3[mturk_id]
             data[mturk_id].append(
                 "timeDelta3: " + str(timeDelta.total_seconds()))
-            data[mturk_id].append("belief0:" + str(resultBelief[0][0]))
-            data[mturk_id].append("belief1:" + str(resultBelief[1][0]))
-            data[mturk_id].append("belief2:" + str(resultBelief[2][0]))
-            data[mturk_id].append("belief3:" + str(resultBelief[3][0]))
-            data[mturk_id].append("belief4:" + str(resultBelief[4][0]))
-            ret = {"videoURL": videoLink,
-                   "imageURL": imageLink,
-                   "buttonLabels": ["null", "Next"],
-                   "instructionText": "You crossed the hallway!",
-                   "sessionData": sessionData}
-            return json.dumps(ret)
-        else:
-            if currHumanPos == currRobotPos and currHumanPos == 2:
-                ret = {"videoURL": videoLink,
-                       "imageURL": imageLink,
-                       "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
-                                        '<span style="font-size:25px;">Stay</span>'],
-                       "instructionText": "<br>", "sessionData": sessionData, "buttonClass": "btn-success"}
-                return json.dumps(ret)
-            elif currHumanPos == currRobotPos and currHumanPos == 1:
-                ret = {"videoURL": videoLink, "imageURL": imageLink,
-                       "buttonLabels": ['<span style="font-size:25px;">Stay</span>',
-                                        '<i class="fa fa-2x fa-long-arrow-right"></i>'],
-                       "instructionText": "<br>",
-                       "sessionData": sessionData,
-                       "buttonClass": "btn-success"}
-                return json.dumps(ret)
-            else:
-                ret = {"videoURL": videoLink,
-                       "imageURL": imageLink,
-                       "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
-                                        '<i class="fa fa-2x fa-long-arrow-right"></i>'],
-                       "instructionText": "<br>",
-                       "sessionData": sessionData,
-                       "buttonClass": "btn-success"}
-                return json.dumps(ret)
+
+       # embed()
+        data[mturk_id].append(
+            "trial" + str(trialIndx[mturk_id]) + "belief0:" + str(resultBelief[0][0]))
+        data[mturk_id].append(
+            "trial" + str(trialIndx[mturk_id]) + "belief1:" + str(resultBelief[1][0]))
+        data[mturk_id].append(
+            "trial" + str(trialIndx[mturk_id]) + "belief2:" + str(resultBelief[2][0]))
+        data[mturk_id].append(
+            "trial" + str(trialIndx[mturk_id]) + "belief3:" + str(resultBelief[3][0]))
+        data[mturk_id].append(
+            "trial" + str(trialIndx[mturk_id]) + "belief4:" + str(resultBelief[4][0]))
+        trialIndx[mturk_id] = trialIndx[mturk_id] + 1
+
+        print "appending"
+        ret = {"videoURL": videoLink,
+               "imageURL": imageLink,
+               "buttonLabels": ["null", "Next"],
+               "instructionText": "The table is in a horizontal position. You finished the task!",
+               "sessionData": sessionData}
+        return json.dumps(ret)
     else:
-        print "Error! Unknown task!"
+        sessionData["playVideo"] = 1
+        ret = {"videoURL": videoLink,
+               "imageURL": imageLink,
+               "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
+                                '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
+               "instructionText": "<br>",
+               "sessionData": sessionData,
+               "buttonClass": "btn-success"}
+        return json.dumps(ret)
+
 
 # when the survey is approved by surveyhandler.js, the button requests this url
 # handle_survey records the responses and gives a one line html page in response
 # web browsers automatically add head/body syntax for this case
-
-
 @app.post('/submit_survey')
 def handle_survey():
     mturk_id = request.cookies.get('mturk_id', 'EXPIRED')
@@ -504,6 +442,6 @@ def backupLog():
     shutil.copy("output/log.json", "output/log-backup-{}.json".format(i))
 
 Model2.globalsInit()
-HallwayModel.globalsInit()
+Hallway.
 backupLog()
 run(app, host='0.0.0.0', port=8085)
