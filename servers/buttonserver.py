@@ -316,9 +316,9 @@ def do_click():
         return json.dumps(ret)
 
     if sessionData["picCount"] == 21:
-        if "trustRate4" in requestData["trustRate4"]:
-            data[mturk_id].append("trustRate4: " + requestData["trustRate1"])
-            data[mturk_id].append("scRate4: " + requestData["scRate1"])
+        if "trustRate4" in requestData.keys():
+            data[mturk_id].append("trustRate4: " + requestData["trustRate4"])
+            data[mturk_id].append("scRate4: " + requestData["scRate4"])
 
         sessionData["playVideo"] = 0
         ret = {"imageURL": "images/Slide12.JPG",
