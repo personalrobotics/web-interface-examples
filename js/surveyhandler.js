@@ -15,8 +15,8 @@ jQuery(function ($) {
         if (!$("input[name=4]:checked").val()) demandCompletion(e);
 
 
-        if (!$("input[name=t5]:checked").val()) demandCompletion(e);
-        if (!$("input[name=sc5]:checked").val()) demandCompletion(e);
+        if (!$("input[name=t3]:checked").val()) demandCompletion(e);
+        if (!$("input[name=sc3]:checked").val()) demandCompletion(e);
 
         //check free response
         if ($(".fr1").val()=='') demandCompletion(e);

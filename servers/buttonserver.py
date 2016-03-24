@@ -139,7 +139,7 @@ def do_click():
     data[mturk_id].append("trustRate1: "+ requestData["trustRate1"])
     data[mturk_id].append("scRate1: "+ requestData["scRate1"])
 
-    ret = {"imageURL": "images/Slide5.JPG",
+    ret = {"imageURL": "images/Slide5a.JPG",
            "buttonLabels": ["Prev", "START"],
            "instructionText": " ",
            "sessionData": sessionData}
@@ -206,98 +206,6 @@ def do_click():
     timestart2[mturk_id] = secondStart
     sessionData["picCount"]+=1  
     return json.dumps(ret)  
-  
-
-
-  if sessionData["picCount"]==14:
-    sessionData["playVideo"] = 0
-    ret = {"imageURL": "",
-           "buttonLabels": ["null", "Next"],
-           "instructionText": " ",
-           "sessionData": sessionData,
-       "buttonClass": "btn-primary"}
-    sessionData["picCount"]+=1
-    secondFinish = datetime.datetime.now()
-    data[mturk_id].append("secondFinish: "+ str(secondFinish))
-    timeDelta = secondFinish-timestart2[mturk_id]
-    data[mturk_id].append("timeDelta2: "+ str(timeDelta.total_seconds()))
-    return json.dumps(ret)
-
-  if sessionData["picCount"]==15:
-    data[mturk_id].append("trustRate3: "+ requestData["trustRate3"])
-    data[mturk_id].append("scRate3: "+ requestData["scRate3"])
-    sessionData["playVideo"] = 0
-    ret = {"imageURL": "images/Slide7.JPG",
-           "buttonLabels": ["null", "START"],
-           "instructionText": " ",
-           "sessionData": sessionData,
-       "buttonClass": "btn-primary"}
-    data[mturk_id].append("round three")
-    sessionData["picCount"]+=1
-    #timestamp
-    return json.dumps(ret)
-
-
-  if sessionData["picCount"]==16:
-    sessionData["playVideo"] = 0
-    Model2.resetTask(d,request.cookies.get('mturk_id','NOT SET'))
-    ret = {"imageURL": "images/T100.jpg",
-           "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
-                            '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
-           "instructionText": "Choose how you would like to rotate the table.",
-           "sessionData": sessionData,
-       "buttonClass": "btn-success"}
-    #timestamp
-    thirdStart = datetime.datetime.now()
-    data[mturk_id].append("thirdStart: "+ str(thirdStart))
-    sessionData["picCount"]+=1  
-    timestart3[mturk_id] = thirdStart
-    return json.dumps(ret) 
-
-  if sessionData["picCount"]==18:
-    sessionData["playVideo"] = 0
-    ret = {"imageURL": "",
-           "buttonLabels": ["null", "Next"],
-           "instructionText": " ",
-           "sessionData": sessionData,
-       "buttonClass": "btn-primary"}
-    sessionData["picCount"]+=1
-    thirdFinish = datetime.datetime.now()
-    data[mturk_id].append("thirdFinish: "+ str(thirdFinish))
-    timeDelta = thirdFinish-timestart3[mturk_id]
-    data[mturk_id].append("timeDelta3: "+ str(timeDelta.total_seconds()))
-    return json.dumps(ret)
-
-  if sessionData["picCount"]==19:
-    data[mturk_id].append("trustRate4: "+ requestData["trustRate4"])
-    data[mturk_id].append("scRate4: "+ requestData["scRate4"])
-    sessionData["playVideo"] = 0
-    ret = {"imageURL": "images/Slide8.JPG",
-           "buttonLabels": ["null", "START"],
-           "instructionText": " ",
-           "sessionData": sessionData,
-       "buttonClass": "btn-primary"}
-    data[mturk_id].append("round four")
-    sessionData["picCount"]+=1
-    #timestamp
-    return json.dumps(ret)
-
-
-  if sessionData["picCount"]==20:
-    sessionData["playVideo"] = 0
-    Model2.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
-    ret = {"imageURL": "images/T100.jpg",
-           "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
-                            '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
-           "instructionText": "Choose how you would like to rotate the table.",
-           "sessionData": sessionData,
-       "buttonClass": "btn-success"}
-    #timestamp
-    fourthStart = datetime.datetime.now()
-    data[mturk_id].append("fourthStart: "+ str(fourthStart))
-    timestart4[mturk_id] = fourthStart
-    sessionData["picCount"]+=1  
-    return json.dumps(ret) 
 
   #record in log
   data[mturk_id].append(buttonClicked)
@@ -317,16 +225,16 @@ def do_click():
   videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
   imageLink = "images/T{}.jpg".format(currTableTheta)
   if currTableTheta==0 or currTableTheta==180:
-    if sessionData["picCount"]==9 or sessionData["picCount"]==13 or sessionData["picCount"]==17:
+    if sessionData["picCount"]==9:
       Model2.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
-    elif sessionData["picCount"]==21:
+    elif sessionData["picCount"]==13:
       sessionData["toSurvey"] = True
       #timestamp
-      fourthFinish = datetime.datetime.now()
-      data[mturk_id].append("fourthFinish: "+ str(fourthFinish))
-      timeDelta = fourthFinish-timestart4[mturk_id]
-      data[mturk_id].append("timeDelta4: "+ str(timeDelta.total_seconds()))
+      secondFinish = datetime.datetime.now()
+      data[mturk_id].append("secondfinish: "+ str(secondFinish))
+      timeDelta = secondFinish-timestart2[mturk_id]
+      data[mturk_id].append("timeDelta2: "+ str(timeDelta.total_seconds()))
 
     data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief0:" + str(resultBelief[0][0]))
     data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief1:" + str(resultBelief[1][0]))
@@ -362,8 +270,8 @@ def handle_survey():
   mturk_id = request.cookies.get('mturk_id', 'EXPIRED')
   for i in xrange(1,7):
     data[mturk_id].append(request.forms.get(str(i)))
-  data[mturk_id].append(request.forms.get("t5"))
-  data[mturk_id].append(request.forms.get("sc5"))
+  data[mturk_id].append(request.forms.get("t3"))
+  data[mturk_id].append(request.forms.get("sc3"))
   with open('output/log.json', 'w') as outfile:
     json.dump(data, outfile)
   print("User {} submitted the survey".format(mturk_id))
