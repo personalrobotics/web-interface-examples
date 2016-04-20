@@ -34,7 +34,7 @@ function buttonClicked(idx) {
     var postData = {"sessionData": sessionData,
                     "buttonID": idx};
     
-	if (sessionData["picCount"]==4){
+	if (sessionData["picCount"]==5){
         $(".text-danger").show()
         if ((!$("input[name=1]:checked").val())&&(postData["buttonID"]==1)){
             $(".text-danger").removeClass('hide');
@@ -190,7 +190,7 @@ sessionData["picCount"]==13){
 
 	     if(sessionData["picCount"]==2){
 		 }
-        else if (sessionData["picCount"]==4){
+        else if (sessionData["picCount"]==5){
             $('.radio').removeAttr('style');
         }
         else if(sessionData["picCount"] == 6){

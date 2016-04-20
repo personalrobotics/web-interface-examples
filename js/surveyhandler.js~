@@ -33,6 +33,6 @@ jQuery(function ($) {
         if ($(".fr2").val()=='') demandCompletion(e);
         if ($(".fr3").val()=='') demandCompletion(e);
 
-        //if ($(".t3").val()=='') demandCompletion(e);
+        if ($(".t3").val()=='') demandCompletion(e);
     })
 })
