@@ -122,7 +122,7 @@ function handleResponse(rawData) {
         if(sessionData["picCount"]==9 || sessionData["picCount"]==10|| sessionData["picCount"]==11|| 
 sessionData["picCount"]==13){
             //videos start only after instructions
-            if (sessionData["playVideo"]==2){ //remove now for debugging
+            if (sessionData["playVideo"]==1){ //remove now for debugging
                 //disable buttons until the video is over
                 disableButtons();
                 $("#instruction-text").html("<br>"); //disable html text while video is playing
