@@ -17,7 +17,7 @@ timestart2 = dict()
 timestart3 = dict()
 timestart4 = dict()
 trialIndx = dict()
-
+prior = True #condition is set to true when collecting priors
 
 #loads static pages from the directory
 #example: website.com/index.html
@@ -71,7 +71,7 @@ def do_click():
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
     return json.dumps(ret)
-	
+  
   if sessionData["picCount"]==2:
     #generate a cookie with user's ID
     gen_id = ''.join(random.choice(string.ascii_uppercase +
@@ -82,7 +82,7 @@ def do_click():
     ip = request.environ.get('REMOTE_ADDR')
     data[gen_id].append(ip)
     ret = {"imageURL": "images/Slide2.JPG",
-           "buttonLabels": ["null", "Next"],
+           "buttonLabels": ["Prev", "Next"],
            "instructionText": " ",
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
@@ -90,12 +90,12 @@ def do_click():
 
   #following code may need mturk_id, so get it once now
   mturk_id = request.cookies.get('mturk_id','NOT SET')
-  	
+    
   if sessionData["picCount"]==3:
     trialIndx[mturk_id] = 1
 
     ret = {"imageURL": "images/Slide3.JPG",
-           "buttonLabels": ["null", "Next"],
+           "buttonLabels": ["Prev", "Next"],
            "instructionText": " ",
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
@@ -203,19 +203,30 @@ def do_click():
   data[mturk_id].append(buttonClicked)
 
   #get next move
-  currTableTheta, oldTableTheta, resultBelief, message = \
-    Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
+  currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
+    Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, prior)
+
 
   #debugging
   #print "Belief is: {}".format(resultBelief)
   #play the long video if the human-robot actions
   # are the same and it's the first time this is happening
-  suffix=""
+  suffix = ""
+  prefix = "T"
   if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
     suffix="l"
     sessionData["playedLong"]=1
-  videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
+
+
+
+  if(resultHAction =='ROTATE_COUNTER_CLOCKWISE'):
+    suffix = "e"
+    videoLink = "videos/{}{}{}.mp4".format(prefix,currTableTheta,suffix)
+  else:
+    videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
+  #print "VIDEOLINK:   " + videoLink
   imageLink = "images/T{}.jpg".format(currTableTheta)
+
   if currTableTheta==0 or currTableTheta==180:
     if sessionData["picCount"]==9:
       Model2.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
