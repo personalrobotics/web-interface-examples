@@ -118,11 +118,14 @@ class Data:
     if VERBOSE:
       print "Value function is: " + str(maxVal)
       #print "Robot action is: " + self.STR_ACTIONS[action]
-    return action
+    print "ACTION: "
+    print action
+    #return action
+    return 0;
 
   def getTableThetaFromState(self, ss):
     if(ss == startStateIndx):
-  	   return startStateTheta
+       return startStateTheta
     else:
        str_state = stateNames[ss]
        theta = int(str_state.split("_")[0][1:])
@@ -202,7 +205,7 @@ def restartTask(d, id):
 #the server will call this function passing the id and the button pressed
 #we'll store the class instances in a dictionary with IDs as keys
 #idInitiated helper function checks if id is in the dictionary
-def getMove(d,id,humanAction):
+def getMove(d,id,humanAction, prior):
   print("IN:id={},action={}".format(id,humanAction))
   #retrieve/create the class instance
   if idInitiated(id,d):
@@ -215,18 +218,31 @@ def getMove(d,id,humanAction):
   currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta = \
     x.stateUpdateFromHumanAction(humanAction)
   print("OUT:theta={}".format(currTableTheta))
-  if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
-     message = 'You turned the table CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
-  elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
-     message = 'You turned the table COUNTER-CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
-  elif(resultHAction == 'ROTATE_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
-     message = 'You tried to turn the table CLOCKWISE. HERB tried to turn the table COUNTER-CLOCKWISE. <br> The table did not turn.'
-  elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_CLOCKWISE'):
-     message = 'You tried to turn the table COUNTER-CLOCKWISE. HERB tried to turn the table CLOCKWISE. <br> The table did not turn.'
-  else:
+
+  if(prior): #Condition where we want to collect priors 
+    if(resultHAction=='ROTATE_COUNTER_CLOCKWISE'):
+      message =  'Let\'s rotate the table clockwise, by pressing the button on your LEFT!'
+    elif(resultHAction=='ROTATE_CLOCKWISE'):
+      message = 'You turned the table CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
+    else:
       message = 'Model2py@getMove error: unknown string!' 
+  else: #Condition where we don't collect priors 
+    if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
+       message = 'You turned the table CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
+    elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
+       message = 'You turned the table COUNTER-CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
+    elif(resultHAction == 'ROTATE_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
+       message = 'You tried to turn the table CLOCKWISE. HERB tried to turn the table COUNTER-CLOCKWISE. <br> The table did not turn.'
+    elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_CLOCKWISE'):
+       message = 'You tried to turn the table COUNTER-CLOCKWISE. HERB tried to turn the table CLOCKWISE. <br> The table did not turn.'
+    else:
+        message = 'Model2py@getMove error: unknown string!' 
+        
   #for debugging
   instructionString ='''The current angle is: {}<br> The current state is: {}<br>  The current belief is: {}<br> You did action: {}<br> Robot did action: {}<br>
-   Old angle is {}<br> '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta)
+    Old angle is {}<br> '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta)
   message = message + instructionString
-  return (currTableTheta, oldTableTheta, resultBelief, message)
+  #print "MESSAGE: " + message
+  return (currTableTheta, oldTableTheta, resultBelief, resultHAction, message)
+
+
