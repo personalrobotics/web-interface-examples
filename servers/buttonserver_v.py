@@ -101,7 +101,7 @@ def do_click():
     data[mturk_id].append(ip)
     ret = {"imageURL": "images/Slide2.JPG",
            "buttonLabels": ["Prev", "Next"],
-           "instructionText": " ",
+           "instructionText": "Instructions",
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
     return json.dumps(ret)
@@ -113,7 +113,7 @@ def do_click():
 
     ret = {"imageURL": "images/Slide3.JPG",
            "buttonLabels": ["Prev", "Next"],
-           "instructionText": " ",
+           "instructionText": "Instructions",
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
     return json.dumps(ret)
@@ -121,7 +121,7 @@ def do_click():
   if sessionData["picCount"]==4:
     ret = {"imageURL": "images/Slide4.JPG",
            "buttonLabels": ["Prev", "Next"],
-           "instructionText": " ",
+           "instructionText": "Instructions: Selecting a Starting Preference",
            "sessionData": sessionData}
     return json.dumps(ret)
   
@@ -132,7 +132,7 @@ def do_click():
       data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
     ret = {"imageURL": "images/HERBspeaks.JPG",
            "buttonLabels": ["Prev", "Next"],
-           "instructionText": " ",
+           "instructionText": "Instructions",
            "sessionData": sessionData}
     return json.dumps(ret)
 
