@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- These three are needed for reasons -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" src="lib/jquery.min.js"></script>
+
+<!-- Bootstrap -->
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+<script src="lib/bootstrap.min.js"></script>
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="css/mystyle.css">
+
+<!-- herb favicon -->
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="css/font-awesome.css">
+
+<!-- Our script -->
+<script type="text/javascript" src="js/buttonoptions.js"></script>
+
+</head>
+
+<body>
+  <div class="container-fluid">
+    <h3 id="instruction-text"></h3>
+    <!--ADDED THIS PART TO ENTER WORKER ID-->
+    <center>
+      <div id="group_welcome">
+        <br><br><br><br><br><br>
+        <h1 class="my_header_font" id="title_welcome" style="font-size:50px; max-width:800px;">Welcome!</h1>
+        <br>
+
+        <h1 class="my_header_font" id="prompt_welcome" style="font-size:25px;font-family:'Helvetica Neue';max-width:620px;">Please input your <b>worker ID</b><!--<br>(We have to ask your worker ID because we need to verify that you have not completed this survey before)--></h1>
+        <textarea cols="40" rows="1" name="text_welcome" id="text_welcome" style="resize:none" draggable="false" onfocus="setbg('text_welcome','#F0F0F0');" onblur="setbg('text_welcome','white')" placeholder="Enter your worker ID here..." style="font-size:14px;"></textarea>
+        <br><br><br>
+      </div>    
+      <!--ADDED THIS PART TO ENTER WORKER ID-->
+
+    <div id="screen">
+     <img id="ui-image">  <!--src="images/Slide1.JPG" />-->
+      <video style="display:none;" id="ui-video" height="400" autoplay="autoplay" src="">
+      </video>
+    </div>
+    <p class="text-danger hide">Please answer the question</p>
+    <div class="radio" style="display:none;">
+      <label><input type="radio" name=1 value="humanFacingDoor">I would like to walk forward towards the door, so that HERB goes out of the room first  (rotate the table by pressing the <strong>RIGHT</strong> button 
+	  <img src="images/button_ccw.png" alt="counter-clockwise" width="44" height="26">)
+</label>
+ <br>
+    <br>
+    </div> 
+    <div class="radio" style="display:none;">
+      <label><input type="radio" name=1 value="humanFacingRoom">I would like to walk backward towards the door, so that I go out of the room first (rotate the table by pressing the <strong>LEFT</strong> button <img  src="images/button_cw.png" alt="clockwise" width="44" height="26">)</label>
+    </div> 
+	
+	   
+  
+       <div class = "trust1text" style = "display:none;">
+	   <h3 > Please rate your agreement to the following statement based on your degree of <strong>trust</strong> to <strong>HERB</strong> right now.  
+	   	   </h3>
+       <h4>
+	   <em>  Since you have not worked with HERB yet, please answer based on your previous interaction experiences with robots, as well as your intuition.
+        </em>
+				</h4>
+
+		<br>
+		</div>
+      <table class="trust1 table-bordered table-hover fixed" style="display:none;" >
+        <col width="200px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <tr>
+          <th>&nbsp;</th>
+          <th>Strongly Disagree</th>
+          <th>Disagree</th>
+          <th>Neither Agree nor Disagree</th>
+          <th>Agree</th>
+          <th>Strongly Agree</th>
+        </tr>
+        <tr>
+          <th >HERB is trustworthy</th>
+          <td>
+            &nbsp;<label><input type="radio" name="t1" value="1">  1</label>
+          </td>
+          <td>
+           &nbsp; <label><input type="radio" name="t1"  value="2">  2</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="t1"  value="3">  3</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="t1"  value="4">  4</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="t1"  value="5">  5</label>
+          </td>
+        </tr>
+       </table>
+	   
+	   
+
+<div class = "trust2text" style = "display:none;">
+	   <h3 > Please rate your agreement to the following statement based on your degree of <strong>trust</strong> to <strong>HERB</strong> right now.  
+	   	   </h3>
+       <h4>
+	   <em>  Think carefully about your interaction experiences before answering. 
+        </em>
+				</h4>
+
+		<br>
+		</div>
+      <table class="trust2 table-bordered table-hover fixed" style="display:none;" >
+        <col width="200px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <col width="130px" />
+        <tr>
+          <th>&nbsp;</th>
+          <th>Strongly Disagree</th>
+          <th>Disagree</th>
+          <th>Neither Agree nor Disagree</th>
+          <th>Agree</th>
+          <th>Strongly Agree</th>
+        </tr>
+        <tr>
+          <th >HERB is trustworthy</th>
+          <td>
+            &nbsp;<label><input type="radio" name="t2" value="1">  1</label>
+          </td>
+          <td>
+           &nbsp; <label><input type="radio" name="t2"  value="2">  2</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="t2"  value="3">  3</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="t2"  value="4">  4</label>
+          </td>
+          <td>
+            &nbsp;<label><input type="radio" name="t2"  value="5">  5</label>
+          </td>
+        </tr>
+       </table>
+	   
+
+	   <div class = "trust3text" style = "display:none;">
+	   <h3 > Please rate your agreement to the following statement based on your degree of <strong>trust</strong> to <strong>HERB</strong> right now.  
+	   	   </h3>
+       <h4>
+	   <em>  Think carefully about your interaction experiences before answering. 
+        </em>
+				</h4>
+
+		<br>
+		</div>
+     
+    <br>
+    <button id="left-button" type="button" class="ui-button btn btn-primary btn-lg" style="display:none;">null</button>
+    <button id="right-button" type="button" class="ui-button btn btn-primary btn-lg">Next</button>
+  </div>
+</body>
+</html>
