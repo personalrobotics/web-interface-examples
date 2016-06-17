@@ -293,14 +293,15 @@ def handle_survey():
 
   if(cheating == True):
     data[mturk_id].append("INCOMPLETE")
-    with open('output/log.json', 'w') as outfile:
+    with open('output/log.json', 'a') as outfile:
       json.dump(data, outfile)
-    return "<p>It appears that the HIT has not been fully completed. Please complete the HIT again by pasting this link into your browser: http://localhost:8085/tableturn.html </p>"
+    return "<p>It appears that the HIT has not been fully completed. Please complete the HIT again by pasting this link into your browser: http://studies.personalrobotics.ri.cmu.edu/minaek/index.html </p>"
   
+
   for i in xrange(1,17):
     data[mturk_id].append(request.forms.get(str(i)))
   #data[mturk_id].append(request.forms.get("t3"))
-  with open('output/log.json', 'w') as outfile:
+  with open('output/log.json', 'a') as outfile:
     json.dump(data, outfile)
   print("User {} submitted the survey".format(mturk_id))
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)
@@ -316,3 +317,4 @@ def backupLog():
 Model2.globalsInit()
 backupLog()
 run(app, host='0.0.0.0', port=8084)
+x
