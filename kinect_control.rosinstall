@@ -20,3 +20,5 @@
 - git: {local-name: humanpy, uri: 'https://github.com/personalrobotics/humanpy.git', version: c77a1ddfd10197def63447af3801457e09238f83}
 - git: {local-name: k2_client, uri: 'https://github.com/personalrobotics/k2_client.git'}
 - git: {local-name: k2_client_vis, uri: 'https://github.com/personalrobotics/k2_client_vis.git', version: 1416088c9fdf6df27675607a4e0d9f134af257fb}
+- git: {local-name: k2_client_vis, uri: 'https://github.com/personalrobotics/k2_server.git'}
+
