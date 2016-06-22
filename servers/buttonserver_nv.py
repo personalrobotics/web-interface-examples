@@ -1,5 +1,3 @@
-#nonverbal condition
-
 from bottle import Bottle, run, static_file, request,response
 import json
 import string
@@ -20,7 +18,7 @@ timestart3 = dict()
 timestart4 = dict()
 trialIndx = dict()
 prior = True #condition is set to true when collecting priors
-
+cheating = True
 #loads static pages from the directory
 #example: website.com/index.html
 #server will load index.html from the directory
@@ -60,45 +58,74 @@ def do_click():
 
   #go to next/prev pic according to button clicked
   buttonClicked = requestData["buttonID"]
-  if sessionData["picCount"]<8:
-    if buttonClicked==0:
-      sessionData["picCount"] -= 1
-    elif buttonClicked==1:
-      sessionData["picCount"] += 1
 
-  if sessionData["picCount"]==1:
-    ret = {"imageURL": "images/Slide1.JPG",
+  if (sessionData["picCount"]<8):
+    if(sessionData["picCount"]==4):
+      if buttonClicked==0:
+        sessionData["picCount"] -= 1
+      elif buttonClicked==1:
+        sessionData["picCount"] += 2
+    elif(sessionData["picCount"]==6):
+      if buttonClicked==0:
+        sessionData["picCount"] -= 2
+      elif buttonClicked==1:
+        sessionData["picCount"] += 1
+    else:
+      if buttonClicked==0:
+        sessionData["picCount"] -= 1
+      elif buttonClicked==1:
+        sessionData["picCount"] += 1
+
+
+  if sessionData["picCount"]==0:
+    ret = {"imageURL": "",
            "buttonLabels": ["null", "Next"],
-           "instructionText": "Instructions 1/3",
+           "instructionText": "",
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
-    return json.dumps(ret)
+    return json.dumps(ret) 
+
+  worker_id = requestData["worker_id"]
   
-  if sessionData["picCount"]==2:
-    #generate a cookie with user's ID
+  response.set_cookie('worker_id', worker_id, max_age=survey_duration, path='/')
+
+  if sessionData["picCount"]==1:
     gen_id = ''.join(random.choice(string.ascii_uppercase +
       string.digits) for _ in range(6))
     response.set_cookie('mturk_id', gen_id, max_age=survey_duration, path='/')
     data[gen_id] = []
+    data[gen_id].append(worker_id)
+    print "DATA: "
+    print data
+    ret = {"imageURL": "images/Slide1.JPG",
+           "buttonLabels": ["null", "Next"],
+           "instructionText": "",
+           "sessionData": sessionData,
+       "buttonClass": "btn-primary"}
+    return json.dumps(ret)
+
+  mturk_id = request.cookies.get('mturk_id','NOT SET')
+
+  if sessionData["picCount"]==2:
+    #generate a cookie with user's ID
     #get ip
     ip = request.environ.get('REMOTE_ADDR')
-    data[gen_id].append(ip)
+    data[mturk_id].append(ip)
     ret = {"imageURL": "images/Slide2.JPG",
            "buttonLabels": ["Prev", "Next"],
-           "instructionText": " ",
+           "instructionText": "Instructions",
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
     return json.dumps(ret)
 
   #following code may need mturk_id, so get it once now
-  mturk_id = request.cookies.get('mturk_id','NOT SET')
     
   if sessionData["picCount"]==3:
     trialIndx[mturk_id] = 1
 
     ret = {"imageURL": "images/Slide3.JPG",
            "buttonLabels": ["Prev", "Next"],
-           "instructionText": " ",
+           "instructionText": "Instructions",
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
     return json.dumps(ret)
@@ -106,22 +133,24 @@ def do_click():
   if sessionData["picCount"]==4:
     ret = {"imageURL": "images/Slide4.JPG",
            "buttonLabels": ["Prev", "Next"],
-           "instructionText": " ",
+           "instructionText": "Instructions: Selecting a Starting Preference",
            "sessionData": sessionData}
     return json.dumps(ret)
   
 
 
-  if sessionData["picCount"]==5:
-    if "radioChoice" in requestData.keys():
-      data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
-    ret = {"imageURL": "images/HERBspeaks.JPG",
-           "buttonLabels": ["Prev", "Next"],
-           "instructionText": " ",
-           "sessionData": sessionData}
-    return json.dumps(ret)
+  # if sessionData["picCount"]==5:
+  #   if "radioChoice" in requestData.keys():
+  #     data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
+  #   ret = {"imageURL": "images/HERBspeaks.JPG",
+  #          "buttonLabels": ["Prev", "Next"],
+  #          "instructionText": "Instructions",
+  #          "sessionData": sessionData}
+  #   return json.dumps(ret)
 
   if sessionData["picCount"]==6:
+    if "radioChoice" in requestData.keys():
+      data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
     # we got the results from slide4 radio
     ret = {"imageURL": "",
            "buttonLabels": ["Prev", "Next"],
@@ -231,6 +260,8 @@ def do_click():
       Model2.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
     elif sessionData["picCount"]==13:
+      global cheating
+      cheating = False
       sessionData["toSurvey"] = True
       #timestamp
       secondFinish = datetime.datetime.now()
@@ -270,10 +301,18 @@ def do_click():
 @app.post('/submit_survey')
 def handle_survey():
   mturk_id = request.cookies.get('mturk_id', 'EXPIRED')
+
+  if(cheating == True):
+    data[mturk_id].append("INCOMPLETE")
+    with open('output/log-cheating-nv.json', 'w') as outfile:
+      json.dump(data, outfile)
+    return "<p>It appears that the HIT has not been fully completed. Please complete the HIT again by pasting this link into your browser: http://studies.personalrobotics.ri.cmu.edu/minaek/index.html </p>"
+  
+
   for i in xrange(1,17):
     data[mturk_id].append(request.forms.get(str(i)))
   #data[mturk_id].append(request.forms.get("t3"))
-  with open('output/log.json', 'w') as outfile:
+  with open('output/log-firstbatch-nv.json', 'w') as outfile:
     json.dump(data, outfile)
   print("User {} submitted the survey".format(mturk_id))
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)
@@ -288,4 +327,5 @@ def backupLog():
  
 Model2.globalsInit()
 backupLog()
-run(app, host='0.0.0.0', port=8085)
+run(app, host='0.0.0.0', port=8084)
+
