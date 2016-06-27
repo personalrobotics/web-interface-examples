@@ -1,3 +1,5 @@
+- git: {local-name: prpy, uri: 'https://github.com/personalrobotics/prpy.git'}
+- git: {local-name: herbpy, uri: 'https://github.com/personalrobotics/herbpy.git', version: 54e3e226a78368c109cbdf573fc28f4a7fa348ea}
 - git: {local-name: herb_description, uri: 'https://github.com/personalrobotics/herb_description.git'}
 - git: {local-name: openrave_catkin, uri: 'https://github.com/personalrobotics/openrave_catkin.git'}
 - git: {local-name: or_urdf, uri: 'https://github.com/personalrobotics/or_urdf.git'}
@@ -15,8 +17,6 @@
 - git: {local-name: ros_control, uri: 'https://github.com/ros-controls/ros_control.git', version: 0.10.0}
 - git: {local-name: ros_control_client, uri: 'https://github.com/personalrobotics/ros_control_client.git'}
 - git: {local-name: talker, uri: 'https://github.com/personalrobotics/talker.git'}
-- git: {local-name: humanpy, uri: 'https://github.com/personalrobotics/humanpy.git', version: 6d0af89369ef4e785b9476a85f7a0b71304b0041}
-- git: {local-name: k2_client, uri: 'https://github.com/personalrobotics/k2_client.git', version: c05401f8818db83968ef34360fd9906271a66187}
-- git: {local-name: k2_client_vis, uri: 'https://github.com/personalrobotics/k2_client_vis.git', version: 91f3661e73eb0ef2b259fdffcc3bdea8dbc31ec7}
-- git: {local-name: prpy, uri: 'https://github.com/personalrobotics/prpy.git', version: 2b525986d727320b1d742ccd0a25b657e96840e3}
-- git: {local-name: herbpy, uri: 'https://github.com/personalrobotics/herbpy.git', version: 0cc9c62f7abc9486bde1a8a086ebf71e63b20ffa}
+- git: {local-name: humanpy, uri: 'https://github.com/personalrobotics/humanpy.git', version: c77a1ddfd10197def63447af3801457e09238f83}
+- git: {local-name: k2_client, uri: 'https://github.com/personalrobotics/k2_client.git'}
+- git: {local-name: k2_client_vis, uri: 'https://github.com/personalrobotics/k2_client_vis.git', version: 1416088c9fdf6df27675607a4e0d9f134af257fb}
