@@ -1,2 +1,3 @@
 bower_components/
 *.pyc
+.DS_Store
