@@ -22,6 +22,33 @@ cheating = True
 #loads static pages from the directory
 #example: website.com/index.html
 #server will load index.html from the directory
+
+def remove_dups(string, info, mturk_id):
+  global data
+  lastInd = len(data[mturk_id])-1
+
+  if (info != data[mturk_id][lastInd] and string==""):
+    data[mturk_id].append(string+ str(info))
+  elif(string not in data[mturk_id][lastInd] and string!=""):
+    data[mturk_id].append(string+ str(info))
+  else:
+    data[mturk_id][lastInd]=string+ str(info)
+  return data
+
+def remove_dups_trial(trialNum, mturk_id):
+  global data
+  lastInd = len(data[mturk_id])-1
+
+  belief_start_index = trialNum.find("belief")
+  belief_end_index = belief_start_index+7
+  trial = trialNum[:belief_end_index+1]
+
+  if(trial not in data[mturk_id][lastInd]):
+    data[mturk_id].append(trialNum)
+  else:
+    data[mturk_id][lastInd] = trialNum
+  return data
+
 @app.route('<path:path>')
 def server_static(path):
   return static_file(path, root=".")
@@ -74,17 +101,20 @@ def do_click():
     return json.dumps(ret) 
 
   worker_id = requestData["worker_id"]
-  
   response.set_cookie('worker_id', worker_id, max_age=survey_duration, path='/')
 
   if sessionData["picCount"]==1:
-    gen_id = ''.join(random.choice(string.ascii_uppercase +
-      string.digits) for _ in range(6))
-    response.set_cookie('mturk_id', gen_id, max_age=survey_duration, path='/')
-    data[gen_id] = []
-    data[gen_id].append(worker_id)
-    print "DATA: "
-    print data
+    exists = 0
+    #if worker id does not already exist:
+    for key,value in data.items():
+      if worker_id in value:
+        exists=1
+    if(exists==0):
+      gen_id = ''.join(random.choice(string.ascii_uppercase +
+        string.digits) for _ in range(6))
+      response.set_cookie('mturk_id', gen_id, max_age=survey_duration, path='/')
+      data[gen_id] = []
+      data[gen_id].append(worker_id)
     ret = {"imageURL": "images/Slide1.JPG",
            "buttonLabels": ["null", "Next"],
            "instructionText": "",
@@ -98,19 +128,16 @@ def do_click():
     #generate a cookie with user's ID
     #get ip
     ip = request.environ.get('REMOTE_ADDR')
-    data[mturk_id].append(ip)
+    data = remove_dups("", ip, mturk_id)
     ret = {"imageURL": "images/Slide2.JPG",
            "buttonLabels": ["Prev", "Next"],
            "instructionText": "Instructions",
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
     return json.dumps(ret)
-
-  #following code may need mturk_id, so get it once now
     
   if sessionData["picCount"]==3:
     trialIndx[mturk_id] = 1
-
     ret = {"imageURL": "images/Slide3.JPG",
            "buttonLabels": ["Prev", "Next"],
            "instructionText": "Instructions",
@@ -124,12 +151,13 @@ def do_click():
            "instructionText": "Instructions: Selecting a Starting Preference",
            "sessionData": sessionData}
     return json.dumps(ret)
-  
-
 
   if sessionData["picCount"]==5:
-    if "radioChoice" in requestData.keys():
+    lastInd = len(data[mturk_id])-1
+    if ("radioChoice" in requestData.keys() and "radioChoice: " not in data[mturk_id][lastInd]):
       data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
+    elif("radioChoice: " in data[mturk_id][lastInd]):
+      data[mturk_id][lastInd] = "radioChoice: "+ requestData["radioChoice"]
     ret = {"imageURL": "images/HERBspeaks.JPG",
            "buttonLabels": ["Prev", "Next"],
            "instructionText": "Instructions",
@@ -147,7 +175,7 @@ def do_click():
 
 
   if sessionData["picCount"]==7:
-    data[mturk_id].append("trustRate1: "+ requestData["trustRate1"])
+    data = remove_dups("trustRate1: ", requestData["trustRate1"], mturk_id)
     ret = {"imageURL": "images/Slide5.JPG",
            "buttonLabels": ["Prev", "START"],
            "instructionText": " ",
@@ -157,7 +185,7 @@ def do_click():
   if sessionData["picCount"]==8:
     #timestamp
     startTime = datetime.datetime.now()
-    data[mturk_id].append("start: "+ str(startTime))
+    data = remove_dups("start: ", startTime, mturk_id)
     timestart1[mturk_id] = startTime
     sessionData["playVideo"] = 0
     sessionData["playedLong"] = 0
@@ -180,21 +208,20 @@ def do_click():
     sessionData["picCount"]+=1
     #timestamp
     firstFinish = datetime.datetime.now()
-    data[mturk_id].append("firstFinish: "+ str(firstFinish))
+    data = remove_dups("firstFinish: ", firstFinish, mturk_id)
     timeDelta = firstFinish-timestart1[mturk_id]
-    data[mturk_id].append("timeDelta: "+ str(timeDelta.total_seconds()))
+    data = remove_dups("timeDelta: ", timeDelta.total_seconds(), mturk_id)
     return json.dumps(ret)
 
   if sessionData["picCount"]==11:
-    data[mturk_id].append("trustRate2: "+ requestData["trustRate2"])
-
+    data = remove_dups("trustRate2: ", requestData["trustRate2"], mturk_id)
     sessionData["playVideo"] = 0
     ret = {"imageURL": "images/Slide6.JPG",
            "buttonLabels": ["null", "START"],
            "instructionText": " ",
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
-    data[mturk_id].append("round two")
+    data = remove_dups("", "round two", mturk_id)
     sessionData["picCount"]+=1
     #timestamp
     return json.dumps(ret)
@@ -211,7 +238,7 @@ def do_click():
        "buttonClass": "btn-success"}
     #timestamp
     secondStart = datetime.datetime.now()
-    data[mturk_id].append("secondStart: "+ str(secondStart))
+    data = remove_dups("secondStart: ", secondStart, mturk_id)
     timestart2[mturk_id] = secondStart
     sessionData["picCount"]+=1  
     return json.dumps(ret)  
@@ -234,14 +261,11 @@ def do_click():
     suffix="l"
     sessionData["playedLong"]=1
 
-
-
   if(resultHAction =='ROTATE_COUNTER_CLOCKWISE'):
     suffix = "e"
     videoLink = "videos/{}{}{}.mp4".format(prefix,currTableTheta,suffix)
   else:
     videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
-  #print "VIDEOLINK:   " + videoLink
   imageLink = "images/T{}.jpg".format(currTableTheta)
 
   if currTableTheta==0 or currTableTheta==180:
@@ -254,15 +278,35 @@ def do_click():
       sessionData["toSurvey"] = True
       #timestamp
       secondFinish = datetime.datetime.now()
-      data[mturk_id].append("secondfinish: "+ str(secondFinish))
-      timeDelta = secondFinish-timestart2[mturk_id]
-      data[mturk_id].append("timeDelta2: "+ str(timeDelta.total_seconds()))
+      lastInd = len(data[mturk_id])-1
+      if(type(data[mturk_id][lastInd]) == int):
+        data[mturk_id].append("secondfinish: "+ str(secondFinish))
+      elif("secondfinish: " in data[mturk_id][lastInd]):
+        data[mturk_id][lastInd] = "secondfinish: "+ str(secondFinish)
 
-    data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief0:" + str(resultBelief[0][0]))
-    data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief1:" + str(resultBelief[1][0]))
-    data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief2:" + str(resultBelief[2][0]))
-    data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief3:" + str(resultBelief[3][0]))
-    data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief4:" + str(resultBelief[4][0]))
+      timeDelta = secondFinish-timestart2[mturk_id]
+      data = remove_dups("timeDelta2: ", timeDelta.total_seconds(), mturk_id)
+
+    trialNum = "trial" + str(trialIndx[mturk_id]) + "belief0:" + str(resultBelief[0][0])
+    data = remove_dups("", trialNum, mturk_id)
+
+    trialNum = "trial" + str(trialIndx[mturk_id]) + "belief1:" + str(resultBelief[1][0])
+    remove_dups_trial(trialNum, mturk_id)
+
+    trialNum = "trial" + str(trialIndx[mturk_id]) + "belief2:" + str(resultBelief[2][0])
+    remove_dups_trial(trialNum, mturk_id)
+
+    trialNum = "trial" + str(trialIndx[mturk_id]) + "belief3:" + str(resultBelief[3][0])
+    remove_dups_trial(trialNum, mturk_id)
+
+    trialNum = "trial" + str(trialIndx[mturk_id]) + "belief4:" + str(resultBelief[4][0])
+    remove_dups_trial(trialNum, mturk_id)
+
+
+    # data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief1:" + str(resultBelief[1][0]))
+    # data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief2:" + str(resultBelief[2][0]))
+    # data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief3:" + str(resultBelief[3][0]))
+    # data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief4:" + str(resultBelief[4][0]))
     trialIndx[mturk_id] = trialIndx[mturk_id]  + 1
 
  
@@ -293,15 +337,14 @@ def handle_survey():
 
   if(cheating == True):
     data[mturk_id].append("INCOMPLETE")
-    with open('output/log-cheating.json', 'a') as outfile:
+    with open('output/log-cheating-v.json', 'a') as outfile:
       json.dump(data, outfile)
     return "<p>It appears that the HIT has not been fully completed. Please complete the HIT again by pasting this link into your browser: http://studies.personalrobotics.ri.cmu.edu/minaek/index.html </p>"
   
 
   for i in xrange(1,17):
     data[mturk_id].append(request.forms.get(str(i)))
-  #data[mturk_id].append(request.forms.get("t3"))
-  with open('output/log-secondbatch.json', 'w') as outfile:
+  with open('output/log-v.json', 'w') as outfile:
     json.dump(data, outfile)
   print("User {} submitted the survey".format(mturk_id))
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)
