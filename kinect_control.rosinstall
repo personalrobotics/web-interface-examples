@@ -18,5 +18,5 @@
 - git: {local-name: humanpy, uri: 'https://github.com/personalrobotics/humanpy.git', version: 6d0af89369ef4e785b9476a85f7a0b71304b0041}
 - git: {local-name: k2_client, uri: 'https://github.com/personalrobotics/k2_client.git', version: c05401f8818db83968ef34360fd9906271a66187}
 - git: {local-name: k2_client_vis, uri: 'https://github.com/personalrobotics/k2_client_vis.git', version: 91f3661e73eb0ef2b259fdffcc3bdea8dbc31ec7}
-- git: {local-name: prpy, uri: 'https://github.com/personalrobotics/prpy.git', version: 2b525986d727320b1d742ccd0a25b657e96840e3}
-- git: {local-name: herbpy, uri: 'https://github.com/personalrobotics/herbpy.git', version: 0cc9c62f7abc9486bde1a8a086ebf71e63b20ffa}
+- git: {local-name: prpy, uri: 'https://github.com/personalrobotics/prpy.git', version: ff2bc8967d42574544490d8494d0e6f9b93c8932}
+- git: {local-name: herbpy, uri: 'https://github.com/personalrobotics/herbpy.git', version: d664a14179c9f3c36a6d936d01f6733a8b2b5976}
