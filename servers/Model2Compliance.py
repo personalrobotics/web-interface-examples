@@ -354,9 +354,9 @@ def getMove(d,id,humanAction, prior):
   print("OUT:theta={}".format(currTableTheta))
 
   if(resultRAction=='TALK_CLOCKWISE'):
-  	message = 'TALK CLOCKWISE' #####################
+  	message = 'HERB says, "Let\'s turn the table CLOCKWISE." <br> The table did not turn' 
   elif(resultRAction=='TALK_COUNTERCLOCKWISE'):
-  	message = 'TALK COUNTER CLOCKWISE'
+  	message = 'HERB says, "Let\'s turn the table COUNTER-CLOCKWISE." <br> The table did not turn' 
   elif(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
      message = 'You turned the table CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
   elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
