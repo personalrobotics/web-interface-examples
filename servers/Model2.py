@@ -5,9 +5,13 @@ import  xml.etree.cElementTree as ET
 
 VERBOSE = True  
 #these are the same for all users
-folderName = 'data/'
-momdpOutFolderName = 'data/'
-policyFileName = 'TableCarryingTask.policy'
+#folderName = 'data/'
+#momdpOutFolderName = 'data/'
+#policyFileName = 'TableCarryingTask.policy'
+folderName = 'dataCompliance/baseline/'
+momdpOutFolderName = 'dataCompliance/baseline/'
+policyFileName = 'Baseline20-10.policy'
+
 statesFileName = 'obsState.dat'
 startStateTheta = 100
 goal1StateTheta = 0
@@ -120,8 +124,8 @@ class Data:
       #print "Robot action is: " + self.STR_ACTIONS[action]
     print "ACTION: "
     print action
-    #return action
-    return 0;
+    return action
+    
 
   def getTableThetaFromState(self, ss):
     if(ss == startStateIndx):
@@ -219,24 +223,16 @@ def getMove(d,id,humanAction, prior):
     x.stateUpdateFromHumanAction(humanAction)
   print("OUT:theta={}".format(currTableTheta))
 
-  if(prior): #Condition where we want to collect priors 
-    if(resultHAction=='ROTATE_COUNTER_CLOCKWISE'):
-      message =  'Let\'s rotate the table clockwise, by pressing the button on your LEFT!'
-    elif(resultHAction=='ROTATE_CLOCKWISE'):
-      message = 'You turned the table CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
-    else:
+  if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
+     message = 'You turned the table CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
+  elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
+     message = 'You turned the table COUNTER-CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
+  elif(resultHAction == 'ROTATE_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
+     message = 'You tried to turn the table CLOCKWISE. HERB tried to turn the table COUNTER-CLOCKWISE. <br> The table did not turn.'
+  elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_CLOCKWISE'):
+     message = 'You tried to turn the table COUNTER-CLOCKWISE. HERB tried to turn the table CLOCKWISE. <br> The table did not turn.'
+  else:
       message = 'Model2py@getMove error: unknown string!' 
-  else: #Condition where we don't collect priors 
-    if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
-       message = 'You turned the table CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
-    elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
-       message = 'You turned the table COUNTER-CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
-    elif(resultHAction == 'ROTATE_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
-       message = 'You tried to turn the table CLOCKWISE. HERB tried to turn the table COUNTER-CLOCKWISE. <br> The table did not turn.'
-    elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_CLOCKWISE'):
-       message = 'You tried to turn the table COUNTER-CLOCKWISE. HERB tried to turn the table CLOCKWISE. <br> The table did not turn.'
-    else:
-        message = 'Model2py@getMove error: unknown string!' 
         
   #for debugging
   instructionString ='''The current angle is: {}<br> The current state is: {}<br>  The current belief is: {}<br> You did action: {}<br> Robot did action: {}<br>
@@ -244,5 +240,4 @@ def getMove(d,id,humanAction, prior):
   message = message + instructionString
   #print "MESSAGE: " + message
   return (currTableTheta, oldTableTheta, resultBelief, resultHAction, message)
-
 

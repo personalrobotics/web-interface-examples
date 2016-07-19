@@ -247,7 +247,7 @@ def do_click():
   data[mturk_id].append(buttonClicked)
 
   #get next move
-  currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
+  currTableTheta, oldTableTheta, resultBelief, resultHAction, message, resultRAction = \
     Model2Compliance.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, prior)
 
 
@@ -261,7 +261,7 @@ def do_click():
     suffix="l"
     sessionData["playedLong"]=1
 
-  if(resultHAction =='ROTATE_COUNTER_CLOCKWISE'):
+  if(resultRAction =='TALK_CLOCKWISE'):
     suffix = "e"
     videoLink = "videos/{}{}{}.mp4".format(prefix,currTableTheta,suffix)
   else:
@@ -357,7 +357,7 @@ def backupLog():
     i+=1
   shutil.copy("output/log.json","output/log-backup-{}.json".format(i))
  
-Model2Compliance.globalsInit()
+#Model2Compliance.globalsInit()
 backupLog()
 run(app, host='0.0.0.0', port=8084)
 
