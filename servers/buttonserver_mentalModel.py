@@ -61,7 +61,6 @@ def server_static(path):
 @app.post('/ui/button')
 def do_click():
   global prevTableTheta
-  
 
   #init dictionary of users
   global d
@@ -85,23 +84,11 @@ def do_click():
 
   #go to next/prev pic according to button clicked
   buttonClicked = requestData["buttonID"]
-
-  if (sessionData["picCount"]<8):
-    if(sessionData["picCount"]==4):
-      if buttonClicked==0:
-        sessionData["picCount"] -= 1
-      elif buttonClicked==1:
-        sessionData["picCount"] += 2
-    elif(sessionData["picCount"]==6):
-      if buttonClicked==0:
-        sessionData["picCount"] -= 2
-      elif buttonClicked==1:
-        sessionData["picCount"] += 1
-    else:
-      if buttonClicked==0:
-        sessionData["picCount"] -= 1
-      elif buttonClicked==1:
-        sessionData["picCount"] += 1
+  if sessionData["picCount"]<8:
+    if buttonClicked==0:
+      sessionData["picCount"] -= 1
+    elif buttonClicked==1:
+      sessionData["picCount"] += 1
 
 
   if sessionData["picCount"]==0:
@@ -163,30 +150,28 @@ def do_click():
            "instructionText": "Instructions: Selecting a Starting Preference",
            "sessionData": sessionData}
     return json.dumps(ret)
-  
 
-
-  # if sessionData["picCount"]==5:
-  #   if "radioChoice" in requestData.keys():
-  #     data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
-  #   ret = {"imageURL": "images/HERBspeaks.JPG",
-  #          "buttonLabels": ["Prev", "Next"],
-  #          "instructionText": "Instructions",
-  #          "sessionData": sessionData}
-  #   return json.dumps(ret)
-
-  if sessionData["picCount"]==6:
+  if sessionData["picCount"]==5:
     lastInd = len(data[mturk_id])-1
     if ("radioChoice" in requestData.keys() and "radioChoice: " not in data[mturk_id][lastInd]):
       data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
     elif("radioChoice: " in data[mturk_id][lastInd]):
       data[mturk_id][lastInd] = "radioChoice: "+ requestData["radioChoice"]
+    ret = {"imageURL": "images/HERBspeaks.JPG",
+           "buttonLabels": ["Prev", "Next"],
+           "instructionText": "Instructions",
+           "sessionData": sessionData}
+    return json.dumps(ret)
+
+  if sessionData["picCount"]==6:
     # we got the results from slide4 radio
     ret = {"imageURL": "",
            "buttonLabels": ["Prev", "Next"],
            "instructionText": " ",
            "sessionData": sessionData}
     return json.dumps(ret)
+
+
 
   if sessionData["picCount"]==7:
     data = remove_dups("trustRate1: ", requestData["trustRate1"], mturk_id)
@@ -270,16 +255,16 @@ def do_click():
   #play the long video if the human-robot actions
   # are the same and it's the first time this is happening
   suffix = ""
+  prefix = "T"
   if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
     suffix="l"
     sessionData["playedLong"]=1
 
-  if(resultHAction =='ROTATE_COUNTER_CLOCKWISE'):
-    suffix = "l"
-    videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta,currTableTheta,suffix)
+  if(resultHAction =='ROTATE_COUNTER_CLOCKWISE'): #display the mental model video 
+    suffix = "e"
+    videoLink = "videos/{}{}{}.mp4".format(prefix,currTableTheta,suffix)
   else:
-    videoLink = "videos/{}to{}.mp4".format(oldTableTheta, currTableTheta)
-  #print "VIDEOLINK:   " + videoLink
+    videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
   imageLink = "images/T{}.jpg".format(currTableTheta)
 
   if currTableTheta==0 or currTableTheta==180:
@@ -316,8 +301,14 @@ def do_click():
     trialNum = "trial" + str(trialIndx[mturk_id]) + "belief4:" + str(resultBelief[4][0])
     remove_dups_trial(trialNum, mturk_id)
 
+
+    # data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief1:" + str(resultBelief[1][0]))
+    # data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief2:" + str(resultBelief[2][0]))
+    # data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief3:" + str(resultBelief[3][0]))
+    # data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief4:" + str(resultBelief[4][0]))
     trialIndx[mturk_id] = trialIndx[mturk_id]  + 1
 
+ 
     ret = {"videoURL": videoLink,
            "imageURL": imageLink,
            "buttonLabels": ["null","Next"],
@@ -345,14 +336,14 @@ def handle_survey():
 
   if(cheating == True):
     data[mturk_id].append("INCOMPLETE")
-    with open('output/log-cheating-prior-nv.json', 'a') as outfile:
+    with open('output/log-cheating-mm.json', 'a') as outfile:
       json.dump(data, outfile)
     return "<p>It appears that the HIT has not been fully completed. Please complete the HIT again by pasting this link into your browser: http://studies.personalrobotics.ri.cmu.edu/minaek/index.html </p>"
   
 
   for i in xrange(1,17):
     data[mturk_id].append(request.forms.get(str(i)))
-  with open('output/log-prior-nv.json', 'w') as outfile:
+  with open('output/log-mm.json', 'w') as outfile:
     json.dump(data, outfile)
   print("User {} submitted the survey".format(mturk_id))
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)

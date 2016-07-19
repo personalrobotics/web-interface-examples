@@ -3,7 +3,7 @@ import json
 import string
 import random
 import json
-import Model2Compliance
+import Model2Prior
 import os
 import shutil
 import time 
@@ -229,7 +229,7 @@ def do_click():
 
   if sessionData["picCount"]==12:
     sessionData["playVideo"] = 0
-    Model2Compliance.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
+    Model2Prior.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
     ret = {"imageURL": "images/T100.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
@@ -248,7 +248,7 @@ def do_click():
 
   #get next move
   currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
-    Model2Compliance.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, prior)
+    Model2Prior.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, prior)
 
 
   #debugging
@@ -270,7 +270,7 @@ def do_click():
 
   if currTableTheta==0 or currTableTheta==180:
     if sessionData["picCount"]==9:
-      Model2Compliance.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
+      Model2Prior.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
     elif sessionData["picCount"]==13:
       global cheating
@@ -357,7 +357,7 @@ def backupLog():
     i+=1
   shutil.copy("output/log.json","output/log-backup-{}.json".format(i))
  
-Model2Compliance.globalsInit()
+Model2Prior.globalsInit()
 backupLog()
 run(app, host='0.0.0.0', port=8084)
 
