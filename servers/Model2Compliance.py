@@ -56,7 +56,8 @@ class Data:
 	       zz.append(yy)
 	     self.Tprob.append(zz)
 
-	    self.NUMOFALPHAVECTORS = 6932
+	    #self.NUMOFALPHAVECTORS = 6932
+	    self.NUMOFALPHAVECTORS = 6905
 	    self.A = numpy.zeros([self.NUMOFALPHAVECTORS, self.NUMOFALLUNOBSSTATES + 2])
 	    #assume that the state before last is the starting state. The last one is the absorbing state
 	    self.startStateIndx = 0 #5120
@@ -141,13 +142,13 @@ class Data:
 	        if yy == 0:
 	            proby = 0.0/45.0
 	        elif yy == 1: 
-	            proby = 3.0/45.0
+	            proby = 11.0/45.0
 	        elif yy == 2:
-	            proby = 6.0/45.0
+	            proby = 16.0/45.0
 	        elif yy == 3:
-	            proby = 17.0/45.0
+	            proby = 7.0/45.0
 	        else: 
-	            proby = 19.0/45.0
+	            proby = 11.0/45.0
 	        #if zz == 0 or zz == 4:
 	        #     probz = 0.5
 	        #else: 
@@ -155,13 +156,13 @@ class Data:
 	        if zz == 0:
 	            probz = 0.0/40.0
 	        elif zz == 1:
-	            probz = 2.0/40.0
+	            probz = 3.0/40.0
 	        elif zz == 2:
-	            probz = 6.0/40.0
+	            probz = 8.0/40.0
 	        elif zz == 3:
-	            probz = 7.0/40.0
+	            probz = 1.0/40.0
 	        else: 
-	            probz = 25.0/40.0
+	            probz = 28.0/40.0
 	 
 	        prob = proby * probz
 	        self.bel_t[bel_indx] = prob
