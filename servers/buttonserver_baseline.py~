@@ -3,7 +3,7 @@ import json
 import string
 import random
 import json
-import Model2Prior
+import Model2
 import os
 import shutil
 import time 
@@ -61,6 +61,7 @@ def server_static(path):
 @app.post('/ui/button')
 def do_click():
   global prevTableTheta
+  
 
   #init dictionary of users
   global d
@@ -82,13 +83,25 @@ def do_click():
   #init log variable
   global data
 
-  #go to next/prev pic according to button clicked
+#go to next/prev pic according to button clicked
   buttonClicked = requestData["buttonID"]
-  if sessionData["picCount"]<8:
-    if buttonClicked==0:
-      sessionData["picCount"] -= 1
-    elif buttonClicked==1:
-      sessionData["picCount"] += 1
+
+  if (sessionData["picCount"]<8):
+    if(sessionData["picCount"]==4):
+      if buttonClicked==0:
+        sessionData["picCount"] -= 1
+      elif buttonClicked==1:
+        sessionData["picCount"] += 2
+    elif(sessionData["picCount"]==6):
+      if buttonClicked==0:
+        sessionData["picCount"] -= 2
+      elif buttonClicked==1:
+        sessionData["picCount"] += 1
+    else:
+      if buttonClicked==0:
+        sessionData["picCount"] -= 1
+      elif buttonClicked==1:
+        sessionData["picCount"] += 1
 
 
   if sessionData["picCount"]==0:
@@ -150,28 +163,30 @@ def do_click():
            "instructionText": "Instructions: Selecting a Starting Preference",
            "sessionData": sessionData}
     return json.dumps(ret)
+  
 
-  if sessionData["picCount"]==5:
+
+  # if sessionData["picCount"]==5:
+  #   if "radioChoice" in requestData.keys():
+  #     data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
+  #   ret = {"imageURL": "images/HERBspeaks.JPG",
+  #          "buttonLabels": ["Prev", "Next"],
+  #          "instructionText": "Instructions",
+  #          "sessionData": sessionData}
+  #   return json.dumps(ret)
+
+  if sessionData["picCount"]==6:
     lastInd = len(data[mturk_id])-1
     if ("radioChoice" in requestData.keys() and "radioChoice: " not in data[mturk_id][lastInd]):
       data[mturk_id].append("radioChoice: "+ requestData["radioChoice"])
     elif("radioChoice: " in data[mturk_id][lastInd]):
       data[mturk_id][lastInd] = "radioChoice: "+ requestData["radioChoice"]
-    ret = {"imageURL": "images/HERBspeaks.JPG",
-           "buttonLabels": ["Prev", "Next"],
-           "instructionText": "Instructions",
-           "sessionData": sessionData}
-    return json.dumps(ret)
-
-  if sessionData["picCount"]==6:
     # we got the results from slide4 radio
     ret = {"imageURL": "",
            "buttonLabels": ["Prev", "Next"],
            "instructionText": " ",
            "sessionData": sessionData}
     return json.dumps(ret)
-
-
 
   if sessionData["picCount"]==7:
     data = remove_dups("trustRate1: ", requestData["trustRate1"], mturk_id)
@@ -207,7 +222,6 @@ def do_click():
     sessionData["picCount"]+=1
     #timestamp
     firstFinish = datetime.datetime.now()
-    print "DATA FIRST FINISH: " + str(data[mturk_id])
     data = remove_dups("firstFinish: ", firstFinish, mturk_id)
     timeDelta = firstFinish-timestart1[mturk_id]
     data = remove_dups("timeDelta: ", timeDelta.total_seconds(), mturk_id)
@@ -229,7 +243,7 @@ def do_click():
 
   if sessionData["picCount"]==12:
     sessionData["playVideo"] = 0
-    Model2Prior.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
+    Model2.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
     ret = {"imageURL": "images/T100.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
@@ -242,37 +256,35 @@ def do_click():
     timestart2[mturk_id] = secondStart
     sessionData["picCount"]+=1  
     return json.dumps(ret)  
-
+    
   #record in log
   data[mturk_id].append(buttonClicked)
-  print "DATA: " + str(data[mturk_id])
-
 
   #get next move
   currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
-    Model2Prior.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, prior)
+    Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, prior)
 
 
   #debugging
-  #print "Belief is: {}".format(resultBelief)
+  print "Belief is: {}".format(resultBelief)
   #play the long video if the human-robot actions
   # are the same and it's the first time this is happening
   suffix = ""
-  prefix = "T"
+  #prefix = "T"
   if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
     suffix="l"
     sessionData["playedLong"]=1
-  #if(isinstance(data[mturk_id][-3], str) and 'secondStart' in data[mturk_id][-3]):
-  if(isinstance(data[mturk_id][-3], str) and 'secondStart' in data[mturk_id][-3] and 
-  	data[mturk_id][-2]==1):
-  	videoLink = "videos/talk.mp4"
-  else:
-    videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
+
+  # if(resultHAction =='ROTATE_COUNTER_CLOCKWISE'):
+  #   suffix = "e"
+  #   videoLink = "videos/{}{}{}.mp4".format(prefix,currTableTheta,suffix)
+  # else:
+  videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
   imageLink = "images/T{}.jpg".format(currTableTheta)
 
   if currTableTheta==0 or currTableTheta==180:
     if sessionData["picCount"]==9:
-      Model2Prior.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
+      Model2.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
     elif sessionData["picCount"]==13:
       global cheating
@@ -339,14 +351,14 @@ def handle_survey():
 
   if(cheating == True):
     data[mturk_id].append("INCOMPLETE")
-    with open('output/log-cheating-mm.json', 'a') as outfile:
+    with open('output/log-cheating-nv.json', 'a') as outfile:
       json.dump(data, outfile)
     return "<p>It appears that the HIT has not been fully completed. Please complete the HIT again by pasting this link into your browser: http://studies.personalrobotics.ri.cmu.edu/minaek/index.html </p>"
   
 
   for i in xrange(1,17):
     data[mturk_id].append(request.forms.get(str(i)))
-  with open('output/log-mm.json', 'w') as outfile:
+  with open('output/log-nv.json', 'w') as outfile:
     json.dump(data, outfile)
   print("User {} submitted the survey".format(mturk_id))
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)
@@ -359,7 +371,7 @@ def backupLog():
     i+=1
   shutil.copy("output/log.json","output/log-backup-{}.json".format(i))
  
-Model2Prior.globalsInit()
+Model2.globalsInit()
 backupLog()
 run(app, host='0.0.0.0', port=8084)
 
