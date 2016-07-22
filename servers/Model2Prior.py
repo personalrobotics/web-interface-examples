@@ -186,6 +186,7 @@ def resetTask(d, id):
 
 
 def restartTask(d, id):
+  print "RESTART TASK!!"
   print("IN:id={}".format(id))
   #retrieve/create the class instance
   if idInitiated(id,d):

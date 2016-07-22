@@ -207,6 +207,7 @@ def do_click():
     sessionData["picCount"]+=1
     #timestamp
     firstFinish = datetime.datetime.now()
+    print "DATA FIRST FINISH: " + str(data[mturk_id])
     data = remove_dups("firstFinish: ", firstFinish, mturk_id)
     timeDelta = firstFinish-timestart1[mturk_id]
     data = remove_dups("timeDelta: ", timeDelta.total_seconds(), mturk_id)
@@ -244,6 +245,8 @@ def do_click():
 
   #record in log
   data[mturk_id].append(buttonClicked)
+  print "DATA: " + str(data[mturk_id])
+
 
   #get next move
   currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
@@ -259,10 +262,10 @@ def do_click():
   if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
     suffix="l"
     sessionData["playedLong"]=1
-
-  if(resultHAction =='ROTATE_COUNTER_CLOCKWISE'): #display the mental model video 
-    suffix = "e"
-    videoLink = "videos/{}{}{}.mp4".format(prefix,currTableTheta,suffix)
+  #if(isinstance(data[mturk_id][-3], str) and 'secondStart' in data[mturk_id][-3]):
+  if(isinstance(data[mturk_id][-3], str) and 'secondStart' in data[mturk_id][-3] and 
+  	data[mturk_id][-2]==1):
+  	videoLink = "videos/talk.mp4"
   else:
     videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
   imageLink = "images/T{}.jpg".format(currTableTheta)

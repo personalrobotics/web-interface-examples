@@ -57,7 +57,7 @@ class Data:
 	     self.Tprob.append(zz)
 
 	    #self.NUMOFALPHAVECTORS = 6932
-	    self.NUMOFALPHAVECTORS = 6905
+	    self.NUMOFALPHAVECTORS = 19706
 	    self.A = numpy.zeros([self.NUMOFALPHAVECTORS, self.NUMOFALLUNOBSSTATES + 2])
 	    #assume that the state before last is the starting state. The last one is the absorbing state
 	    self.startStateIndx = 0 #5120
@@ -379,19 +379,22 @@ def getMove(d,id,humanAction, prior):
 
 ###############################################################################################################        
 
-# x = Data(1)
+#x = Data(1)
 # currTableTheta = x.startStateTheta
 # while (currTableTheta!=x.goal1StateTheta) and (currTableTheta!=x.goal2StateTheta):
 #   print "The table rotation angle is: " + str(currTableTheta) + " degrees. "
 #   if VERBOSE:
 #     print "The current state is: " + x.stateNames[x.currState]
+#     print "state number: " + str(x.currState)
 #     print "The current belief is: \n" + str(x.bel_t)
 #   try:
 #       humanAction = input('Enter human action [0 for ROTATE_CLOCKWISE, 1 for ROTATE_COUNTER_CLOCKWISE]: ')
 #   except Exception as e:
 #      print 'Exception: wrong input. '
 #      continue
-#   [currTableTheta, nextState] = x.stateUpdateFromHumanAction(humanAction)
+#  # [currTableTheta, nextState] = x.stateUpdateFromHumanAction(humanAction)
+#   currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta = \
+#   	x.stateUpdateFromHumanAction(humanAction)
 
 
 # if currTableTheta == x.goal1StateTheta:
@@ -415,4 +418,4 @@ def getMove(d,id,humanAction, prior):
 #   [currTableTheta, nextState] = x.stateUpdateFromHumanAction(humanAction)
 
 
-#print 'Goal state reached. '
+# print 'Goal state reached. '
