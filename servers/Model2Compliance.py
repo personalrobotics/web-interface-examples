@@ -11,7 +11,7 @@ class Data:
 	momdpOutFolderName = 'dataCompliance/compliance/'
 	#folderName = '../../MatlabOutputFiles/'  
 	#momdpOutFolderName = '../../output/'
-	policyFileName = 'TwoVariablesLong20-10NP2.policy'
+	policyFileName = 'TwoVariablesLong20-10NP3.policy'
 	statesFileName = 'obsState.dat'
 
   	def __init__(self, id):
@@ -140,29 +140,29 @@ class Data:
 	      for yy in range(0, self.NUMOFUNOBSSTATES):
 	        bel_indx = self.NUMOFUNOBSSTATES*zz+yy
 	        if yy == 0:
-	            proby = 0.0/45.0
+	            proby = 0.0364
 	        elif yy == 1: 
-	            proby = 11.0/45.0
+	            proby = 0.2364
 	        elif yy == 2:
-	            proby = 16.0/45.0
+	            proby = 0.3272
 	        elif yy == 3:
-	            proby = 7.0/45.0
+	            proby = 0.1636
 	        else: 
-	            proby = 11.0/45.0
+	            proby = 0.2364
 	        #if zz == 0 or zz == 4:
 	        #     probz = 0.5
 	        #else: 
 	        #     probz = 0.0
 	        if zz == 0:
-	            probz = 0.0/40.0
+	            probz = 0.0400
 	        elif zz == 1:
-	            probz = 3.0/40.0
+	            probz = 0.1000
 	        elif zz == 2:
-	            probz = 8.0/40.0
+	            probz = 0.2000
 	        elif zz == 3:
-	            probz = 1.0/40.0
+	            probz = 0.0600
 	        else: 
-	            probz = 28.0/40.0
+	            probz = 0.6000
 	 
 	        prob = proby * probz
 	        self.bel_t[bel_indx] = prob
