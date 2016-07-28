@@ -10,7 +10,7 @@ VERBOSE = True
 #policyFileName = 'TableCarryingTask.policy'
 folderName = 'dataCompliance/baseline/'
 momdpOutFolderName = 'dataCompliance/baseline/'
-policyFileName = 'Baseline20-10.policy'
+policyFileName = 'Baseline20-15NewPriors.policy'
 
 statesFileName = 'obsState.dat'
 startStateTheta = 100
@@ -23,7 +23,8 @@ NUMOFUNOBSSTATES = 5
 STR_ACTIONS = ['ROTATE_CLOCKWISE', 'ROTATE_COUNTER_CLOCKWISE']
 R = numpy.zeros([NUMOFSTATES,NUMOFROBOTACTIONS, NUMOFHUMANACTIONS, NUMOFSTATES])
 T = numpy.zeros([NUMOFUNOBSSTATES, NUMOFSTATES, NUMOFROBOTACTIONS, NUMOFSTATES])
-NUMOFALPHAVECTORS = 7029
+#NUMOFALPHAVECTORS = 7029
+NUMOFALPHAVECTORS = 2513
 A = numpy.zeros([NUMOFALPHAVECTORS, NUMOFUNOBSSTATES + 2])
 startStateIndx = 640#NUMOFSTATES-2 #assume that the state before last is the starting one
 goal1RestartStateIndx = 645
@@ -78,12 +79,13 @@ class Data:
 
   def __init__(self, id):
     ##############The following variables are different per user########################
-    self.bel_t = numpy.ones([5,1])*0.2
-    #self.bel_t[0] = 1.0
-    #self.bel_t[1] = 0.0
-    #self.bel_t[2] = 0.0
-    #self.bel_t[3] = 0.0
-    #self.bel_t[4] = 0.0
+    #self.bel_t = numpy.ones([5,1])*0.2
+    self.bel_t = numpy.ones([5,1])
+    self.bel_t[0] = 0.0364
+    self.bel_t[1] = 0.2364
+    self.bel_t[2] = 0.3272
+    self.bel_t[3] = 0.1636
+    self.bel_t[4] = 0.2364
     # self.bel_t[0] = 0.14
     # self.bel_t[1] = 0.5
     # self.bel_t[2] = 0.005
