@@ -127,9 +127,10 @@ class Data:
         print "Value function is: " + str(maxVal)
         #print "Robot action is: " + self.STR_ACTIONS[action]
     else:
-      print " BEING STUBBORN!" + str(lastRobotAction)
+      print " BEING STUBBORN! " + str(lastRobotAction)
       print 'SESSION DATA: ' + str(sessionData)
       print "LAST ROBOT ACTION: " + str(lastRobotAction)
+      #action = 1-self.LRA
       action = 1-lastRobotAction
     return action
 
@@ -219,7 +220,7 @@ def restartTask(d, id):
 #the server will call this function passing the id and the button pressed
 #we'll store the class instances in a dictionary with IDs as keys
 #idInitiated helper function checks if id is in the dictionary
-def getMove(d,id,humanAction, lastRobotAction, sessionData):
+def getMove(d,id,humanAction, sessionData):
   print("IN:id={},action={}".format(id,humanAction))
   #retrieve/create the class instance
   if idInitiated(id,d):
@@ -227,6 +228,43 @@ def getMove(d,id,humanAction, lastRobotAction, sessionData):
     print("Returning user: ID={}".format(id))
   else:
     x = Data(id)
+    d[id] = x
+    print("New class instance created: id={}".format(id))
+  currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta = \
+    x.stateUpdateFromHumanAction(humanAction, 0, sessionData)
+  print("OUT:theta={}".format(currTableTheta))
+
+  if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
+     message = 'You turned the table CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
+  elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
+     message = 'You turned the table COUNTER-CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
+  elif(resultHAction == 'ROTATE_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
+     message = 'You tried to turn the table CLOCKWISE. HERB tried to turn the table COUNTER-CLOCKWISE. <br> The table did not turn.'
+  elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_CLOCKWISE'):
+     message = 'You tried to turn the table COUNTER-CLOCKWISE. HERB tried to turn the table CLOCKWISE. <br> The table did not turn.'
+  else:
+      message = 'Model2py@getMove error: unknown string!' 
+        
+  #for debugging
+  instructionString ='''The current angle is: {}<br> The current state is: {}<br>  The current belief is: {}<br> You did action: {}<br> Robot did action: {}<br>
+    Old angle is {}<br> '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta)
+  message = message + instructionString
+  #print "MESSAGE: " + message
+  return (currTableTheta, oldTableTheta, resultBelief, resultHAction, message)
+
+def getMove13(d,id,humanAction, lastRobotAction, sessionData):
+  print "##################################"
+  print "in GETMOVE13!"
+  print "##################################"
+  print("IN:id={},action={}".format(id,humanAction))
+  #retrieve/create the class instance
+  if idInitiated(id,d):
+    x = d[id] #dictionary
+    print("Returning user: ID={}".format(id))
+  else:
+    print "GET MOVE last robot action : " + str(lastRobotAction)
+    print " "
+    x = Data(id, lastRobotAction)
     d[id] = x
     print("New class instance created: id={}".format(id))
   currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta = \
