@@ -19,7 +19,8 @@ timestart4 = dict()
 trialIndx = dict()
 prior = True #condition is set to true when collecting priors
 cheating = True
-lastRobotAction = -1
+lastRobotAction = {}
+
 #loads static pages from the directory
 #example: website.com/index.html
 #server will load index.html from the directory
@@ -126,6 +127,7 @@ def do_click():
     #get ip
     ip = request.environ.get('REMOTE_ADDR')
     data = remove_dups("", ip, mturk_id)
+    lastRobotAction[mturk_id] = -1
     ret = {"imageURL": "images/Slide2.JPG",
            "buttonLabels": ["Prev", "Next"],
            "instructionText": "Instructions",
@@ -202,7 +204,8 @@ def do_click():
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
     sessionData["picCount"]+=1
-    lastRobotAction = data[mturk_id][-6]
+    #lastRobotAction = data[mturk_id][-6]
+    lastRobotAction[mturk_id] = data[mturk_id][-6]
     #timestamp
     firstFinish = datetime.datetime.now()
     print "DATA FIRST FINISH: " + str(data[mturk_id])
