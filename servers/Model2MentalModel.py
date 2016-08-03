@@ -128,6 +128,8 @@ class Data:
         #print "Robot action is: " + self.STR_ACTIONS[action]
     else:
       print " BEING STUBBORN!" + str(lastRobotAction)
+      print 'SESSION DATA: ' + str(sessionData)
+      print "LAST ROBOT ACTION: " + str(lastRobotAction)
       action = 1-lastRobotAction
     return action
 
