@@ -3,7 +3,7 @@ import json
 import string
 import random
 import json
-import Model2Prior
+import Model2MentalModel
 import os
 import shutil
 import time 
@@ -11,7 +11,7 @@ import datetime
 
 app = Bottle()
 data = dict()
-d=dict()
+d=dict() #dictionary of users
 timestart1 = dict()
 timestart2 = dict()
 timestart3 = dict()
@@ -19,6 +19,7 @@ timestart4 = dict()
 trialIndx = dict()
 prior = True #condition is set to true when collecting priors
 cheating = True
+lastRobotAction = -1
 #loads static pages from the directory
 #example: website.com/index.html
 #server will load index.html from the directory
@@ -60,10 +61,7 @@ def server_static(path):
 # and seeing what the current state of the webapp is
 @app.post('/ui/button')
 def do_click():
-  global prevTableTheta
-
-  #init dictionary of users
-  global d
+  global prevTableTheta, lastRobotAction, d
 
   #add artificial delay
   time.sleep(0.5)
@@ -172,7 +170,6 @@ def do_click():
     return json.dumps(ret)
 
 
-
   if sessionData["picCount"]==7:
     data = remove_dups("trustRate1: ", requestData["trustRate1"], mturk_id)
     ret = {"imageURL": "images/Slide5.JPG",
@@ -205,6 +202,7 @@ def do_click():
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
     sessionData["picCount"]+=1
+    lastRobotAction = data[mturk_id][-6]
     #timestamp
     firstFinish = datetime.datetime.now()
     print "DATA FIRST FINISH: " + str(data[mturk_id])
@@ -226,32 +224,32 @@ def do_click():
     #timestamp
     return json.dumps(ret)
 
-
   if sessionData["picCount"]==12:
-    sessionData["playVideo"] = 0
-    Model2Prior.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
-    ret = {"imageURL": "images/T100.jpg",
-           "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
-                            '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
-           "instructionText": "Choose how you would like to rotate the table.",
-           "sessionData": sessionData,
+    Model2MentalModel.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
+    sessionData["playVideo"] = 3
+    imageLink = "images/T{}.jpg".format(100)
+    videoLink = "videos/talk.mp4"
+    ret = {"videoURL": videoLink,
+       "imageURL":imageLink,
+       "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
+                        '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
+       "instructionText": "<br>",
+       "sessionData": sessionData,
        "buttonClass": "btn-success"}
     #timestamp
     secondStart = datetime.datetime.now()
     data = remove_dups("secondStart: ", secondStart, mturk_id)
     timestart2[mturk_id] = secondStart
-    sessionData["picCount"]+=1  
+    sessionData["picCount"]+=1
     return json.dumps(ret)  
 
   #record in log
   data[mturk_id].append(buttonClicked)
   print "DATA: " + str(data[mturk_id])
 
-
   #get next move
   currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
-    Model2Prior.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, prior)
-
+    Model2MentalModel.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, lastRobotAction, sessionData["picCount"])
 
   #debugging
   #print "Belief is: {}".format(resultBelief)
@@ -259,20 +257,14 @@ def do_click():
   # are the same and it's the first time this is happening
   suffix = ""
   prefix = "T"
+  imageLink = "images/T{}.jpg".format(currTableTheta)
   if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
     suffix="l"
     sessionData["playedLong"]=1
-  #if(isinstance(data[mturk_id][-3], str) and 'secondStart' in data[mturk_id][-3]):
-  if(isinstance(data[mturk_id][-3], str) and 'secondStart' in data[mturk_id][-3] and 
-  	data[mturk_id][-2]==1):
-  	videoLink = "videos/talk.mp4"
-  else:
-    videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
-  imageLink = "images/T{}.jpg".format(currTableTheta)
-
+  videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
   if currTableTheta==0 or currTableTheta==180:
     if sessionData["picCount"]==9:
-      Model2Prior.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
+      Model2MentalModel.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
     elif sessionData["picCount"]==13:
       global cheating
@@ -305,13 +297,7 @@ def do_click():
     remove_dups_trial(trialNum, mturk_id)
 
 
-    # data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief1:" + str(resultBelief[1][0]))
-    # data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief2:" + str(resultBelief[2][0]))
-    # data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief3:" + str(resultBelief[3][0]))
-    # data[mturk_id].append("trial" + str(trialIndx[mturk_id]) + "belief4:" + str(resultBelief[4][0]))
     trialIndx[mturk_id] = trialIndx[mturk_id]  + 1
-
- 
     ret = {"videoURL": videoLink,
            "imageURL": imageLink,
            "buttonLabels": ["null","Next"],
@@ -359,7 +345,7 @@ def backupLog():
     i+=1
   shutil.copy("output/log.json","output/log-backup-{}.json".format(i))
  
-Model2Prior.globalsInit()
-backupLog()
+Model2MentalModel.globalsInit()
+#backupLog()
 run(app, host='0.0.0.0', port=8084)
 
