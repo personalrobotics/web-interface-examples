@@ -248,8 +248,17 @@ def do_click():
   print "DATA: " + str(data[mturk_id])
 
   #get next move
-  currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
-    Model2MentalModel.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, lastRobotAction, sessionData["picCount"])
+  # currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
+  #   Model2MentalModel.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, lastRobotAction, sessionData["picCount"])
+
+  if(sessionData["picCount"]==13):
+ 	currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
+      Model2MentalModel.getMove13(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, lastRobotAction, sessionData["picCount"])
+  else:
+	#get next move
+  	currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
+      Model2MentalModel.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, sessionData["picCount"])
+
 
   #debugging
   #print "Belief is: {}".format(resultBelief)
@@ -305,7 +314,7 @@ def do_click():
            "sessionData": sessionData}
     return json.dumps(ret)
   else:
-    sessionData["playVideo"] = 1
+    sessionData["playVideo"] = 2
     ret = {"videoURL": videoLink,
            "imageURL":imageLink,
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
