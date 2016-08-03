@@ -247,11 +247,18 @@ def do_click():
   data[mturk_id].append(buttonClicked)
   print "DATA: " + str(data[mturk_id])
 
-  #get next move
-  currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
-    Model2MentalModel.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, lastRobotAction, sessionData["picCount"])
+  # #get next move
+  # currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
+  #   Model2MentalModel.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, lastRobotAction, sessionData["picCount"])
 
-  
+  if(sessionData["picCount"]==13):
+  	currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
+      Model2MentalModel.getMove13(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, lastRobotAction, sessionData["picCount"])
+  else:
+  	  #get next move
+    currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
+      Model2MentalModel.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, sessionData["picCount"])
+
 
   #debugging
   #print "Belief is: {}".format(resultBelief)
