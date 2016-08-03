@@ -152,9 +152,7 @@ function handleResponse(rawData) {
         window.location.href = "survey.html";
 
     }
-    console.log(cheating);
     if(cheating == true && document.URL=="http://localhost:8085/survey.html"){
-    console.log("CHEATING TRUE");
     window.location.href = "cheating.html";
     }
 
@@ -176,9 +174,46 @@ function handleResponse(rawData) {
 
 
         if(sessionData["picCount"]==9 || sessionData["picCount"]==10|| sessionData["picCount"]==11|| 
-sessionData["picCount"]==13){
+sessionData["picCount"]==13 || sessionData["picCount"]==12){
+
+            if (sessionData["playVideo"]==3){ //remove now for debugging
+                //disable buttons until the video is over
+                $('#left-button').show();
+                changeButtonLabels(jsonData["buttonLabels"]);
+
+
+                disableButtons();
+                $("#instruction-text").html("<br>"); //disable html text while video is playing
+                $('#ui-video').attr('src', jsonData["videoURL"]);
+                $('#ui-image').hide();
+                $('#ui-video').removeAttr('style');
+                //can work with video only when the page is done loading
+                var vid = document.getElementById("ui-video");
+                vid.onended = function() {
+                    $("#instruction-text").html(jsonData["instructionText"]);
+                    $('#ui-image').removeAttr('style');
+                    $('#ui-image').attr('src', jsonData["imageURL"]);
+                    $('#ui-video').hide();
+                    // if("buttonLabels" in jsonData) {
+                    //     // console.log("DETECTED BUTTON LABELS")
+                    //     // if (jsonData["buttonLabels"][0]!="null"){
+                    //     //     $('#left-button').removeAttr('style');
+                    //     // }
+                    //     // else{
+                    //     //     $('#left-button').hide();
+                    //     // }
+
+                    //     changeButtonLabels(jsonData["buttonLabels"]);
+                    // }
+                    //handle changing button colors upon server request 
+                    var bclasses = "btn-primary btn-success btn-danger btn-warning";
+                    var newclass = jsonData["buttonClass"] || "btn-primary";
+                    $(".ui-button").removeClass(bclasses).addClass(newclass);
+                    enableButtons();
+                };
+            }
             //videos start only after instructions
-            if (sessionData["playVideo"]==1){ //remove now for debugging
+            else if (sessionData["playVideo"]==1){ //remove now for debugging
                 //disable buttons until the video is over
                 disableButtons();
                 $("#instruction-text").html("<br>"); //disable html text while video is playing
