@@ -97,7 +97,7 @@ class Data:
 
   def stateUpdateFromHumanAction(self,humanAction, lastRobotAction, sessionData):
     global stateNames
-    robotAction = self.getRobotActionFromPolicy(self.currState, self.bel_t, lastRobotAction, sessionData)
+    robotAction = self.getRobotActionFromPolicy(self.currState, self.bel_t, int(lastRobotAction), sessionData)
     oldTableTheta = self.getTableThetaFromState(self.currState)
     nextState = self.getNextStateFromHumanRobotAction(self.currState,robotAction, humanAction)
     new_bel_t = self.getNewBeliefFromHumanAction(self.currState,robotAction,nextState, self.bel_t)
@@ -167,7 +167,7 @@ def idInitiated(id,d):
 #it will then reset the observable state for that class
 def setPrevGoalStateTheta(d, id, prevGoalStateTheta):
   if idInitiated(id,d):
-    x = d[id] #dictionary
+    x = d[id][0] #dictionary
     print("Returning user: ID={}".format(id))
   else:
     x = Data(id)
@@ -181,7 +181,7 @@ def resetTask(d, id):
   print("IN:id={}".format(id))
   #retrieve/create the class instance
   if idInitiated(id,d):
-    x = d[id] #dictionary
+    x = d[id][0] #dictionary
     print("Returning user: ID={}".format(id))
   else:
     x = Data(id)
@@ -200,7 +200,7 @@ def restartTask(d, id):
   print " "
   #retrieve/create the class instance
   if idInitiated(id,d):
-    x = d[id] #dictionary
+    x = d[id][0] #dictionary
     print("Returning user: ID={}".format(id))
   else:
     x = Data(id)
@@ -220,55 +220,20 @@ def restartTask(d, id):
 #the server will call this function passing the id and the button pressed
 #we'll store the class instances in a dictionary with IDs as keys
 #idInitiated helper function checks if id is in the dictionary
-def getMove(d,id,humanAction, sessionData):
+def getMove(d,id,humanAction, lastRobotAction, sessionData):
   print("IN:id={},action={}".format(id,humanAction))
   #retrieve/create the class instance
   if idInitiated(id,d):
-    x = d[id] #dictionary
-    print("Returning user: ID={}".format(id))
-  else:
-    x = Data(id)
-    d[id] = x
-    print("New class instance created: id={}".format(id))
-  currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta = \
-    x.stateUpdateFromHumanAction(humanAction, 0, sessionData)
-  print("OUT:theta={}".format(currTableTheta))
-
-  if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
-     message = 'You turned the table CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
-  elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
-     message = 'You turned the table COUNTER-CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
-  elif(resultHAction == 'ROTATE_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
-     message = 'You tried to turn the table CLOCKWISE. HERB tried to turn the table COUNTER-CLOCKWISE. <br> The table did not turn.'
-  elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_CLOCKWISE'):
-     message = 'You tried to turn the table COUNTER-CLOCKWISE. HERB tried to turn the table CLOCKWISE. <br> The table did not turn.'
-  else:
-      message = 'Model2py@getMove error: unknown string!' 
-        
-  #for debugging
-  instructionString ='''The current angle is: {}<br> The current state is: {}<br>  The current belief is: {}<br> You did action: {}<br> Robot did action: {}<br>
-    Old angle is {}<br> '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta)
-  message = message + instructionString
-  #print "MESSAGE: " + message
-  return (currTableTheta, oldTableTheta, resultBelief, resultHAction, message)
-
-def getMove13(d,id,humanAction, lastRobotAction, sessionData):
-  print "##################################"
-  print "in GETMOVE13!"
-  print "##################################"
-  print("IN:id={},action={}".format(id,humanAction))
-  #retrieve/create the class instance
-  if idInitiated(id,d):
-    x = d[id] #dictionary
+    d[id][1] = str(lastRobotAction) #updating last robot action
+    x = d[id][0] #dictionary
     print("Returning user: ID={}".format(id))
   else:
     print "GET MOVE last robot action : " + str(lastRobotAction)
-    print " "
-    x = Data(id, lastRobotAction)
-    d[id] = x
+    x = Data(id)
+    d[id] = [x, str(lastRobotAction)]
     print("New class instance created: id={}".format(id))
   currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta = \
-    x.stateUpdateFromHumanAction(humanAction, lastRobotAction, sessionData)
+    x.stateUpdateFromHumanAction(humanAction, d[id][1], sessionData)
   print("OUT:theta={}".format(currTableTheta))
 
   if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
