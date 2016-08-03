@@ -95,9 +95,9 @@ class Data:
     self.prevGoalStateTheta = -1
     self.id = id  #this is a user id
 
-  def stateUpdateFromHumanAction(self,humanAction, lastRobotAction, sessionData):
+  def stateUpdateFromHumanAction(self,humanAction, d, sessionData):
     global stateNames
-    robotAction = self.getRobotActionFromPolicy(self.currState, self.bel_t, int(lastRobotAction), sessionData)
+    robotAction = self.getRobotActionFromPolicy(self.currState, self.bel_t, d, sessionData)
     oldTableTheta = self.getTableThetaFromState(self.currState)
     nextState = self.getNextStateFromHumanRobotAction(self.currState,robotAction, humanAction)
     new_bel_t = self.getNewBeliefFromHumanAction(self.currState,robotAction,nextState, self.bel_t)
@@ -113,9 +113,11 @@ class Data:
 
     return (currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta)
 
-  def getRobotActionFromPolicy(self, ss, bel_t, lastRobotAction, sessionData):
+  def getRobotActionFromPolicy(self, ss, bel_t, d, sessionData):
     action = -1
     maxVal = -1
+    print " DICT in GET ROBOT ACTION :" + str(d[self.id])
+    lastRobotAction = d[self.id][1]
     if sessionData !=13:
       for aa in range(0, NUMOFALPHAVECTORS):
         if(A[aa][0] == ss):
@@ -131,7 +133,7 @@ class Data:
       print 'SESSION DATA: ' + str(sessionData)
       print "LAST ROBOT ACTION: " + str(lastRobotAction)
       #action = 1-self.LRA
-      action = 1-lastRobotAction
+      action = 1-int(lastRobotAction)
     return action
 
   def getTableThetaFromState(self, ss):
@@ -231,7 +233,7 @@ def getMove(d,id,humanAction, sessionData):
     d[id] = [x, "2"]
     print("New class instance created: id={}".format(id))
   currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta = \
-    x.stateUpdateFromHumanAction(humanAction, d[id][1], sessionData)
+    x.stateUpdateFromHumanAction(humanAction, d, sessionData)
   print("OUT:theta={}".format(currTableTheta))
 
   if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
@@ -265,7 +267,7 @@ def getMove13(d,id,humanAction, lastRobotAction, sessionData):
     d[id] = [x, str(lastRobotAction)]
     print("New class instance created: id={}".format(id))
   currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta = \
-    x.stateUpdateFromHumanAction(humanAction, d[id][1], sessionData)
+    x.stateUpdateFromHumanAction(humanAction, d, sessionData)
   print("OUT:theta={}".format(currTableTheta))
 
   if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
