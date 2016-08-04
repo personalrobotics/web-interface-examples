@@ -20,6 +20,7 @@ trialIndx = dict()
 prior = True #condition is set to true when collecting priors
 cheating = True
 lastRobotAction = {}
+setPrevGoalState = 0
 
 #loads static pages from the directory
 #example: website.com/index.html
@@ -62,7 +63,7 @@ def server_static(path):
 # and seeing what the current state of the webapp is
 @app.post('/ui/button')
 def do_click():
-  global prevTableTheta, lastRobotAction, d
+  global prevTableTheta, lastRobotAction, d, setPrevGoalState
 
   #add artificial delay
   time.sleep(0.5)
@@ -197,6 +198,7 @@ def do_click():
     return json.dumps(ret)
 
   if sessionData["picCount"]==10:
+    print "IN SESSION 10!"
     sessionData["playVideo"] = 0
     ret = {"imageURL": "",
            "buttonLabels": ["null", "Next"],
@@ -247,20 +249,29 @@ def do_click():
     return json.dumps(ret)  
 
   #record in log
-  data[mturk_id].append(buttonClicked)
-  print "DATA: " + str(data[mturk_id])
+  # data[mturk_id].append(buttonClicked)
+  # print "DATA: " + str(data[mturk_id])
 
   # #get next move
   # currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
   #   Model2MentalModel.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, lastRobotAction, sessionData["picCount"])
 
   if(sessionData["picCount"]==13):
-  	currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
-      Model2MentalModel.getMove13(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, lastRobotAction, sessionData["picCount"])
+    if cheating == True:
+      data[mturk_id].append(buttonClicked)
+      currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
+        Model2MentalModel.getMove13(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, lastRobotAction, sessionData["picCount"])
+    else:
+      return
   else:
   	  #get next move
-    currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
-      Model2MentalModel.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, sessionData["picCount"])
+    if(sessionData["picCount"]==9 and setPrevGoalState==1):
+      return
+    else:
+      data[mturk_id].append(buttonClicked)
+      currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
+        Model2MentalModel.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, sessionData["picCount"])
+  print "DATA: " + str(data[mturk_id])
 
 
   #debugging
@@ -278,6 +289,7 @@ def do_click():
     if sessionData["picCount"]==9:
       Model2MentalModel.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
+      setPrevGoalState = 1
     elif sessionData["picCount"]==13:
       global cheating
       cheating = False
