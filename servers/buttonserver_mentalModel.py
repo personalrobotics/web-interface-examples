@@ -21,6 +21,7 @@ prior = True #condition is set to true when collecting priors
 cheating = True
 lastRobotAction = {}
 setPrevGoalState = 0
+GoalState = {}
 
 #loads static pages from the directory
 #example: website.com/index.html
@@ -257,7 +258,7 @@ def do_click():
   #   Model2MentalModel.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, lastRobotAction, sessionData["picCount"])
 
   if(sessionData["picCount"]==13):
-    if cheating == True:
+    if GoalState[mturk_id][1] == True:
       data[mturk_id].append(buttonClicked)
       currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
         Model2MentalModel.getMove13(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, lastRobotAction, sessionData["picCount"])
@@ -265,7 +266,7 @@ def do_click():
       return
   else:
   	  #get next move
-    if(sessionData["picCount"]==9 and setPrevGoalState==1):
+    if(sessionData["picCount"]==9 and GoalState[mturk_id][0]==1):
       return
     else:
       data[mturk_id].append(buttonClicked)
@@ -290,9 +291,11 @@ def do_click():
       Model2MentalModel.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
       setPrevGoalState = 1
+      GoalState[mturk_id] = [setPrevGoalState, cheating]
     elif sessionData["picCount"]==13:
       global cheating
       cheating = False
+      GoalState[mturk_id] = [setPrevGoalState, cheating]
       sessionData["toSurvey"] = True
       #timestamp
       secondFinish = datetime.datetime.now()
