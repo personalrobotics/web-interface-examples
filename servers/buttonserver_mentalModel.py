@@ -130,6 +130,7 @@ def do_click():
     ip = request.environ.get('REMOTE_ADDR')
     data = remove_dups("", ip, mturk_id)
     lastRobotAction[mturk_id] = -1
+    GoalState[mturk_id] = [setPrevGoalState, cheating]
     ret = {"imageURL": "images/Slide2.JPG",
            "buttonLabels": ["Prev", "Next"],
            "instructionText": "Instructions",
@@ -332,7 +333,7 @@ def do_click():
            "sessionData": sessionData}
     return json.dumps(ret)
   else:
-    sessionData["playVideo"] = 2
+    sessionData["playVideo"] = 1
     ret = {"videoURL": videoLink,
            "imageURL":imageLink,
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
