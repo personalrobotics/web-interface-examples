@@ -7,14 +7,9 @@
 $(init);
 
 var buttonPOSTUrl = "ui/button";
-var sessionData = {"picCount": 0};
+var sessionData = {"picCount": 0}; //initializing sessionData
 var buttonIDs = ["#left-button", "#right-button"];
 var cheating = true;
-// if(cheating == true && document.URL=="http://localhost:8085/survey.html"){
-// console.log("CHEATING TRUE");
-
-// window.location.href = "cheating.html";
-// }
 
 // Because of the strange way that javascript scoping works, in order
 // to actually get the value i into a closure we need to actually have
@@ -42,7 +37,7 @@ function init() {
 }
 
 function buttonClicked(idx) {
-    //disableButtons();
+    disableButtons();
 
     var postData = {}
 
