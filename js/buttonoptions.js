@@ -46,8 +46,6 @@ function buttonClicked(idx) {
     }
 
 
-
-
     if (sessionData["picCount"]==0){
         //postData = {"sessionData": "", "buttonID": ""}
         //disableButtons();
@@ -65,9 +63,9 @@ function buttonClicked(idx) {
             }
         }
 
-    if(sessionData["picCount"]!=0){
-        postData = {"sessionData": sessionData, "buttonID": idx, "worker_id":$.trim($("#text_welcome").val())};
-    }
+    // if(sessionData["picCount"]!=0){
+    //     postData = {"sessionData": sessionData, "buttonID": idx, "worker_id":$.trim($("#text_welcome").val())};
+    // }
 
     if (sessionData["picCount"]==4){
         $(".text-danger").show()
@@ -274,16 +272,16 @@ sessionData["picCount"]==13 || sessionData["picCount"]==12){
         //dont frame the buttons as previously selected
         $('.ui-button').blur();
 
-         if(sessionData["picCount"]==2){
-         }
-        else if (sessionData["picCount"]==4){
+         // if(sessionData["picCount"]==2){
+         // }
+        if (sessionData["picCount"]==4){
             $('.radio').removeAttr('style');
         }
-        else if(sessionData["picCount"] == 6){
+        if(sessionData["picCount"] == 6){
             $('.trust1').removeAttr('style');
             $('.trust1text').removeAttr('style');           
         }
-        else if(sessionData["picCount"] == 11){
+        if(sessionData["picCount"] == 11){
             $('.trust2').removeAttr('style');
             $('.trust2text').removeAttr('style');
         }
