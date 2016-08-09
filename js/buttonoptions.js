@@ -272,16 +272,16 @@ sessionData["picCount"]==13 || sessionData["picCount"]==12){
         //dont frame the buttons as previously selected
         $('.ui-button').blur();
 
-         // if(sessionData["picCount"]==2){
-         // }
-        if (sessionData["picCount"]==4){
+         if(sessionData["picCount"]==2){
+         }
+        else if (sessionData["picCount"]==4){
             $('.radio').removeAttr('style');
         }
-        if(sessionData["picCount"] == 6){
+        else if(sessionData["picCount"] == 6){
             $('.trust1').removeAttr('style');
             $('.trust1text').removeAttr('style');           
         }
-        if(sessionData["picCount"] == 11){
+        else if(sessionData["picCount"] == 11){
             $('.trust2').removeAttr('style');
             $('.trust2text').removeAttr('style');
         }
