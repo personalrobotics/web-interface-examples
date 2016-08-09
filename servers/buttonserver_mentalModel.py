@@ -64,7 +64,7 @@ def server_static(path):
 # and seeing what the current state of the webapp is
 @app.post('/ui/button')
 def do_click():
-  global prevTableTheta, lastRobotAction, d, setPrevGoalState
+  global prevTableTheta, lastRobotAction, d, setPrevGoalState, cheating,data
 
   #add artificial delay
   time.sleep(0.5)
@@ -81,7 +81,6 @@ def do_click():
     return json.dumps({"toSurvey":True})
 
   #init log variable
-  global data
 
   #go to next/prev pic according to button clicked
   buttonClicked = requestData["buttonID"]
@@ -294,7 +293,6 @@ def do_click():
       setPrevGoalState = 1
       GoalState[mturk_id] = [setPrevGoalState, cheating]
     elif sessionData["picCount"]==13:
-      global cheating
       cheating = False
       GoalState[mturk_id] = [setPrevGoalState, cheating]
       sessionData["toSurvey"] = True
