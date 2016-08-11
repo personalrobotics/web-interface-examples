@@ -304,7 +304,7 @@ def do_click():
       Model2MentalModel.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
       setPrevGoalState = 1
-      GoalState[mturk_id] = [setPrevGoalState, True]
+      GoalState[mturk_id][0] = setPrevGoalState
     elif sessionData["picCount"]==13:
       cheating = False
       GoalState[mturk_id] = [setPrevGoalState, cheating]
