@@ -211,7 +211,7 @@ def do_click():
   if sessionData["picCount"]==10:
     print "IN SESSION 10!"
     print ""
-    print "session 10 goal State: " + str(GoalState)
+    print "session 10 goal State: " + mturk_id + " " +  str(GoalState)
     sessionData["playVideo"] = 0
     ret = {"imageURL": "",
            "buttonLabels": ["null", "Next"],
@@ -279,9 +279,7 @@ def do_click():
       return
   else:
   	  #get next move
-    print "before returning: " + str(GoalState)
     if(sessionData["picCount"]==9 and GoalState[mturk_id][0]==1):
-      print "RETURNING!!"
       return
     else:
       data[mturk_id].append(buttonClicked)
@@ -310,7 +308,7 @@ def do_click():
     elif sessionData["picCount"]==13:
       cheating = False
       GoalState[mturk_id] = [setPrevGoalState, cheating]
-      print "GOAL STATE CHEATING SHUD BE FALSE: " + str(GoalState)
+      print "GOAL STATE CHEATING SHOULD BE FALSE: " + mturk_id + " " str(GoalState)
 
 
       sessionData["toSurvey"] = True
