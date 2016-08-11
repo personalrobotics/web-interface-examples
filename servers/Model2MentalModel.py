@@ -130,7 +130,7 @@ class Data:
   def getRobotActionFromPolicy(self, ss, bel_t, d, sessionData):
     action = -1
     maxVal = -1
-    print " DICT in GET ROBOT ACTION :" + str(d[self.id])
+    #print " DICT in GET ROBOT ACTION :" + str(d[self.id])
     lastRobotAction = d[self.id][1]
     if sessionData !=13:
       for aa in range(0, NUMOFALPHAVECTORS):
