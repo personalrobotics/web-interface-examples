@@ -18,9 +18,9 @@ timestart3 = dict()
 timestart4 = dict()
 trialIndx = dict()
 prior = True #condition is set to true when collecting priors
-cheating = True
+# cheating = True
 lastRobotAction = {}
-setPrevGoalState = 0
+# setPrevGoalState = 0
 GoalState = {}
 
 print " RESET!!!!??"
@@ -134,7 +134,7 @@ def do_click():
     ip = request.environ.get('REMOTE_ADDR')
     data = remove_dups("", ip, mturk_id)
     lastRobotAction[mturk_id] = -1
-    GoalState[mturk_id] = [setPrevGoalState, cheating]
+    GoalState[mturk_id] = [0, True]
     print "pic count 2 Goal State: " + str(GoalState)
 
     ret = {"imageURL": "images/Slide2.JPG",
@@ -310,6 +310,8 @@ def do_click():
       cheating = False
       GoalState[mturk_id] = [setPrevGoalState, cheating]
       print "GOAL STATE CHEATING SHUD BE FALSE: " + str(GoalState)
+
+
       sessionData["toSurvey"] = True
       #timestamp
       secondFinish = datetime.datetime.now()
