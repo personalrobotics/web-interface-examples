@@ -75,6 +75,7 @@ def do_click():
 
   #get the data that the buttonClicked posted
   requestData = json.loads(request.body.getvalue())
+  print "Request Data: " + str(requestData)
   sessionData = requestData["sessionData"]
 
   if "toSurvey" in sessionData:
