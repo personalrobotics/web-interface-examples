@@ -18,14 +18,12 @@ timestart3 = dict()
 timestart4 = dict()
 trialIndx = dict()
 prior = True #condition is set to true when collecting priors
-# cheating = True
+cheating = True
 lastRobotAction = {}
-# setPrevGoalState = 0
+setPrevGoalState = 0
 GoalState = {}
 
-print " RESET!!!!??"
-print setPrevGoalState, cheating
-print " "
+
 
 #loads static pages from the directory
 #example: website.com/index.html
