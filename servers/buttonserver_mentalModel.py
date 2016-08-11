@@ -130,6 +130,7 @@ def do_click():
     data = remove_dups("", ip, mturk_id)
     lastRobotAction[mturk_id] = -1
     GoalState[mturk_id] = [setPrevGoalState, cheating]
+    print "picCount2 Goal State: " + str(GoalState[mturk_id])
     ret = {"imageURL": "images/Slide2.JPG",
            "buttonLabels": ["Prev", "Next"],
            "instructionText": "Instructions",
@@ -186,6 +187,7 @@ def do_click():
   if sessionData["picCount"]==8:
     #timestamp
     print "PIC COUNT 8!!!!!!!!!!!!"
+    print "pic count 8 Goal State: " + str(GoalState[mturk_id])
     startTime = datetime.datetime.now()
     data = remove_dups("start: ", startTime, mturk_id)
     timestart1[mturk_id] = startTime
@@ -268,6 +270,7 @@ def do_click():
       return
   else:
   	  #get next move
+    print "before returning: " + str(GoalState[mturk_id])
     if(sessionData["picCount"]==9 and GoalState[mturk_id][0]==1):
       print "RETURNING!!"
       print " "
