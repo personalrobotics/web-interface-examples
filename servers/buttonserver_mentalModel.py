@@ -204,12 +204,14 @@ def do_click():
            "sessionData": sessionData,
        "buttonClass": "btn-success"}
     sessionData["picCount"]+=1       
-    return json.dumps(ret)''
+    return json.dumps(ret)
   if sessionData["picCount"]==9:
     print "pic count 9 Goal State: " + str(GoalState)
 
   if sessionData["picCount"]==10:
     print "IN SESSION 10!"
+    print ""
+    print "session 10 goal State: " + str(GoalState)
     sessionData["playVideo"] = 0
     ret = {"imageURL": "",
            "buttonLabels": ["null", "Next"],
