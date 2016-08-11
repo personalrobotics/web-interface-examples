@@ -75,7 +75,7 @@ def do_click():
 
   #get the data that the buttonClicked posted
   requestData = json.loads(request.body.getvalue())
-  print "Request Data: " + str(requestData)
+
   sessionData = requestData["sessionData"]
 
   if "toSurvey" in sessionData:
@@ -131,7 +131,8 @@ def do_click():
     data = remove_dups("", ip, mturk_id)
     lastRobotAction[mturk_id] = -1
     GoalState[mturk_id] = [setPrevGoalState, cheating]
-    print "picCount2 Goal State: " + str(GoalState[mturk_id])
+    print "pic count 2 Goal State: " + str(GoalState)
+
     ret = {"imageURL": "images/Slide2.JPG",
            "buttonLabels": ["Prev", "Next"],
            "instructionText": "Instructions",
@@ -188,7 +189,7 @@ def do_click():
   if sessionData["picCount"]==8:
     #timestamp
     print "PIC COUNT 8!!!!!!!!!!!!"
-    print "pic count 8 Goal State: " + str(GoalState[mturk_id])
+    print "pic count 8 Goal State: " + str(GoalState)
     startTime = datetime.datetime.now()
     data = remove_dups("start: ", startTime, mturk_id)
     timestart1[mturk_id] = startTime
@@ -263,6 +264,7 @@ def do_click():
   #   Model2MentalModel.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, lastRobotAction, sessionData["picCount"])
 
   if(sessionData["picCount"]==13):
+    print "After pic count 13: " + str(GoalState)
     if GoalState[mturk_id][1] == True:
       data[mturk_id].append(buttonClicked)
       currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
@@ -271,7 +273,7 @@ def do_click():
       return
   else:
   	  #get next move
-    print "before returning: " + str(GoalState[mturk_id])
+    print "before returning: " + str(GoalState)
     if(sessionData["picCount"]==9 and GoalState[mturk_id][0]==1):
       print "RETURNING!!"
       print " "
