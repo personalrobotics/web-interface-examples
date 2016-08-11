@@ -63,9 +63,9 @@ function buttonClicked(idx) {
             }
         }
 
-    // if(sessionData["picCount"]!=0){
-    //     postData = {"sessionData": sessionData, "buttonID": idx, "worker_id":$.trim($("#text_welcome").val())};
-    // }
+    if(sessionData["picCount"]!=0){
+        postData = {"sessionData": sessionData, "buttonID": idx, "worker_id":$.trim($("#text_welcome").val())};
+    }
 
     if (sessionData["picCount"]==4){
         $(".text-danger").show()
