@@ -308,7 +308,7 @@ def do_click():
     elif sessionData["picCount"]==13:
       cheating = False
       GoalState[mturk_id] = [setPrevGoalState, cheating]
-      print "GOAL STATE CHEATING SHOULD BE FALSE: " + mturk_id + " " str(GoalState)
+      print "GOAL STATE CHEATING SHOULD BE FALSE: " + mturk_id + " " + str(GoalState)
 
 
       sessionData["toSurvey"] = True
