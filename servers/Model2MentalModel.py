@@ -103,9 +103,9 @@ class Data:
     new_bel_t = self.getNewBeliefFromHumanAction(self.currState,robotAction,nextState, self.bel_t)
     self.bel_t = new_bel_t
     self.currState = nextState
-    print " "
-    print "NEXT STATE: " + str(nextState) #0 or 639
-    print " "
+    # print " "
+    # print "NEXT STATE: " + str(nextState) #0 or 639
+    # print " "
 
     if(nextState == 733):
       if oldTableTheta == 180:
@@ -172,6 +172,7 @@ class Data:
       SumBeliefs = SumBeliefs + bel_tp1[yy]
     bel_tp1 = bel_tp1 / SumBeliefs
     return bel_tp1
+
 
 def idInitiated(id,d):
   if id in d:
@@ -282,8 +283,8 @@ def getMove13(d,id,humanAction, lastRobotAction, sessionData):
   currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta = \
     x.stateUpdateFromHumanAction(humanAction, d, sessionData)
   print("OUT:theta={}".format(currTableTheta))
-  print "GET MOVE last robot action : " + str(lastRobotAction)
-  print " "
+  # print "GET MOVE last robot action : " + str(lastRobotAction)
+  # print " "
 
   if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
      message = 'You turned the table CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
