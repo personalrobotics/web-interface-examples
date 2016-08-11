@@ -204,7 +204,9 @@ def do_click():
            "sessionData": sessionData,
        "buttonClass": "btn-success"}
     sessionData["picCount"]+=1       
-    return json.dumps(ret)
+    return json.dumps(ret)''
+  if sessionData["picCount"]==9:
+    print "pic count 9 Goal State: " + str(GoalState)
 
   if sessionData["picCount"]==10:
     print "IN SESSION 10!"
@@ -278,7 +280,6 @@ def do_click():
     print "before returning: " + str(GoalState)
     if(sessionData["picCount"]==9 and GoalState[mturk_id][0]==1):
       print "RETURNING!!"
-      print " "
       return
     else:
       data[mturk_id].append(buttonClicked)
