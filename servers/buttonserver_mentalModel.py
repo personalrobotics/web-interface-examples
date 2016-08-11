@@ -173,8 +173,9 @@ def do_click():
            "sessionData": sessionData}
     return json.dumps(ret)
 
-
   if sessionData["picCount"]==7:
+    print "PIC COUNT 7!!!!!!!!!!!!"
+
     data = remove_dups("trustRate1: ", requestData["trustRate1"], mturk_id)
     ret = {"imageURL": "images/Slide5.JPG",
            "buttonLabels": ["Prev", "START"],
@@ -184,6 +185,7 @@ def do_click():
 
   if sessionData["picCount"]==8:
     #timestamp
+    print "PIC COUNT 8!!!!!!!!!!!!"
     startTime = datetime.datetime.now()
     data = remove_dups("start: ", startTime, mturk_id)
     timestart1[mturk_id] = startTime
@@ -267,6 +269,8 @@ def do_click():
   else:
   	  #get next move
     if(sessionData["picCount"]==9 and GoalState[mturk_id][0]==1):
+      print "RETURNING!!"
+      print " "
       return
     else:
       data[mturk_id].append(buttonClicked)
