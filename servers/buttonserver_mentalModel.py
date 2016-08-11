@@ -23,6 +23,10 @@ lastRobotAction = {}
 setPrevGoalState = 0
 GoalState = {}
 
+print " RESET!!!!??"
+print setPrevGoalState, cheating
+print " "
+
 #loads static pages from the directory
 #example: website.com/index.html
 #server will load index.html from the directory
@@ -305,6 +309,7 @@ def do_click():
     elif sessionData["picCount"]==13:
       cheating = False
       GoalState[mturk_id] = [setPrevGoalState, cheating]
+      print "GOAL STATE CHEATING SHUD BE FALSE: " + str(GoalState)
       sessionData["toSurvey"] = True
       #timestamp
       secondFinish = datetime.datetime.now()
