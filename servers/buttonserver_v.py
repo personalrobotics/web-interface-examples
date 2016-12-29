@@ -247,7 +247,7 @@ def do_click():
   data[mturk_id].append(buttonClicked)
 
   #get next move
-  currTableTheta, oldTableTheta, resultBelief, resultHAction, message = \
+  currTableTheta, oldTableTheta, resultBelief, resultHAction, message, resultRAction = \
     Model2Prior.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, prior)
 
 
