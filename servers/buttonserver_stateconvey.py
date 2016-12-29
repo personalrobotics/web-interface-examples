@@ -344,7 +344,7 @@ def handle_survey():
 
   for i in xrange(1,17):
     data[mturk_id].append(request.forms.get(str(i)))
-  with open('output/log-v.json', 'w') as outfile:
+  with open('output/log-m.json', 'w') as outfile:
     json.dump(data, outfile)
   print("User {} submitted the survey".format(mturk_id))
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)
