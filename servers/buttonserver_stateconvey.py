@@ -337,7 +337,7 @@ def handle_survey():
 
   if(cheating == True):
     data[mturk_id].append("INCOMPLETE")
-    with open('output/log-cheating-v.json', 'a') as outfile:
+    with open('output/log-cheating-m.json', 'a') as outfile:
       json.dump(data, outfile)
     return "<p>It appears that the HIT has not been fully completed. Please complete the HIT again by pasting this link into your browser: http://studies.personalrobotics.ri.cmu.edu/minaek/index.html </p>"
   
