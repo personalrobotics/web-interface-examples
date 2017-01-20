@@ -28,7 +28,7 @@ R = numpy.zeros([NUMOFSTATES,NUMOFROBOTACTIONS, NUMOFHUMANACTIONS, NUMOFSTATES])
 T = numpy.zeros([NUMOFUNOBSSTATES, NUMOFSTATES, NUMOFROBOTACTIONS, NUMOFSTATES])   
 Tz = numpy.zeros([NUMOFUNOBSSTATES, NUMOFSTATES, NUMOFUNOBSSTATES])   
 
-NUMOFALPHAVECTORS = 3314
+NUMOFALPHAVECTORS = 3375
 A = numpy.zeros([NUMOFALPHAVECTORS, NUMOFUNOBSSTATES + 2])
 #assume that the state before last is the starting state. The last one is the absorbing state
 startStateIndx = 2160
@@ -165,22 +165,19 @@ class Data:
     # return startStateTheta
 
   def getNextStateFromHumanRobotAction(self, ss, ra, ha):
-    nextState = R[ss][ra][ha]
-    return nextState
-
-
-  def getNextStateFromHumanRobotAction(self, ss, ra, ha):
     nextStateMtx = R[ss][ra][ha][:]
     return nextStateMtx.argmax()
-
 
   def getNewBeliefFromHumanAction(self, ss, ra, nss, bel_t):
     bel_tp1 = numpy.zeros([NUMOFUNOBSSTATES,1])
     SumBeliefs = 0
     #embed()
-    for yy in range(0, NUMOFUNOBSSTATES):
-      bel_tp1[yy] = T[yy][ss][ra][nss]*bel_t[yy]
-      SumBeliefs = SumBeliefs + bel_tp1[yy]
+    for nyy in range(0, NUMOFUNOBSSTATES): 
+      for yy in range(0,  NUMOFUNOBSSTATES):
+        bel_tp1[nyy] = bel_tp1[nyy] + T[yy][ss][ra][nss]*Tz[yy][ra][nyy]*bel_t[yy]
+    
+      SumBeliefs = SumBeliefs + bel_tp1[nyy]
+    
     bel_tp1 = bel_tp1 / SumBeliefs
     return bel_tp1
 
