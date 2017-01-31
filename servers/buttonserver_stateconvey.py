@@ -23,6 +23,7 @@ cheating = True
 #example: website.com/index.html
 #server will load index.html from the directory
 
+
 def remove_dups(string, info, mturk_id):
   global data
   lastInd = len(data[mturk_id])-1
@@ -248,24 +249,28 @@ def do_click():
 
   #get next move
   currTableTheta, oldTableTheta, resultBelief, resultHAction, message, resultRAction = \
-    Model2StateConveying.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked, prior)
+    Model2StateConveying.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
 
 
   #debugging
   #print "Belief is: {}".format(resultBelief)
   #play the long video if the human-robot actions
   # are the same and it's the first time this is happening
-  suffix = ""
-  prefix = "T"
-  if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
-    suffix="l"
-    sessionData["playedLong"]=1
 
-  if(resultRAction =="CONVEY_STATE"):
+  prefix = "T"
+   
+
+  if(resultRAction =='CONVEY_STATE'):
     suffix = "m"
     videoLink = "videos/{}{}{}.mp4".format(prefix,currTableTheta,suffix)
-  else:
+  elif oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
+    suffix="l"
+    sessionData["playedLong"]=1
     videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
+  else:
+    suffix = ""
+    videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
+
   imageLink = "images/T{}.jpg".format(currTableTheta)
 
   if currTableTheta==0 or currTableTheta==180:
@@ -337,14 +342,14 @@ def handle_survey():
 
   if(cheating == True):
     data[mturk_id].append("INCOMPLETE")
-    with open('output/log-cheating-m.json', 'a') as outfile:
+    with open('output/log-cheating-v.json', 'a') as outfile:
       json.dump(data, outfile)
     return "<p>It appears that the HIT has not been fully completed. Please complete the HIT again by pasting this link into your browser: http://studies.personalrobotics.ri.cmu.edu/minaek/index.html </p>"
   
 
   for i in xrange(1,17):
     data[mturk_id].append(request.forms.get(str(i)))
-  with open('output/log-m.json', 'w') as outfile:
+  with open('output/log-v.json', 'w') as outfile:
     json.dump(data, outfile)
   print("User {} submitted the survey".format(mturk_id))
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)

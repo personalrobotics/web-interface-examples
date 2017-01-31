@@ -242,7 +242,7 @@ def restartTask(d, id):
 #the server will call this function passing the id and the button pressed
 #we'll store the class instances in a dictionary with IDs as keys
 #idInitiated helper function checks if id is in the dictionary
-def getMove(d,id,humanAction, prior):
+def getMove(d,id,humanAction):
   print("IN:id={},action={}".format(id,humanAction))
   #retrieve/create the class instance
   if idInitiated(id,d):
