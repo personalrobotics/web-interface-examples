@@ -261,7 +261,7 @@ def do_click():
    
 
   if(resultRAction =='CONVEY_STATE'):
-    suffix = "m"
+    suffix = "m2"
     videoLink = "videos/{}{}{}.mp4".format(prefix,currTableTheta,suffix)
   elif oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
     suffix="l"
